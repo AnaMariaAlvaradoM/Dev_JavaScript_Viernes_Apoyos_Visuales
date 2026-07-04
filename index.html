@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Clases · Ana Alvarado · Dev Senior</title>
+
+<!--
+  ============================================================================
+  © 2026 ANA ALVARADO — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack
+  linkedin.com/in/ana-alvarado-instructora-full-stack
+
+  Este material educativo es de autoría exclusiva de Ana Alvarado.
+  Queda PROHIBIDA su reproducción, redistribución, modificación o uso
+  fuera del contexto de la clase para la que fue creado, sin autorización
+  escrita de la autora. El acceso a este recurso no otorga ningún derecho
+  sobre su contenido ni sobre su código.
+  ============================================================================
+-->
+
+<meta name="author" content="Ana Alvarado">
+<meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+<meta name="description" content="Material educativo de autoría de Ana Alvarado · Educadora Tech & Desarrolladora Full Stack. Uso exclusivo de clase.">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================================
+     © 2026 Ana Alvarado · Educadora Tech & Desarrolladora Full Stack
+     Todos los derechos reservados · Autoría exclusiva.
+     ========================================================================== */
+:root{
+    /* Fondo morado-carbón (tinte del morado Dev Senior, no gris neutro) */
+    --bg:#0f0a17;
+    --bg-card:#181022;
+    --bg-card-hover:#20152e;
+    --borde:#2a1c3a;
+    --borde-claro:#3f2758;
+    --texto:#f0eaf8;
+    --texto-suave:#a08bb3;
+    --texto-tenue:#725e86;
+    /* Acento institucional Dev Senior */
+    --acento:#7435f3;        /* vibrante Dev Senior, para que resalte sobre oscuro */
+    --acento-fuerte:#6933d4; /* principal Dev Senior */
+    --acento-tenue:#3C1884;  /* oscuro Dev Senior */
+    --acento-glow:rgba(96,24,240,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--texto);
+    min-height:100vh;
+    line-height:1.6;
+    background-image:radial-gradient(circle at 50% -10%, var(--acento-glow), transparent 46%);
+    /* disuasión: dificulta selección casual */
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    user-select:none;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:64px 24px 90px}
+
+  /* Encabezado */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.76rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--texto-tenue);
+    margin-bottom:16px;
+  }
+  h1{
+    font-size:clamp(2rem,5vw,3rem);
+    font-weight:800;
+    letter-spacing:-.025em;
+    line-height:1.08;
+    margin-bottom:14px;
+  }
+  h1 .acento{
+    color:var(--acento);
+  }
+  .lead{
+    color:var(--texto-suave);
+    font-size:1.05rem;
+    max-width:540px;
+  }
+
+  /* Aviso legal serio */
+  .aviso{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    background:var(--bg-card);
+    border:1px solid var(--borde);
+    border-left:3px solid var(--acento-fuerte);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-top:26px;
+    max-width:620px;
+  }
+  .aviso-icono{
+    flex-shrink:0;
+    width:34px;height:34px;
+    border-radius:9px;
+    background:var(--acento-glow);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.1rem;
+    color:var(--acento);
+    font-weight:700;
+  }
+  .aviso-cuerpo{flex:1}
+  .aviso-titulo{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--acento);
+    margin-bottom:6px;
+    font-weight:600;
+  }
+  .aviso-texto{
+    font-size:.92rem;
+    color:var(--texto-suave);
+    line-height:1.55;
+  }
+  .aviso-texto strong{color:var(--texto);font-weight:600}
+
+  .divider{
+    height:1px;
+    background:linear-gradient(90deg,var(--borde-claro),transparent);
+    margin:44px 0 30px;
+  }
+  .sec-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.8rem;
+    color:var(--texto-tenue);
+    letter-spacing:.1em;
+    margin-bottom:20px;
+  }
+
+  /* Módulos plegables */
+  .modulos{display:flex;flex-direction:column;gap:14px}
+  .modulo{
+    background:var(--bg-card);
+    border:1px solid var(--borde);
+    border-radius:14px;
+    overflow:hidden;
+    transition:border-color .2s ease;
+  }
+  .modulo[open]{border-color:var(--borde-claro)}
+  .modulo summary{
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:20px 22px;
+    user-select:none;
+    transition:background .2s ease;
+  }
+  .modulo summary::-webkit-details-marker{display:none}
+  .modulo summary:hover{background:var(--bg-card-hover)}
+  .modulo summary:focus-visible{outline:2px solid var(--acento);outline-offset:-2px}
+  .mod-punto{
+    width:9px;height:9px;border-radius:50%;flex-shrink:0;
+    background:var(--acento);
+    box-shadow:0 0 8px var(--acento-glow);
+  }
+  .mod-punto.apagado{
+    background:var(--texto-tenue);
+    box-shadow:none;
+  }
+  .mod-info{flex:1;min-width:0}
+  .mod-titulo{font-size:1.12rem;font-weight:700;margin-bottom:2px}
+  .mod-meta{
+    font-size:.82rem;
+    color:var(--texto-tenue);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .mod-chevron{
+    color:var(--texto-tenue);
+    font-size:.9rem;
+    transition:transform .25s ease;
+    flex-shrink:0;
+  }
+  .modulo[open] .mod-chevron{transform:rotate(90deg)}
+  .mod-badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--texto-tenue);
+    border:1px solid var(--borde-claro);
+    border-radius:20px;
+    padding:3px 10px;
+    flex-shrink:0;
+  }
+  .mod-badge.activo{
+    color:var(--acento);
+    border-color:var(--acento-tenue);
+  }
+
+  /* Lista de clases dentro del módulo */
+  .clases{
+    padding:4px 14px 16px;
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .clase{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:13px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    color:inherit;
+    transition:background .15s ease;
+  }
+  .clase:hover{background:var(--bg-card-hover)}
+  .clase:focus-visible{outline:2px solid var(--acento);outline-offset:-2px}
+  .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.95rem;
+    font-weight:600;
+    color:var(--texto-tenue);
+    min-width:30px;
+    flex-shrink:0;
+  }
+  .clase-info{flex:1;min-width:0}
+  .clase-titulo{font-size:1rem;font-weight:600;margin-bottom:1px}
+  .clase-temas{
+    font-size:.82rem;
+    color:var(--texto-suave);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .flecha{color:var(--texto-tenue);font-size:1.1rem;transition:.15s ease;flex-shrink:0}
+  .clase:hover .flecha{color:var(--acento);transform:translateX(2px)}
+  .clase:hover .num{color:var(--acento)}
+
+  /* Módulo próximamente */
+  .modulo.proximo{opacity:.6}
+  .modulo.proximo summary{cursor:default}
+  .modulo.proximo summary:hover{background:transparent}
+  .vacio{
+    padding:0 22px 20px;
+    font-size:.9rem;
+    color:var(--texto-tenue);
+    font-style:italic;
+  }
+
+  /* Marca de agua discreta fija */
+  .watermark{
+    position:fixed;
+    bottom:12px;right:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.68rem;
+    color:var(--texto-tenue);
+    opacity:.4;
+    pointer-events:none;
+    user-select:none;
+    z-index:5;
+  }
+
+  /* Pie */
+  footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--borde);
+    font-size:.82rem;
+    color:var(--texto-tenue);
+    text-align:center;
+  }
+  footer a{color:var(--texto-suave);text-decoration:none}
+  footer a:hover{color:var(--acento)}
+  footer .firma{color:var(--texto-suave);font-weight:600;margin-bottom:4px}
+
+  @media (max-width:520px){
+    .wrap{padding:44px 18px 60px}
+    .modulo summary{padding:16px 18px;gap:12px}
+    .mod-badge{display:none}
+    .watermark{display:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body oncontextmenu="return false">
+  <div class="wrap">
+
+    <p class="eyebrow">Ana Alvarado · Dev Senior</p>
+    <h1>JavaScript AI Backend · <span class="acento">Guías visuales de clase</span></h1>
+    <p class="lead">Recursos de clase organizados por módulo. Abre un módulo para ver sus sesiones, listas para repasar o proyectar.</p>
+
+    <div class="divider"></div>
+
+    <p class="sec-label">// Módulos</p>
+
+    <div class="modulos">
+
+      <!-- ============ MÓDULO: JAVASCRIPT ============ -->
+      <details class="modulo" open>
+        <summary>
+          <span class="mod-punto"></span>
+          <span class="mod-info">
+            <span class="mod-titulo">Módulo 1</span>
+            <span class="mod-meta">Introducción al programa + entorno profesional + JavaScript setup</span>
+          </span>
+          <span class="mod-badge activo">Activo</span>
+          <span class="mod-chevron">▶</span>
+        </summary>
+        <div class="clases">
+
+          <a class="clase" href="">
+            <span class="num">01</span>
+            <span class="clase-info">
+              <span class="clase-titulo">Clase 1</span>
+              <span class="clase-temas">Introducción a FastAPI y Estructura Profesional de Proyectos</span>
+            </span>
+            <span class="flecha">&rarr;</span>
+          </a>
+<!-- cambios -->
+          <a class="clase" href="docs/clase2.html">
+            <span class="num">02</span>
+            <span class="clase-info">
+              <span class="clase-titulo">Clase 2</span>
+              <span class="clase-temas">Variables + tipos de datos + operadores + lógica básica</span>
+            </span>
+            <span class="flecha">&rarr;</span>
+          </a>
+          <a class="clase" href="docs/M1_Clase3_SPA_estudiantes.html">
+            <span class="num">03</span>
+            <span class="clase-info">
+              <span class="clase-titulo">Clase 3</span>
+              <span class="clase-temas">Condicionales + ciclos + funciones + organización del código</span>
+            </span>
+            <span class="flecha">&rarr;</span>
+          </a>
+<!-- cambios -->
+          <a class="clase" href="docs/Clase4_Modulo1_CLI_Gestor_Tareas.html">
+            <span class="num">04</span>
+            <span class="clase-info">
+              <span class="clase-titulo">Clase 4</span>
+              <span class="clase-temas">Mini proyecto real + CLI App + GitHub + buenas prácticas</span>
+            </span>
+            <span class="flecha">&rarr;</span>
+          </a>
+
+
+
+        </div>
+      </details>
+
+      <!-- ============ MÓDULO: BASES DE DATOS ============ -->
+      <details class="modulo proximo">
+        <summary>
+          <span class="mod-punto apagado"></span>
+          <span class="mod-info">
+            <span class="mod-titulo">Módulo 2</span>
+            <span class="mod-meta">Próximamente</span>
+          </span>
+          <span class="mod-badge">Pronto</span>
+          <span class="mod-chevron">▶</span>
+        </summary>
+        <p class="vacio">Las sesiones de este módulo se publicarán más adelante.</p>
+
+
+    </div>
+
+    <footer>
+          <div class="aviso" role="note" aria-label="Aviso de derechos de autor">
+      <span class="aviso-icono">©</span>
+      <div class="aviso-cuerpo">
+        <div class="aviso-titulo">Aviso de derechos de autor</div>
+        <p class="aviso-texto">
+          Este material es de <strong>autoría exclusiva de Ana Alvarado</strong> y su acceso está limitado a las y los estudiantes de esta cohorte. Queda <strong>prohibida su reproducción, redistribución o uso fuera de clase</strong> sin autorización escrita de la autora.
+        </p>
+      </div>
+    </div>
+        <div class="divider"></div>
+      <p class="firma">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack</p>
+      <p>Todos los derechos reservados ·
+      <a href="https://linkedin.com/in/ana-alvarado-instructora-full-stack" target="_blank" rel="noopener">linkedin.com/in/ana-alvarado-instructora-full-stack</a></p>
+    </footer>
+
+  </div>
+
+  <div class="watermark">© 2026 Ana Alvarado</div>
+
+<script>
+/* ============================================================================
+   © 2026 Ana Alvarado — Educadora Tech & Desarrolladora Full Stack
+   Todos los derechos reservados. Autoría exclusiva.
+   linkedin.com/in/ana-alvarado-instructora-full-stack
+   ============================================================================ */
+console.log("%c© 2026 Ana Alvarado","color:#0086CE;font-size:16px;font-weight:bold");
+console.log("%cEducadora Tech & Desarrolladora Full Stack — Todos los derechos reservados","color:#8ba0b3");
+console.log("%cEste material es de autoría exclusiva. Prohibida su reproducción o redistribución sin autorización.","color:#5e7286");
+
+/* Capa de disuasión (NO es bloqueo real; molesta la copia casual) */
+(function(){
+  // Bloquear selección por arrastre
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); });
+  // Bloquear arrastre de enlaces/imágenes
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+  // Atajos comunes de guardado / código fuente / imprimir / copiar
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if(e.ctrlKey || e.metaKey){
+      if(['s','u','p','c'].includes(k)){ e.preventDefault(); return false; }
+    }
+    // F12 (DevTools) y Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+    if(k === 'f12'){ e.preventDefault(); return false; }
+    if((e.ctrlKey||e.metaKey) && e.shiftKey && ['i','j','c'].includes(k)){
+      e.preventDefault(); return false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

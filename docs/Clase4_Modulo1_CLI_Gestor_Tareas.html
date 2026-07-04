@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+  © 2026 Ana Alvarado — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack.
+  Material de autoría exclusiva. Prohibida su reproducción, redistribución,
+  modificación o uso fuera del contexto de clase sin autorización escrita.
+============================================================================
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ana Alvarado">
+<meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<title>Clase 4 · CLI Gestor de Tareas · JavaScript AI Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dev-principal:#5418CC;
+  --dev-vibrante:#6018F0;
+  --dev-oscuro:#3C1884;
+  --acento-claro:#9F7AEA;
+  --bg-0:#0D0A18;
+  --bg-1:#141026;
+  --bg-2:#1C1636;
+  --bg-3:#241B44;
+  --borde:#2E2450;
+  --borde-fuerte:#3D2F68;
+  --texto:#EDE9F7;
+  --texto-2:#B4A9D4;
+  --texto-3:#7E739E;
+  --verde:#2DD4A7;
+  --verde-bg:#0F2E28;
+  --ambar:#F0A94A;
+  --ambar-bg:#33260F;
+  --radio:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg-0);
+  color:var(--texto);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  overflow-x:hidden;
+}
+code,pre,.mono{font-family:'JetBrains Mono',monospace}
+
+/* ===== LAYOUT ===== */
+.app{display:flex;min-height:100vh}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:290px;flex-shrink:0;
+  background:var(--bg-1);
+  border-right:1px solid var(--borde);
+  padding:26px 18px;
+  position:fixed;top:0;left:0;height:100vh;
+  overflow-y:auto;z-index:50;
+  transition:transform .3s ease;
+}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:6px;padding:0 8px}
+.brand-logo{
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--dev-vibrante),var(--dev-oscuro));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:20px;color:#fff;
+  box-shadow:0 4px 18px rgba(96,24,240,.4);
+}
+.brand-txt strong{display:block;font-size:15px;font-weight:700;letter-spacing:.3px}
+.brand-txt span{display:block;font-size:11px;color:var(--texto-3);letter-spacing:.5px;text-transform:uppercase}
+.sidebar-eyebrow{
+  font-size:10.5px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--texto-3);margin:26px 10px 12px;font-weight:600;
+}
+.nav a{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:10px;
+  color:var(--texto-2);text-decoration:none;font-size:13.5px;font-weight:500;
+  margin-bottom:3px;transition:all .18s;border:1px solid transparent;
+  cursor:pointer;
+}
+.nav a .ic{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav a:hover{background:var(--bg-2);color:var(--texto)}
+.nav a.active{
+  background:linear-gradient(135deg,rgba(96,24,240,.22),rgba(60,24,132,.12));
+  color:#fff;border-color:var(--borde-fuerte);
+}
+.nav a.active .ic{color:var(--acento-claro)}
+.nav .done::after{content:"✓";margin-left:auto;color:var(--verde);font-size:12px;font-weight:700}
+
+/* ===== MAIN ===== */
+.main{flex:1;margin-left:290px;min-width:0}
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(13,10,24,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--borde);
+  padding:14px 40px;display:flex;align-items:center;gap:18px;
+}
+.progress-wrap{flex:1;max-width:320px}
+.progress-label{font-size:11px;color:var(--texto-3);margin-bottom:5px;letter-spacing:.4px}
+.progress-track{height:6px;background:var(--bg-2);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--dev-vibrante),var(--acento-claro));border-radius:99px;transition:width .4s ease}
+.btn-present{
+  margin-left:auto;background:linear-gradient(135deg,var(--dev-vibrante),var(--dev-principal));
+  color:#fff;border:none;padding:9px 18px;border-radius:10px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:transform .15s,box-shadow .2s;
+  box-shadow:0 3px 14px rgba(96,24,240,.35);
+}
+.btn-present:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(96,24,240,.5)}
+.menu-toggle{display:none;background:var(--bg-2);border:1px solid var(--borde);color:var(--texto);width:40px;height:40px;border-radius:10px;font-size:18px;cursor:pointer}
+
+.content{padding:44px 40px 90px;max-width:940px}
+
+/* ===== HERO ===== */
+.hero{
+  background:
+    radial-gradient(circle at 12% 20%,rgba(96,24,240,.28),transparent 42%),
+    radial-gradient(circle at 88% 80%,rgba(60,24,132,.32),transparent 45%),
+    var(--bg-1);
+  border:1px solid var(--borde);border-radius:22px;
+  padding:44px 42px;margin-bottom:34px;position:relative;overflow:hidden;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(96,24,240,.15);border:1px solid var(--borde-fuerte);
+  color:var(--acento-claro);font-size:11.5px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 14px;border-radius:99px;margin-bottom:20px;
+}
+.hero h1{font-size:38px;font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:14px}
+.hero h1 .accent{
+  background:linear-gradient(120deg,var(--acento-claro),var(--dev-vibrante));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{color:var(--texto-2);font-size:16px;max-width:620px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--bg-2);border:1px solid var(--borde);
+  padding:8px 14px;border-radius:10px;font-size:12.5px;color:var(--texto-2);font-weight:500;
+}
+.chip b{color:var(--texto)}
+
+/* ===== SECTIONS ===== */
+.section{display:none;animation:fade .45s ease}
+.section.visible{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.sec-head{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+.sec-icon{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--bg-3),var(--bg-2));
+  border:1px solid var(--borde-fuerte);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+}
+.sec-num{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--acento-claro);font-weight:700}
+.sec-head h2{font-size:27px;font-weight:800;letter-spacing:-.3px}
+.sec-sub{color:var(--texto-2);font-size:15.5px;margin:14px 0 26px;padding-left:2px}
+
+/* ===== CARDS / PROSE ===== */
+.card{
+  background:var(--bg-1);border:1px solid var(--borde);
+  border-radius:var(--radio);padding:24px 26px;margin-bottom:20px;
+}
+.card h3{font-size:17px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+.card h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--dev-vibrante);flex-shrink:0}
+.card p{color:var(--texto-2);margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+.card strong{color:var(--texto);font-weight:600}
+
+.def{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;
+}
+.def-box{background:var(--bg-2);border:1px solid var(--borde);border-radius:11px;padding:16px 18px}
+.def-box .lbl{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.def-box.tec .lbl{color:var(--acento-claro)}
+.def-box.real .lbl{color:var(--verde)}
+.def-box p{font-size:13.5px;color:var(--texto-2);margin:0}
+
+/* ===== TIP / BANNER ===== */
+.banner{
+  display:flex;gap:14px;padding:16px 20px;border-radius:12px;margin:18px 0;
+  border:1px solid;align-items:flex-start;
+}
+.banner .b-ic{font-size:20px;flex-shrink:0;line-height:1.4}
+.banner p{margin:0;font-size:14px}
+.banner.tip{background:rgba(96,24,240,.1);border-color:var(--borde-fuerte)}
+.banner.tip .b-ic{color:var(--acento-claro)}
+.banner.warn{background:var(--ambar-bg);border-color:#5c451a}
+.banner.warn .b-ic{color:var(--ambar)}
+.banner.bridge{background:var(--verde-bg);border-color:#1c5245}
+.banner.bridge .b-ic{color:var(--verde)}
+
+/* ===== CODE ===== */
+.code-wrap{margin:18px 0;border-radius:12px;overflow:hidden;border:1px solid var(--borde)}
+.code-head{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg-2);padding:9px 14px;border-bottom:1px solid var(--borde);
+}
+.code-file{
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--texto-2);
+  display:flex;align-items:center;gap:7px;
+}
+.code-file .fdot{width:9px;height:9px;border-radius:50%;background:var(--ambar)}
+.code-lang{font-size:10px;color:var(--texto-3);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.btn-copy{
+  margin-left:auto;background:var(--bg-3);border:1px solid var(--borde-fuerte);
+  color:var(--texto-2);font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:5px 11px;border-radius:7px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:6px;
+}
+.btn-copy:hover{background:var(--dev-oscuro);color:#fff;border-color:var(--dev-vibrante)}
+.btn-copy.ok{background:var(--verde-bg);color:var(--verde);border-color:#1c5245}
+pre{
+  background:#0A0714;padding:18px 20px;overflow-x:auto;
+  user-select:text;-webkit-user-select:text;
+}
+pre code{font-size:13px;line-height:1.75;color:#D8D0F0;white-space:pre}
+.tok-key{color:#C792EA}
+.tok-str{color:#7FD9A6}
+.tok-com{color:#5E5580;font-style:italic}
+.tok-fn{color:#82AAFF}
+.tok-num{color:#F78C6C}
+.tok-op{color:#89DDFF}
+
+/* ===== TERMINAL ===== */
+.term{background:#08060F;border:1px solid var(--borde);border-radius:12px;overflow:hidden;margin:18px 0}
+.term-head{background:var(--bg-2);padding:8px 14px;display:flex;gap:6px;align-items:center}
+.term-head .tdot{width:11px;height:11px;border-radius:50%}
+.term-head .tdot.r{background:#FF5F56}.term-head .tdot.y{background:#FFBD2E}.term-head .tdot.g{background:#27C93F}
+.term-head span{margin-left:8px;font-size:11px;color:var(--texto-3);font-family:'JetBrains Mono',monospace}
+.term pre{background:transparent;user-select:text}
+.term pre code{color:#B4A9D4}
+.term .prompt-sym{color:var(--verde)}
+
+/* ===== REFLEXIÓN (colapsable) ===== */
+.reflex{
+  background:linear-gradient(135deg,rgba(96,24,240,.1),rgba(60,24,132,.06));
+  border:1px solid var(--borde-fuerte);border-radius:14px;
+  padding:20px 22px;margin:20px 0;
+}
+.reflex-q{display:flex;gap:12px;align-items:flex-start}
+.reflex-q .q-ic{
+  font-size:18px;flex-shrink:0;width:32px;height:32px;border-radius:9px;
+  background:var(--bg-3);display:flex;align-items:center;justify-content:center;
+}
+.reflex-q .q-txt{font-size:15.5px;font-weight:600;color:var(--texto);padding-top:3px}
+.reflex-toggle{
+  margin-top:16px;background:var(--bg-2);border:1px solid var(--borde-fuerte);
+  color:var(--acento-claro);font-family:inherit;font-size:13px;font-weight:600;
+  padding:9px 16px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  transition:all .15s;
+}
+.reflex-toggle:hover{background:var(--bg-3)}
+.reflex-toggle .arr{transition:transform .25s}
+.reflex-toggle.open .arr{transform:rotate(180deg)}
+.reflex-answer{
+  max-height:0;overflow:hidden;transition:max-height .4s ease,margin .3s,padding .3s;
+}
+.reflex-answer.open{max-height:600px;margin-top:16px}
+.reflex-answer .inner{
+  background:var(--bg-1);border-left:3px solid var(--verde);
+  border-radius:0 10px 10px 0;padding:16px 20px;
+}
+.reflex-answer .inner p{font-size:14px;color:var(--texto-2);margin:0}
+.reflex-answer .inner strong{color:var(--verde)}
+
+/* ===== FILE TREE ===== */
+.tree{background:var(--bg-2);border:1px solid var(--borde);border-radius:12px;padding:18px 22px;margin:18px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9}
+.tree .t-folder{color:var(--acento-claro)}
+.tree .t-file{color:var(--texto)}
+.tree .t-note{color:var(--texto-3)}
+
+/* ===== LIST ===== */
+.ilist{list-style:none;margin:14px 0}
+.ilist li{display:flex;gap:12px;align-items:flex-start;margin-bottom:11px;color:var(--texto-2);font-size:14.5px}
+.ilist li .li-ic{color:var(--acento-claro);flex-shrink:0;font-size:15px;margin-top:2px}
+
+/* ===== AVISO COPYRIGHT ===== */
+.aviso{
+  background:var(--bg-1);border:1px solid var(--borde);
+  border-left:4px solid var(--dev-vibrante);border-radius:0 12px 12px 0;
+  padding:18px 22px;margin-bottom:28px;
+}
+.aviso .a-title{
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
+  letter-spacing:1.5px;color:var(--acento-claro);
+  display:flex;align-items:center;gap:9px;margin-bottom:9px;
+}
+.aviso p{font-size:12.5px;color:var(--texto-3);margin:0;line-height:1.6}
+.aviso strong{color:var(--texto-2)}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--borde);margin-top:50px;padding-top:24px;
+  font-size:12px;color:var(--texto-3);text-align:center;line-height:1.8;
+}
+.footer a{color:var(--acento-claro);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* ===== NAV BOTONES INFERIOR ===== */
+.sec-nav{display:flex;justify-content:space-between;gap:14px;margin-top:36px}
+.sec-nav button{
+  background:var(--bg-1);border:1px solid var(--borde-fuerte);color:var(--texto);
+  font-family:inherit;font-size:13.5px;font-weight:600;padding:12px 20px;
+  border-radius:11px;cursor:pointer;transition:all .18s;flex:1;
+  display:flex;align-items:center;gap:9px;justify-content:center;
+}
+.sec-nav button:hover:not(:disabled){background:var(--bg-3);border-color:var(--dev-vibrante)}
+.sec-nav button:disabled{opacity:.3;cursor:not-allowed}
+.sec-nav button.next{background:linear-gradient(135deg,var(--dev-vibrante),var(--dev-principal));border-color:transparent}
+
+/* ===== WATERMARK ===== */
+.watermark{
+  position:fixed;bottom:14px;right:16px;z-index:30;
+  font-size:11px;color:var(--texto-3);opacity:.4;
+  font-family:'JetBrains Mono',monospace;pointer-events:none;
+}
+
+/* ===== PRESENT MODE ===== */
+body.present .sidebar,body.present .topbar,body.present .sec-nav,body.present .watermark{display:none}
+body.present .main{margin-left:0}
+body.present .content{max-width:1100px;margin:0 auto;padding:60px 60px 80px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+body.present .hero h1{font-size:46px}
+body.present .section{font-size:1.06em}
+.present-hud{
+  display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:60;background:var(--bg-2);border:1px solid var(--borde-fuerte);
+  border-radius:99px;padding:9px 18px;align-items:center;gap:16px;
+  font-size:12.5px;color:var(--texto-2);box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+body.present .present-hud{display:flex}
+.present-hud kbd{background:var(--bg-3);border:1px solid var(--borde-fuerte);border-radius:6px;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.present-hud .pcount{color:var(--acento-claro);font-weight:700}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:920px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .menu-toggle{display:flex;align-items:center;justify-content:center}
+  .content{padding:28px 20px 80px}
+  .topbar{padding:12px 20px}
+  .hero{padding:30px 24px}
+  .hero h1{font-size:28px}
+  .def{grid-template-columns:1fr}
+  .tern-grid{grid-template-columns:1fr !important}
+  .watermark{display:none}
+  .progress-wrap{max-width:none}
+  .btn-present{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">d</div>
+      <div class="brand-txt">
+        <strong>Dev Senior</strong>
+        <span>AI Backend Developer</span>
+      </div>
+    </div>
+    <div class="sidebar-eyebrow">Módulo 1 · Clase 4</div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="progress-wrap">
+        <div class="progress-label" id="progressLabel">Sección 1 de 10</div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <button class="btn-present" id="btnPresent">▶ Modo presentación</button>
+    </div>
+
+    <div class="content" id="content"><!-- secciones inyectadas --></div>
+  </div>
+</div>
+
+<div class="watermark">© 2026 Ana Alvarado</div>
+<div class="present-hud">
+  <span><span class="pcount" id="hudCount">1 / 10</span></span>
+  <span><kbd>←</kbd> <kbd>→</kbd> navegar</span>
+  <span><kbd>Esc</kbd> salir</span>
+</div>
+
+<script>
+/* ============================================================
+   © 2026 Ana Alvarado — Material de autoría exclusiva.
+   ============================================================ */
+
+const SECCIONES = [
+  {
+    id:"intro", icon:"🎯", num:"Bienvenida", titulo:"Tu primera app real",
+    html:`
+      <div class="hero">
+        <span class="hero-eyebrow">⚡ Proyecto integrador</span>
+        <h1>Construye un <span class="accent">Gestor de Tareas</span> por consola</h1>
+        <p>Hoy juntas todo lo que aprendiste en el módulo —variables, condicionales, funciones— y lo conviertes en una aplicación de línea de comandos que funciona de verdad. En el camino aparecen tres piezas nuevas, cada una porque el proyecto te la pide.</p>
+        <div class="hero-meta">
+          <span class="chip">📥 <b>Entrada por teclado</b></span>
+          <span class="chip">🔁 <b>Ciclo while</b></span>
+          <span class="chip">🔀 <b>switch</b></span>
+          <span class="chip">🧩 <b>Modularización</b></span>
+        </div>
+      </div>
+
+      <div class="aviso">
+        <div class="a-title">© AVISO DE DERECHOS DE AUTOR</div>
+        <p>Este material es de autoría exclusiva de <strong>Ana Alvarado</strong> y su acceso está limitado a las y los estudiantes de esta cohorte. Queda <strong>prohibida su reproducción, redistribución o uso fuera de clase</strong> sin autorización escrita de la autora.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot"></span>El problema que vamos a resolver</h3>
+        <p>Un equipo pequeño lleva sus pendientes en un chat de WhatsApp. Cada quien escribe "ya hice tal cosa", otro pregunta "¿qué falta?", y al final del día nadie sabe con certeza qué está pendiente ni qué es urgente.</p>
+      </div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">¿Qué necesitaría un programa para reemplazar ese caos del chat?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>El programa necesita <strong>guardar</strong> tareas (una lista en memoria), <strong>mostrarlas</strong> cuando se pidan, permitir <strong>marcarlas como hechas</strong>, <strong>eliminarlas</strong>, y sobre todo <strong>seguir funcionando</strong> después de cada acción para no reiniciarlo cada vez. Esas cinco necesidades son justo lo que construyes hoy: cada una te va a pedir una herramienta nueva.</p>
+        </div></div>
+      </div>
+
+      <div class="banner tip">
+        <span class="b-ic">🔗</span>
+        <p>Ya sabes declarar variables (<code>let</code>, <code>const</code>), usar tipos, operadores, condicionales y crear <strong>funciones con parámetros y retorno</strong>. En la Clase 3 modelaste una tarea con tres propiedades: <code>titulo</code>, <code>prioridad</code> y <code>completada</code>. Hoy esa tarea deja de ser un ejemplo suelto y se vuelve el corazón de un sistema real.</p>
+      </div>
+    `
+  },
+  {
+    id:"input", icon:"📥", num:"Momento 1", titulo:"El primer input por teclado",
+    html:`
+      <p class="sec-sub">Hasta ahora tus programas eran mudos: los valores los escribías tú en el código. Un gestor de tareas de verdad debe <strong>preguntarle al usuario</strong>. Para leer lo que la persona escribe en la terminal usamos una herramienta externa: el paquete <code>prompt-sync</code>.</p>
+
+      <div class="card">
+        <h3><span class="dot"></span>Paso 1 · La cédula del proyecto</h3>
+        <p>Todo proyecto profesional necesita una "cédula de identidad": el archivo <code>package.json</code>. Se crea con un comando dentro de la carpeta del proyecto.</p>
+      </div>
+
+      <div class="term">
+        <div class="term-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span><span>terminal</span></div>
+        <pre><code><span class="prompt-sym">$</span> npm init -y</code></pre>
+      </div>
+      <div class="banner tip"><span class="b-ic">📄</span><p>Aparece un archivo nuevo, <code>package.json</code>. Ese archivo va a recordar qué herramientas usa tu proyecto.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>Paso 2 · Instalar la herramienta de teclado</h3>
+        <p>Ahora descargamos <code>prompt-sync</code>, la herramienta que nos deja leer lo que el usuario escribe.</p>
+      </div>
+
+      <div class="term">
+        <div class="term-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span><span>terminal</span></div>
+        <pre><code><span class="prompt-sym">$</span> npm install prompt-sync</code></pre>
+      </div>
+      <div class="banner tip"><span class="b-ic">📦</span><p>Aparecen dos cosas: una carpeta <code>node_modules</code> (la herramienta descargada) y una línea nueva en <code>package.json</code>. Así se agregan herramientas a un proyecto.</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">¿Por qué el proyecto necesita recordar en <code>package.json</code> qué instalamos, si la herramienta ya está en <code>node_modules</code>?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Porque <code>node_modules</code> <strong>no se comparte</strong>: es muy pesada y se puede reconstruir. Cuando otra persona descargue tu proyecto, <code>package.json</code> le dice exactamente qué instalar con un solo <code>npm install</code>. Es la <strong>receta</strong>, no los ingredientes ya comprados.</p>
+        </div></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot"></span>Paso 3 · Tu primer programa que pregunta</h3>
+        <p>Crea un archivo nuevo llamado <code>app.js</code> en la raíz del proyecto y escribe esto:</p>
+      </div>
+
+      ${code("app.js","javascript",
+`const prompt = require("prompt-sync")();
+
+const nombre = prompt("¿Cómo te llamas? ");
+console.log("Hola, " + nombre + ". Bienvenido a tu gestor de tareas.");`)}
+
+      <div class="banner tip"><span class="b-ic">🔍</span><p>Fíjate en los <strong>dos</strong> pares de paréntesis en <code>require("prompt-sync")()</code>. El primero trae la herramienta; el segundo <code>()</code> la <strong>activa</strong> para poder usarla. Si olvidas el segundo, aparece el error <code>prompt is not a function</code>.</p></div>
+
+      <div class="term">
+        <div class="term-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span><span>terminal</span></div>
+        <pre><code><span class="prompt-sym">$</span> node app.js</code></pre>
+      </div>
+      <div class="banner tip"><span class="b-ic">💡</span><p>El programa se detiene, espera a que escribas, y responde. Esa pausa es la clave: <code>prompt()</code> <strong>retorna</strong> lo que el usuario escribió, igual que cualquier función que ya conoces.</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">El programa saludó una sola vez y terminó. Si quisieras que preguntara varias cosas seguidas, ¿qué problema tienes ahora mismo?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>El programa se ejecuta <strong>de arriba a abajo una sola vez</strong> y termina. Para un gestor de tareas necesitas que se quede abierto y te deje hacer muchas acciones. Eso te lleva a la siguiente herramienta.</p>
+        </div></div>
+      </div>
+    `
+  },
+  {
+    id:"while", icon:"🔁", num:"Momento 2", titulo:"Conociendo el ciclo while",
+    html:`
+      <p class="sec-sub">Es la primera vez que vemos <code>while</code>, así que vamos con calma y <strong>fuera del gestor de tareas</strong> primero. Un ciclo sirve para <strong>repetir</strong> un bloque de código sin copiarlo y pegarlo muchas veces. Piensa en subir una escalera: <strong>mientras</strong> queden escalones, das un paso más; cuando se acaban, dejas de subir.</p>
+
+      <div class="card">
+        <h3><span class="dot"></span>La sintaxis del while</h3>
+        <p>Un <code>while</code> tiene tres partes. Las nombramos antes de escribirlo para que no sea magia.</p>
+      </div>
+
+      ${code("estructura general","text",
+`while (condición) {
+  // bloque que se repite mientras la condición sea verdadera
+}`)}
+
+      <ul class="ilist">
+        <li><span class="li-ic">▹</span> <strong>Condición:</strong> una pregunta que se responde verdadero o falso. Se revisa <em>antes</em> de cada vuelta.</li>
+        <li><span class="li-ic">▹</span> <strong>Bloque:</strong> lo que se repite.</li>
+        <li><span class="li-ic">▹</span> <strong>Cambio:</strong> dentro del bloque algo debe <em>cambiar</em>, para que la condición algún día sea falsa y el ciclo termine.</li>
+      </ul>
+
+      <div class="card">
+        <h3><span class="dot"></span>Ejemplo básico · un contador del 1 al 5</h3>
+        <p>Escribimos un ciclo sencillo que imprime del 1 al 5. Este ejemplo <strong>no</strong> es del gestor: es solo para entender el <code>while</code> en su forma más común.</p>
+      </div>
+
+      ${code("demo-while.js  ·  archivo temporal para practicar","javascript",
+`let numero = 1;
+
+while (numero <= 5) {
+  console.log("Número: " + numero);
+  numero = numero + 1;
+}
+
+console.log("El ciclo terminó.");`)}
+
+      <div class="banner tip"><span class="b-ic">🔢</span><p><code>numero</code> empieza en 1. El <code>while</code> pregunta: ¿<code>numero &lt;= 5</code>? Sí → imprime y suma 1. Cuando llega a 6, la condición es falsa y el ciclo se detiene. La línea <code>numero = numero + 1</code> es el <strong>cambio</strong>: sin ella, el ciclo no terminaría nunca.</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">¿Qué pasaría si borramos la línea <code>numero = numero + 1</code>?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>El ciclo se volvería <strong>infinito</strong>: <code>numero</code> quedaría en 1 para siempre, la condición nunca sería falsa, y el programa imprimiría "Número: 1" sin parar. Todo <code>while</code> necesita que algo cambie adentro para poder terminar.</p>
+        </div></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot"></span>El caso especial · while (true)</h3>
+        <p>A veces <strong>no sabemos</strong> cuántas vueltas necesitamos. En un gestor de tareas, el usuario puede hacer 3 acciones o 300; no lo sabemos de antemano. Para esos casos existe un patrón especial: <code>while (true)</code>.</p>
+        <p><code>true</code> significa "siempre verdadero", así que repetiría para siempre... salvo que le demos una puerta de salida con la palabra <code>break</code>.</p>
+      </div>
+
+      ${code("ejemplo del patrón (todavía fuera del gestor)","javascript",
+`const prompt = require("prompt-sync")();
+
+while (true) {
+  const texto = prompt("Escribe algo (o 'salir'): ");
+
+  if (texto === "salir") {
+    console.log("Programa terminado.");
+    break;
+  }
+
+  console.log("Escribiste: " + texto);
+}`)}
+
+      <div class="banner tip"><span class="b-ic">🚪</span><p>La palabra <code>break</code> <strong>rompe</strong> el ciclo y saca al programa del <code>while</code>. Es la puerta de salida. Sin ella, <code>while (true)</code> no terminaría nunca.</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">Entonces, ¿el <code>while (true)</code> es un error porque es infinito?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>No. <code>while (true)</code> es <strong>válido y muy útil</strong> cuando no sabemos cuántas vueltas necesitamos, <strong>siempre que tenga un <code>break</code></strong> con una condición clara de salida. Lo peligroso es un ciclo sin salida, no la palabra <code>true</code>. Los dos estilos conviven: <code>while (condición)</code> cuando sabemos cuándo parar, <code>while (true) + break</code> cuando la salida depende del usuario.</p>
+        </div></div>
+      </div>
+    `
+  },
+  {
+    id:"switch", icon:"🔀", num:"Momento 3", titulo:"Nace el switch (el menú)",
+    html:`
+      <p class="sec-sub">Ahora el usuario no escribirá texto libre: escogerá una <strong>opción de un menú</strong> (1, 2, 3...). Podríamos usar muchos <code>if / else if</code> encadenados, pero se vuelven difíciles de leer. Para elegir entre varios caminos según un valor existe una estructura más limpia: <code>switch</code>.</p>
+
+      <div class="def">
+        <div class="def-box tec"><div class="lbl">Definición técnica</div><p><code>switch</code> compara un valor contra varios <code>case</code> y ejecuta el que coincida.</p></div>
+        <div class="def-box real"><div class="lbl">En la vida real</div><p>Un ascensor: según el botón que oprimas (piso 1, 2, 3), va a un destino distinto.</p></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot"></span>El menú con switch</h3>
+        <p>Volvemos al gestor. Mostramos un menú, leemos la opción, y con <code>switch</code> decidimos qué hacer. Cada <code>case</code> termina en <code>break</code> para no "caer" al siguiente. El <code>default</code> atrapa opciones inválidas.</p>
+      </div>
+
+      ${code("app.js  ·  reemplazar el contenido de prueba anterior","javascript",
+`const prompt = require("prompt-sync")();
+
+while (true) {
+  console.log("\\n--- GESTOR DE TAREAS ---");
+  console.log("1. Agregar tarea");
+  console.log("2. Listar tareas");
+  console.log("3. Completar tarea");
+  console.log("4. Eliminar tarea");
+  console.log("5. Salir");
+
+  const opcion = prompt("Elige una opción: ");
+
+  switch (opcion) {
+    case "1":
+      console.log("Elegiste: Agregar");
+      break;
+    case "2":
+      console.log("Elegiste: Listar");
+      break;
+    case "5":
+      console.log("Hasta luego.");
+      break;
+    default:
+      console.log("Opción no válida.");
+  }
+
+  if (opcion === "5") break;
+}`)}
+
+      <div class="banner warn"><span class="b-ic">⚠️</span><p>El <code>default</code> maneja los <strong>errores lógicos</strong>: si el usuario escribe "9", en vez de dejar el programa confundido, respondemos con elegancia "Opción no válida".</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">¿Qué pasaría si a un <code>case</code> le quitamos el <code>break</code>?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Sin <code>break</code>, el programa <strong>sigue ejecutando los siguientes <code>case</code></strong> aunque no coincidan (efecto cascada o <em>fall-through</em>). Es un error lógico clásico: el menú haría cosas de más. El <code>break</code> es obligatorio para aislar cada opción.</p>
+        </div></div>
+      </div>
+    `
+  },
+  {
+    id:"operaciones", icon:"⚙️", num:"Momento 4", titulo:"Las cuatro operaciones reales",
+    html:`
+      <p class="sec-sub">Ya tienes el esqueleto. Ahora le das vida real: un <strong>array</strong> que guarda las tareas y la lógica de cada operación. Un array es una lista ordenada de elementos —como una libreta donde cada renglón es una tarea.</p>
+
+      <div class="card">
+        <h3><span class="dot"></span>La estructura de datos</h3>
+        <p>Declaramos el array <strong>antes</strong> del <code>while</code>, para que las tareas sobrevivan entre vueltas del ciclo. Si lo declaráramos dentro, se borraría en cada repetición: aquí aplica el <strong>alcance de variables</strong> de la Clase 3.</p>
+      </div>
+
+      ${code("app.js  ·  al inicio, antes del while","javascript",
+`const prompt = require("prompt-sync")();
+const tareas = [];`)}
+
+      <div class="card">
+        <h3><span class="dot"></span>➕ Operación 1 · Agregar</h3>
+        <p>Pedimos el título, validamos que no esté vacío, y guardamos un objeto con las tres propiedades del módulo: <code>titulo</code>, <code>prioridad</code>, <code>completada</code>.</p>
+      </div>
+
+      ${code('app.js  ·  dentro del case "1"',"javascript",
+`case "1": {
+  const titulo = prompt("Título de la tarea: ");
+
+  if (titulo.trim() === "") {
+    console.log("El título no puede estar vacío.");
+    break;
+  }
+
+  const prioridad = prompt("Prioridad (alta/media/baja): ");
+  tareas.push({ titulo: titulo, prioridad: prioridad, completada: false });
+  console.log("Tarea agregada.");
+  break;
+}`)}
+
+      <div class="banner tip"><span class="b-ic">🧽</span><p><strong><code>.trim()</code></strong> es un método de los textos que <strong>quita los espacios en blanco</strong> del inicio y del final. Si el usuario solo presiona la barra espaciadora y Enter, <code>.trim()</code> limpia esos espacios y así detectamos que el título en realidad está vacío. Es una <strong>validación básica</strong>.</p></div>
+
+      <div class="banner tip"><span class="b-ic">📥</span><p><strong><code>.push()</code></strong> es un método de los arrays que <strong>agrega un elemento al final</strong> de la lista. Aquí metemos un objeto tarea nuevo al array <code>tareas</code>. La lista crece en uno cada vez que lo llamamos.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>📃 Operación 2 · Listar</h3>
+        <p>Recorremos el array con un ciclo <code>for</code> y mostramos cada tarea numerada <strong>desde 1</strong> (más humano), aunque internamente el array empiece en 0.</p>
+      </div>
+
+      ${code('app.js  ·  dentro del case "2"',"javascript",
+`case "2": {
+  if (tareas.length === 0) {
+    console.log("No hay tareas registradas.");
+    break;
+  }
+
+  for (let i = 0; i < tareas.length; i++) {
+    const t = tareas[i];
+    let estado;
+    if (t.completada === true) {
+      estado = "[✓]";
+    } else {
+      estado = "[ ]";
+    }
+    console.log((i + 1) + ". " + estado + " " + t.titulo + " (" + t.prioridad + ")");
+  }
+  break;
+}`)}
+
+      <div class="banner tip"><span class="b-ic">📏</span><p><strong><code>.length</code></strong> es una propiedad de los arrays que dice <strong>cuántos elementos tiene</strong> la lista. Si vale 0, no hay tareas y avisamos. También lo usamos en el <code>for</code> para saber hasta dónde recorrer.</p></div>
+
+      <div class="reflex" style="border-color:#5c451a;background:linear-gradient(135deg,rgba(240,169,74,.08),rgba(240,169,74,.03))">
+        <div class="reflex-q">
+          <div class="q-ic">💡</div>
+          <div class="q-txt">Atajo profesional (opcional): el operador ternario</div>
+        </div>
+        <p style="color:var(--texto-2);font-size:14px;margin:12px 0 0">El <code>if / else</code> de arriba se puede resumir en <strong>una sola línea</strong> con el operador ternario. Hace exactamente lo mismo. Se lee: <code>condición ? valorSiVerdadero : valorSiFalso</code>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px" class="tern-grid">
+          <div>
+            <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--acento-claro);font-weight:700;margin-bottom:6px">Con if / else (lo que conocen)</div>
+            <div class="code-wrap" style="margin:0"><pre style="border-radius:12px"><code><span class="tok-key">let</span> estado;
+<span class="tok-key">if</span> (t.completada === <span class="tok-key">true</span>) {
+  estado = <span class="tok-str">"[✓]"</span>;
+} <span class="tok-key">else</span> {
+  estado = <span class="tok-str">"[ ]"</span>;
+}</code></pre></div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--verde);font-weight:700;margin-bottom:6px">Con ternario (el atajo)</div>
+            <div class="code-wrap" style="margin:0"><pre style="border-radius:12px"><code><span class="tok-key">const</span> estado = t.completada
+  ? <span class="tok-str">"[✓]"</span>
+  : <span class="tok-str">"[ ]"</span>;</code></pre></div>
+          </div>
+        </div>
+        <p style="color:var(--texto-3);font-size:13px;margin:12px 0 0">Ambos dan el mismo resultado. El ternario es más corto, pero solo conviene cuando la decisión es simple. Úsalo cuando te resulte cómodo; mientras tanto, el <code>if / else</code> está perfecto.</p>
+      </div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">El usuario ve la tarea número 1, pero el array la guarda en la posición 0. ¿Qué debes hacer para no confundirte al completar o eliminar?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>El usuario piensa desde 1; el array cuenta desde 0. Conviertes con <code>numero - 1</code>, y <strong>validas</strong> que ese índice exista antes de usarlo. Ignorar esto es un error lógico muy común.</p>
+        </div></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="dot"></span>✅ Operación 3 · Completar</h3>
+        <p>Pedimos el número, lo convertimos a índice, validamos que exista, y cambiamos <code>completada</code> a <code>true</code>.</p>
+      </div>
+
+      ${code('app.js  ·  dentro del case "3"',"javascript",
+`case "3": {
+  const num = Number(prompt("Número de la tarea a completar: "));
+  const indice = num - 1;
+
+  if (indice < 0 || indice >= tareas.length) {
+    console.log("Esa tarea no existe.");
+    break;
+  }
+
+  tareas[indice].completada = true;
+  console.log("Tarea completada.");
+  break;
+}`)}
+
+      <div class="banner tip"><span class="b-ic">🔢</span><p><strong><code>Number()</code></strong> convierte texto en número de verdad. <code>prompt()</code> siempre nos da texto, aunque el usuario escriba un número; <code>Number()</code> lo transforma para poder restar y comparar. Sin convertir, las operaciones darían resultados raros.</p></div>
+
+      <div class="banner warn"><span class="b-ic">⚠️</span><p>La validación <code>if (indice &lt; 0 || indice &gt;= tareas.length)</code> evita buscar una posición inexistente. Sin ella el programa no se rompe, pero produce <code>undefined</code>: otro error lógico silencioso.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>🗑️ Operación 4 · Eliminar</h3>
+        <p>Misma lógica de validación, pero usamos <code>.splice()</code> para quitar el elemento del array.</p>
+      </div>
+
+      ${code('app.js  ·  dentro del case "4"',"javascript",
+`case "4": {
+  const num = Number(prompt("Número de la tarea a eliminar: "));
+  const indice = num - 1;
+
+  if (indice < 0 || indice >= tareas.length) {
+    console.log("Esa tarea no existe.");
+    break;
+  }
+
+  tareas.splice(indice, 1);
+  console.log("Tarea eliminada.");
+  break;
+}`)}
+
+      <div class="banner tip"><span class="b-ic">✂️</span><p><strong><code>.splice()</code></strong> es un método de los arrays que <strong>quita elementos</strong> de una posición. Recibe dos datos: <strong>desde qué posición</strong> empezar y <strong>cuántos</strong> quitar. Así, <code>tareas.splice(indice, 1)</code> significa: "desde esa posición, quita 1 elemento". El array se reordena solo y se hace más corto.</p></div>
+    `
+  },
+  {
+    id:"dolor", icon:"😵", num:"Momento 5", titulo:"El archivo empieza a doler",
+    html:`
+      <p class="sec-sub">Mira tu <code>app.js</code> completo. Ahora mismo un solo archivo tiene: la lógica de las tareas, los mensajes de pantalla, el menú y el control del programa. Todo mezclado.</p>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">Si mañana quisieras cambiar solo cómo se ven los mensajes en pantalla, sin tocar la lógica de las tareas, ¿qué tan fácil sería en este archivo?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Difícil y riesgoso: al buscar los mensajes podrías romper la lógica sin querer. Cuando un archivo hace <strong>demasiadas cosas</strong>, cualquier cambio es peligroso. La solución es <strong>separar responsabilidades</strong>: que cada archivo tenga un solo trabajo.</p>
+        </div></div>
+      </div>
+
+      <div class="banner bridge"><span class="b-ic">🧭</span><p>Esto es el principio de <strong>responsabilidad única</strong>: cada pieza del sistema debe tener una sola razón para cambiar. Lo verás formalizado más adelante en el programa cuando lleguemos a SOLID.</p></div>
+    `
+  },
+  {
+    id:"refactor", icon:"🧩", num:"Momento 6", titulo:"Refactor a tres archivos",
+    html:`
+      <p class="sec-sub">Vamos a partir el monolito en tres archivos, cada uno con una responsabilidad clara. Esto se llama <strong>modularización</strong>. Piensa en un restaurante: la cocina (lógica) no atiende mesas; el mesero (interfaz) no cocina; el gerente (app) coordina a ambos.</p>
+
+      <div class="tree">
+        <div><span class="t-folder">proyecto/</span></div>
+        <div>├── <span class="t-file">tareas.js</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-note">→ la lógica pura (guardar, completar, eliminar)</span></div>
+        <div>├── <span class="t-file">interfaz.js</span>&nbsp;&nbsp;&nbsp;<span class="t-note">→ lo que se imprime en pantalla</span></div>
+        <div>├── <span class="t-file">app.js</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-note">→ coordina todo (el menú, el while, el switch)</span></div>
+        <div>└── <span class="t-file">package.json</span></div>
+      </div>
+
+      <div class="banner tip"><span class="b-ic">🧩</span><p><strong>Antes de escribir · ¿cómo se comunican dos archivos?</strong> Cuando separamos el código, cada archivo queda <strong>aislado</strong>: <code>app.js</code> no puede ver lo que hay dentro de <code>tareas.js</code> a menos que se lo permitamos. Para eso hay dos palabras nuevas que trabajan en pareja: <code>module.exports</code> (el archivo que <strong>entrega</strong> funciones — como poner cosas en una caja) y <code>require("./archivo")</code> (el archivo que <strong>recibe</strong> — abrir esa caja). Sin <code>module.exports</code>, las funciones son privadas.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>📄 tareas.js · la lógica pura</h3>
+        <p>Este archivo <strong>no sabe</strong> qué es la consola ni el teclado. Solo recibe datos y retorna datos. Al final, <code>module.exports</code> <strong>entrega</strong> las tres funciones para que otros archivos las usen.</p>
+      </div>
+
+      ${code("tareas.js  ·  crear nuevo","javascript",
+`function agregarTarea(lista, titulo, prioridad) {
+  lista.push({ titulo: titulo, prioridad: prioridad, completada: false });
+}
+
+function completarTarea(lista, indice) {
+  if (indice < 0 || indice >= lista.length) return false;
+  lista[indice].completada = true;
+  return true;
+}
+
+function eliminarTarea(lista, indice) {
+  if (indice < 0 || indice >= lista.length) return false;
+  lista.splice(indice, 1);
+  return true;
+}
+
+module.exports = { agregarTarea, completarTarea, eliminarTarea };`)}
+
+      <div class="banner tip"><span class="b-ic">📦</span><p><strong><code>module.exports = { ... }</code></strong> es la "caja de salida". Dentro de las llaves ponemos los nombres de las funciones que queremos <strong>compartir</strong>: <code>agregarTarea</code>, <code>completarTarea</code> y <code>eliminarTarea</code>. Cualquier cosa que <strong>no</strong> esté en esa caja se queda privada dentro de <code>tareas.js</code>.</p></div>
+
+      <div class="banner tip"><span class="b-ic">🔁</span><p>Las funciones ya no imprimen nada: <strong>retornan</strong> si la operación salió bien (<code>true</code> / <code>false</code>). Quién decide qué mensaje mostrar es la interfaz, no la lógica. Esa es la separación.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>📄 interfaz.js · lo visual</h3>
+        <p>Este archivo <strong>solo se encarga de mostrar</strong>. No toca la lógica. Reúne el menú y el formato de las tareas, y también <strong>exporta</strong> sus funciones al final.</p>
+      </div>
+
+      ${code("interfaz.js  ·  crear nuevo","javascript",
+`function mostrarMenu() {
+  console.log("\\n--- GESTOR DE TAREAS ---");
+  console.log("1. Agregar tarea");
+  console.log("2. Listar tareas");
+  console.log("3. Completar tarea");
+  console.log("4. Eliminar tarea");
+  console.log("5. Salir");
+}
+
+function mostrarTareas(lista) {
+  if (lista.length === 0) {
+    console.log("No hay tareas registradas.");
+    return;
+  }
+  for (let i = 0; i < lista.length; i++) {
+    const t = lista[i];
+    let estado;
+    if (t.completada === true) {
+      estado = "[✓]";
+    } else {
+      estado = "[ ]";
+    }
+    console.log((i + 1) + ". " + estado + " " + t.titulo + " (" + t.prioridad + ")");
+  }
+}
+
+module.exports = { mostrarMenu, mostrarTareas };`)}
+
+      <div class="banner tip"><span class="b-ic">📦</span><p>Igual que en <code>tareas.js</code>, la caja <code>module.exports</code> entrega <code>mostrarMenu</code> y <code>mostrarTareas</code>. Ahora <code>app.js</code> podrá pedirlas.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>📄 app.js · el coordinador</h3>
+        <p>Ahora <code>app.js</code> queda limpio: <strong>recibe</strong> las dos piezas con <code>require</code>, lee el teclado, y <strong>conecta</strong> la interfaz con la lógica. Es el director de orquesta.</p>
+      </div>
+
+      ${code("app.js  ·  reemplazar el contenido anterior","javascript",
+`const prompt = require("prompt-sync")();
+const tareas = require("./tareas.js");
+const interfaz = require("./interfaz.js");
+
+const lista = [];
+
+while (true) {
+  interfaz.mostrarMenu();
+  const opcion = prompt("Elige una opción: ");
+
+  switch (opcion) {
+    case "1": {
+      const titulo = prompt("Título: ");
+      if (titulo.trim() === "") {
+        console.log("El título no puede estar vacío.");
+        break;
+      }
+      const prioridad = prompt("Prioridad (alta/media/baja): ");
+      tareas.agregarTarea(lista, titulo, prioridad);
+      console.log("Tarea agregada.");
+      break;
+    }
+    case "2":
+      interfaz.mostrarTareas(lista);
+      break;
+    case "3": {
+      const num = Number(prompt("Número a completar: "));
+      const completada = tareas.completarTarea(lista, num - 1);
+      if (completada === true) {
+        console.log("Tarea completada.");
+      } else {
+        console.log("Esa tarea no existe.");
+      }
+      break;
+    }
+    case "4": {
+      const num = Number(prompt("Número a eliminar: "));
+      const eliminada = tareas.eliminarTarea(lista, num - 1);
+      if (eliminada === true) {
+        console.log("Tarea eliminada.");
+      } else {
+        console.log("Esa tarea no existe.");
+      }
+      break;
+    }
+    case "5":
+      console.log("Hasta luego.");
+      break;
+    default:
+      console.log("Opción no válida.");
+  }
+
+  if (opcion === "5") break;
+}`)}
+
+      <div class="banner tip"><span class="b-ic">📎</span><p>El <code>./</code> en <code>require("./tareas.js")</code> indica "un archivo de mi propia carpeta". Así <strong>recibimos</strong> las funciones que el otro archivo exportó. Node conecta los tres archivos en uno solo al ejecutar.</p></div>
+
+      <div class="banner tip"><span class="b-ic">🎯</span><p>Como guardamos lo recibido en la variable <code>tareas</code>, para usar una función escribimos <code>tareas.</code> y el nombre. Es como decir "de la caja que me dio <code>tareas.js</code>, usa esta función".</p></div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">Ahora que están separados, ¿en cuál archivo cambiarías el texto de los mensajes? ¿Y en cuál cambiarías cómo se guarda una tarea?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Los mensajes viven en <code>interfaz.js</code>; la forma de guardar vive en <code>tareas.js</code>. Cada cambio tiene <strong>un solo lugar</strong> donde hacerse, sin tocar lo demás. Eso es lo que ganas con la separación de responsabilidades.</p>
+        </div></div>
+      </div>
+    `
+  },
+  {
+    id:"mejora", icon:"🔎", num:"Momento 7", titulo:"Una mejora que nace de un descubrimiento",
+    html:`
+      <p class="sec-sub">Antes de pulir con IA, probemos algo en vivo. Corre el programa y, en el menú, para salir escribe <strong><code>SALIR</code></strong> en mayúsculas (o <code>Salir</code>). Observa qué pasa.</p>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">Escribí <code>SALIR</code> para salir... y el programa no salió, me mostró "Opción no válida". ¿Por qué, si sí escribí salir?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>No es un error, es que la computadora es <strong>literal</strong>: para ella <code>"SALIR"</code>, <code>"Salir"</code> y <code>"salir"</code> son <strong>tres cosas distintas</strong>. Descubriste una debilidad real, y ahora la mejoramos.</p>
+        </div></div>
+      </div>
+
+      <div class="banner tip"><span class="b-ic">🔡</span><p><strong><code>.toLowerCase()</code></strong> es un método de los textos que <strong>convierte todo a minúsculas</strong>. Si tomamos lo que el usuario escribe y lo pasamos a minúsculas antes de compararlo, entonces <code>SALIR</code>, <code>Salir</code> y <code>salir</code> se vuelven todos <code>"salir"</code>, y el programa los entiende igual.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>La mejora</h3>
+        <p>Imagina que en vez del menú numérico dejáramos escribir la palabra de la acción. Con <code>.toLowerCase()</code> toleramos mayúsculas y minúsculas. Este es el patrón que usarías si el menú fuera por palabras:</p>
+      </div>
+
+      ${code("app.js  ·  la mejora","javascript",
+`const opcion = prompt("Elige una opción: ").toLowerCase();
+
+if (opcion === "salir") {
+  console.log("Hasta luego.");
+  break;
+}`)}
+
+      <div class="banner bridge"><span class="b-ic">🛠️</span><p>Primero lo viste fallar, luego lo mejoraste. Así trabaja un desarrollador: no adivina de una, prueba, descubre el problema y ajusta.</p></div>
+    `
+  },
+  {
+    id:"cursor", icon:"🤖", num:"Copiloto", titulo:"Cursor AI: copiloto, no piloto",
+    html:`
+      <p class="sec-sub">Ahora que <strong>tú</strong> entiendes el código, puedes usar Cursor para mejorarlo. La regla de oro del programa: Cursor es <strong>copiloto, no piloto</strong>. Nunca aceptes lo que no entiendes.</p>
+
+      <div class="card">
+        <h3><span class="dot"></span>Ejercicio guiado</h3>
+        <p>Selecciona la función <code>mostrarTareas</code> y pídele a Cursor:</p>
+        <div class="banner tip" style="margin-top:6px"><span class="b-ic">💬</span><p><em>"Refactoriza esta función para que las tareas completadas aparezcan al final de la lista."</em></p></div>
+      </div>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">💭</div>
+          <div class="q-txt">Cursor te devuelve código. ¿Qué haces ANTES de aceptarlo?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Primero <strong>leerlo y entenderlo</strong>: ¿hace lo que pediste?, ¿respeta tu separación (no mete lógica en la interfaz)?, ¿introduce algo que no reconoces? Solo si lo entiendes y lo pruebas, lo aceptas. Cursor acelera, pero la decisión es tuya.</p>
+        </div></div>
+      </div>
+    `
+  },
+  {
+    id:"github", icon:"🚀", num:"Publicación", titulo:"Subir a GitHub",
+    html:`
+      <p class="sec-sub">Antes de subir, hay que decirle a Git qué <strong>no</strong> subir. La carpeta <code>node_modules</code> es enorme y reconstruible, así que la ignoramos.</p>
+
+      <div class="card">
+        <h3><span class="dot"></span>El archivo .gitignore</h3>
+        <p>Crea un archivo nuevo llamado <code>.gitignore</code> en la raíz del proyecto con una sola línea:</p>
+      </div>
+
+      ${code(".gitignore  ·  crear nuevo","text",`node_modules/`)}
+
+      <div class="banner tip"><span class="b-ic">🔄</span><p>Con esto Git ignora <code>node_modules</code>. Cuando alguien clone tu proyecto, solo corre <code>npm install</code> y la reconstruye desde <code>package.json</code>. Volvemos al concepto del Momento 1: la receta, no los ingredientes.</p></div>
+
+      <div class="card">
+        <h3><span class="dot"></span>Comandos de publicación</h3>
+        <p>Son los mismos comandos de la Clase 1. Ahora tienes un proyecto real para tu portafolio.</p>
+      </div>
+
+      <div class="term">
+        <div class="term-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span><span>terminal</span></div>
+        <pre><code><span class="prompt-sym">$</span> git init
+<span class="prompt-sym">$</span> git add .
+<span class="prompt-sym">$</span> git commit -m "Gestor de tareas CLI - Modulo 1"
+<span class="prompt-sym">$</span> git branch -M main
+<span class="prompt-sym">$</span> git remote add origin URL_DEL_REPOSITORIO
+<span class="prompt-sym">$</span> git push -u origin main</code></pre>
+      </div>
+    `
+  },
+  {
+    id:"puente", icon:"🌉", num:"Hacia el Módulo 2", titulo:"¿Y si respondiera por internet?",
+    html:`
+      <p class="sec-sub">Cerramos mirando hacia adelante. Hoy tu gestor responde en la <strong>consola</strong>, aquí en tu máquina. Pero piensa un momento...</p>
+
+      <div class="reflex">
+        <div class="reflex-q">
+          <div class="q-ic">🌍</div>
+          <div class="q-txt">Este mismo gestor —agregar, listar, completar, eliminar— ¿cómo se vería si, en vez de responder en la consola, respondiera por internet a cualquier persona del mundo?</div>
+        </div>
+        <button class="reflex-toggle" onclick="toggleReflex(this)">Ver explicación <span class="arr">▾</span></button>
+        <div class="reflex-answer"><div class="inner">
+          <p>Necesitarías un <strong>backend</strong>: un programa que escuche peticiones por internet y responda. Tus cuatro operaciones se convertirían en una <strong>API REST</strong> (agregar → crear, listar → leer, completar → actualizar, eliminar → borrar: el famoso <strong>CRUD</strong>). Y tu separación en archivos se volvería la arquitectura profesional que usarás con <strong>Node.js y NestJS</strong>.</p>
+        </div></div>
+      </div>
+
+      <div class="banner bridge"><span class="b-ic">💡</span><p>Lo que hoy hiciste con <code>console.log</code>, en el Módulo 2 lo harás <strong>para el mundo entero</strong>.</p></div>
+
+      <div class="card" style="text-align:center;padding:34px">
+        <h3 style="justify-content:center;font-size:20px">🎉 ¡Completaste el Módulo 1!</h3>
+        <p style="max-width:520px;margin:10px auto 0">Consolidaste la base de la programación con JavaScript: variables, condicionales, ciclos, funciones y organización del código. Tienes un proyecto real en GitHub y estás listo para construir backend de verdad.</p>
+      </div>
+    `
+  }
+];
+
+/* ===== helper de bloque de código con highlight ===== */
+function code(file, lang, raw){
+  const esc = raw
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const hl = highlight(esc, lang);
+  const id = "c"+Math.random().toString(36).slice(2,8);
+  return `
+    <div class="code-wrap">
+      <div class="code-head">
+        <span class="code-file"><span class="fdot"></span>${file}</span>
+        <span class="code-lang">${lang}</span>
+        <button class="btn-copy" data-code="${id}" onclick="copyCode(this)">⧉ Copiar</button>
+      </div>
+      <pre><code id="${id}">${hl}</code></pre>
+    </div>`;
+}
+
+/* resaltador ligero para JS / bash / text */
+function highlight(s, lang){
+  if(lang==="text") return s;
+  // comentarios //
+  s = s.replace(/(\/\/[^\n]*)/g,'<span class="tok-com">$1</span>');
+  // strings
+  s = s.replace(/(&quot;[^&]*?&quot;|&#39;[^&]*?&#39;|"[^"]*"|'[^']*')/g,'<span class="tok-str">$1</span>');
+  // keywords
+  s = s.replace(/\b(const|let|var|function|return|if|else|while|switch|case|default|break|true|false|require|module|exports)\b/g,'<span class="tok-key">$1</span>');
+  // funciones conocidas
+  s = s.replace(/\b(console|prompt|push|splice|trim|Number|log)\b/g,'<span class="tok-fn">$1</span>');
+  // números
+  s = s.replace(/\b(\d+)\b/g,'<span class="tok-num">$1</span>');
+  return s;
+}
+
+/* ===== render inicial ===== */
+const content = document.getElementById('content');
+const nav = document.getElementById('nav');
+SECCIONES.forEach((sec,i)=>{
+  const el = document.createElement('section');
+  el.className = 'section'+(i===0?' visible':'');
+  el.id = 'sec-'+sec.id;
+  const head = i===0 ? '' :
+    `<div class="sec-head">
+       <div class="sec-icon">${sec.icon}</div>
+       <div><div class="sec-num">${sec.num}</div><h2>${sec.titulo}</h2></div>
+     </div>`;
+  el.innerHTML = head + sec.html + navButtons(i);
+  content.appendChild(el);
+
+  const a = document.createElement('a');
+  a.dataset.idx = i;
+  a.innerHTML = `<span class="ic">${sec.icon}</span> ${sec.titulo}`;
+  a.onclick = ()=>goTo(i);
+  if(i===0) a.classList.add('active');
+  nav.appendChild(a);
+});
+
+function navButtons(i){
+  const prev = i>0 ? `<button onclick="goTo(${i-1})">← Anterior</button>` : `<button disabled>← Anterior</button>`;
+  const next = i<SECCIONES.length-1 ? `<button class="next" onclick="goTo(${i+1})">Siguiente →</button>` : `<button class="next" disabled>Fin ✓</button>`;
+  return `<div class="sec-nav">${prev}${next}</div>`;
+}
+
+let actual = 0;
+const vistas = new Set([0]);
+
+function goTo(i){
+  if(i<0||i>=SECCIONES.length) return;
+  document.querySelectorAll('.section')[actual].classList.remove('visible');
+  document.querySelectorAll('.nav a')[actual].classList.remove('active');
+  actual = i;
+  const sec = document.querySelectorAll('.section')[i];
+  sec.classList.add('visible');
+  document.querySelectorAll('.nav a')[i].classList.add('active');
+  vistas.add(i);
+  updateProgress();
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(!document.body.classList.contains('present')) content.scrollTop=0;
+}
+
+function updateProgress(){
+  const pct = Math.round((vistas.size/SECCIONES.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = `Sección ${actual+1} de ${SECCIONES.length}`;
+  document.getElementById('hudCount').textContent = `${actual+1} / ${SECCIONES.length}`;
+  document.querySelectorAll('.nav a').forEach((a,idx)=>{
+    a.classList.toggle('done', vistas.has(idx) && idx!==actual);
+  });
+}
+updateProgress();
+
+/* ===== reflexión colapsable ===== */
+function toggleReflex(btn){
+  btn.classList.toggle('open');
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('open');
+  btn.querySelector('.arr').textContent = ans.classList.contains('open') ? '▴' : '▾';
+}
+
+/* ===== copiar código ===== */
+function copyCode(btn){
+  const el = document.getElementById(btn.dataset.code);
+  const txt = el.textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.classList.add('ok');
+    btn.textContent = '✓ Copiado';
+    setTimeout(()=>{btn.classList.remove('ok');btn.innerHTML='⧉ Copiar';},1600);
+  });
+}
+
+/* ===== modo presentación ===== */
+const btnPresent = document.getElementById('btnPresent');
+btnPresent.onclick = ()=>{
+  document.body.classList.add('present');
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+};
+function exitPresent(){
+  document.body.classList.remove('present');
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+
+document.addEventListener('keydown',(e)=>{
+  const present = document.body.classList.contains('present');
+  if(e.key==='ArrowRight'||(present&&e.key===' ')){ e.preventDefault(); goTo(actual+1); }
+  else if(e.key==='ArrowLeft'){ goTo(actual-1); }
+  else if(e.key==='Escape'&&present){ exitPresent(); }
+  else if(e.key==='p'||e.key==='P'){
+    if(!present){ btnPresent.click(); }
+  }
+});
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement) document.body.classList.remove('present');
+});
+
+/* ===== menú móvil ===== */
+document.getElementById('menuToggle').onclick = ()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+};
+
+/* ===== protección de contenido (disuasión) ===== */
+document.addEventListener('contextmenu',(e)=>{
+  if(!e.target.closest('pre')) e.preventDefault();
+});
+
+/* ===== copyright en consola ===== */
+console.log('%c© 2026 Ana Alvarado','color:#9F7AEA;font-weight:bold;font-size:16px');
+console.log('%cEducadora Tech & Desarrolladora Full Stack — Todos los derechos reservados','color:#B4A9D4');
+console.log('%cEste material es de autoría exclusiva. Prohibida su reproducción o redistribución sin autorización.','color:#7E739E');
+</script>
+
+<!-- FOOTER visible dentro del contenido -->
+<script>
+document.querySelectorAll('.section').forEach(sec=>{
+  const f = document.createElement('div');
+  f.className='footer';
+  f.innerHTML = '© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · <a href="https://linkedin.com/in/ana-alvarado-instructora-full-stack" target="_blank" rel="noopener">linkedin.com/in/ana-alvarado-instructora-full-stack</a>';
+  sec.appendChild(f);
+});
+</script>
+
+</body>
+</html>

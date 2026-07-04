@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 2 · Variables, tipos, operadores y TypeScript · JavaScript AI Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#5418CC;
+  --violet:#6018F0;
+  --violet-soft:#7d4df5;
+  --indigo-deep:#3C1884;
+  --lilac:#b79cf0;
+  --bg:#0c0a17;
+  --bg-2:#13102099;
+  --panel:#171328;
+  --panel-2:#1d1834;
+  --panel-line:#2c2647;
+  --ink:#ece9f7;
+  --ink-2:#b3adcc;
+  --ink-3:#7d769c;
+  --green:#3ddc97;
+  --green-deep:#0f3d2d;
+  --amber:#f0b429;
+  --red:#ff6b6b;
+  --code-bg:#0f0c1d;
+  --radius:16px;
+  --sidebar-w:268px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(900px 500px at 80% -5%, #6018f025, transparent 60%),
+    radial-gradient(700px 600px at 0% 110%, #3c188433, transparent 55%);
+}
+/* node-network constellation */
+.constellation{position:fixed;inset:0;z-index:-1;opacity:.5;pointer-events:none}
+
+/* ============ LAYOUT ============ */
+.app{display:flex;min-height:100vh}
+
+/* ----- sidebar ----- */
+.sidebar{
+  width:var(--sidebar-w);flex:0 0 var(--sidebar-w);
+  position:sticky;top:0;height:100vh;
+  background:linear-gradient(180deg,#15112a,#0f0c1d);
+  border-right:1px solid var(--panel-line);
+  display:flex;flex-direction:column;
+  z-index:50;
+}
+.brand{padding:22px 22px 16px;border-bottom:1px solid var(--panel-line)}
+.brand .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--lilac);font-weight:700}
+.brand h1{font-size:15px;font-weight:800;margin-top:5px;line-height:1.25}
+.brand .sub{font-size:11.5px;color:var(--ink-3);margin-top:6px;font-family:'JetBrains Mono',monospace}
+
+.progress-wrap{padding:14px 22px;border-bottom:1px solid var(--panel-line)}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-bottom:7px;font-family:'JetBrains Mono',monospace}
+.progress-track{height:6px;background:#241d3e;border-radius:99px;overflow:hidden}
+.progress-bar{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--green));transition:width .4s ease}
+
+.nav{flex:1;overflow-y:auto;padding:10px 12px 20px}
+.nav::-webkit-scrollbar{width:6px}
+.nav::-webkit-scrollbar-thumb{background:#2c2647;border-radius:99px}
+.nav a{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 12px;border-radius:10px;
+  color:var(--ink-2);text-decoration:none;font-size:13.5px;font-weight:500;
+  margin-bottom:2px;position:relative;transition:background .15s,color .15s;
+}
+.nav a .ico{font-size:16px;width:20px;text-align:center;flex:0 0 20px}
+.nav a .seen{margin-left:auto;width:7px;height:7px;border-radius:99px;background:transparent;border:1.5px solid #3a3358;flex:0 0 auto}
+.nav a.done .seen{background:var(--green);border-color:var(--green)}
+.nav a:hover{background:#1f1838;color:var(--ink)}
+.nav a.active{background:linear-gradient(90deg,#5418cc33,#6018f01a);color:#fff}
+.nav a.active::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:3px;border-radius:99px;background:var(--violet)}
+
+.present-btn{
+  margin:0 12px 14px;padding:11px;border-radius:11px;border:1px solid var(--panel-line);
+  background:#1a1530;color:var(--ink);font-family:'Inter';font-size:12.5px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s;
+}
+.present-btn:hover{background:var(--indigo);border-color:var(--violet)}
+
+/* ----- main ----- */
+.main{flex:1;min-width:0;padding:0 clamp(20px,5vw,72px)}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:14px;
+  padding:16px 0;margin-bottom:8px;
+  background:linear-gradient(180deg,var(--bg) 70%,transparent);
+  backdrop-filter:blur(2px);
+}
+.menu-toggle{display:none}
+.topbar .crumb{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-3)}
+.topbar .crumb b{color:var(--lilac)}
+
+.content{max-width:860px;margin:0 auto;padding-bottom:80px}
+
+/* ----- section ----- */
+.section{padding:34px 0 10px;scroll-margin-top:80px;border-top:1px solid #1d1834}
+.section:first-of-type{border-top:none}
+.sec-eyebrow{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--lilac);font-weight:500;margin-bottom:10px}
+.sec-eyebrow .num{
+  display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;
+  background:#1d1834;border:1px solid var(--panel-line);color:var(--violet-soft);font-weight:700;font-size:12px;
+}
+.section h2{font-size:clamp(24px,3.4vw,33px);font-weight:800;letter-spacing:-.02em;line-height:1.15;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.section h2 .emoji{font-size:.9em}
+.section .lead{color:var(--ink-2);font-size:16px;margin-top:12px;max-width:64ch}
+.section h3{font-size:18px;font-weight:700;margin:28px 0 10px;color:#fff}
+.section h4{font-size:14px;font-weight:700;margin:18px 0 6px;color:var(--lilac);font-family:'JetBrains Mono',monospace;letter-spacing:.01em}
+.section p{color:var(--ink-2);margin:8px 0}
+.section p strong,.section li strong{color:var(--ink);font-weight:600}
+.section ul{margin:8px 0 8px 2px;list-style:none}
+.section ul li{position:relative;padding-left:20px;margin:6px 0;color:var(--ink-2)}
+.section ul li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:99px;background:var(--violet-soft)}
+code:not(pre code){
+  font-family:'JetBrains Mono',monospace;font-size:.86em;
+  background:#241d3e;color:#d9c9ff;padding:2px 6px;border-radius:6px;border:1px solid #322a52;
+}
+
+/* ----- def card (técnica + vida real) ----- */
+.def{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--panel-line);border:1px solid var(--panel-line);
+  border-radius:var(--radius);overflow:hidden;margin:16px 0;
+}
+.def>div{background:var(--panel);padding:18px 20px}
+.def .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.def .tech .tag{color:var(--violet-soft)}
+.def .real .tag{color:var(--green)}
+.def .real{background:linear-gradient(180deg,#13211c,#121a18)}
+.def p{margin:0;color:var(--ink-2);font-size:14.5px}
+
+/* ----- callout banners ----- */
+.callout{border-radius:var(--radius);padding:16px 18px 16px 16px;margin:16px 0;border:1px solid;display:flex;gap:13px;font-size:14.5px}
+.callout .ic{font-size:18px;flex:0 0 auto;line-height:1.5}
+.callout .body{color:var(--ink-2)}
+.callout .body strong{color:var(--ink)}
+.callout.tip{background:#15112e;border-color:#3a2d6b}
+.callout.tip .ic{color:var(--violet-soft)}
+.callout.warn{background:#241a0f;border-color:#5c4318}
+.callout.warn .ic{color:var(--amber)}
+.callout.key{background:linear-gradient(110deg,#1c1140,#160e30);border-color:#4a2db0}
+.callout.key .ic{color:var(--lilac)}
+.callout.danger{background:#2a1316;border-color:#6b2630}
+.callout.danger .ic{color:var(--red)}
+
+/* ----- code block ----- */
+.code{position:relative;margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid #2a2348;background:var(--code-bg)}
+.code-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#15112a;border-bottom:1px solid #2a2348}
+.dot{width:11px;height:11px;border-radius:99px}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.code-file{margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-3)}
+.copy-btn{margin-left:auto;background:#241d3e;border:1px solid #322a52;color:var(--ink-2);font-size:11px;
+  font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:7px;cursor:pointer;transition:.15s}
+.copy-btn:hover{background:var(--indigo);color:#fff;border-color:var(--violet)}
+.copy-btn.copied{background:var(--green-deep);color:var(--green);border-color:var(--green)}
+pre{margin:0;padding:15px 16px;overflow-x:auto}
+pre code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.65;color:#e6e0ff;white-space:pre}
+.run{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#0c1612;border-top:1px solid #1d3329;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green)}
+.run .arrow{color:var(--ink-3)}
+/* token colors */
+.tk-key{color:#c792ea}.tk-str{color:#7ee787}.tk-num{color:#f78c6c}.tk-com{color:#6a6486;font-style:italic}
+.tk-fn{color:#82aaff}.tk-op{color:#89ddff}.tk-bool{color:#ff9cac}.tk-typ{color:#ffcb6b}
+
+/* ----- run-out inline result ----- */
+.out{font-family:'JetBrains Mono',monospace;font-size:13px;background:#121a16;border:1px solid #1d3329;
+  border-radius:8px;padding:5px 10px;color:var(--green);display:inline-block;margin-top:2px}
+
+/* ----- chips for tipos ----- */
+.tipos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0}
+.tipo{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:13px 14px;position:relative}
+.tipo .tn{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:#d9c9ff}
+.tipo .td{font-size:12px;color:var(--ink-3);margin-top:3px}
+.tipo .lvl{position:absolute;top:11px;right:12px;font-size:12px}
+
+/* ----- quiz ----- */
+.quiz{background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);padding:18px 20px;margin:16px 0;position:relative}
+.quiz .q-ix{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--lilac);font-weight:700;letter-spacing:.1em}
+.quiz .q-text{font-size:15.5px;color:var(--ink);font-weight:600;margin:8px 0 14px}
+.reveal-btn{background:#1d1834;border:1px solid var(--panel-line);color:var(--lilac);font-family:'Inter';
+  font-size:13px;font-weight:600;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.reveal-btn:hover{background:var(--indigo);color:#fff;border-color:var(--violet)}
+.answer{margin-top:14px;border-left:3px solid var(--green);background:linear-gradient(90deg,#11231b,#101a16);
+  border-radius:0 10px 10px 0;padding:13px 16px;display:none}
+.answer.show{display:block;animation:fade .35s ease}
+.answer .a-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:5px}
+.answer p{margin:0;color:var(--ink-2);font-size:14px}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ----- the 510 hero signature ----- */
+.hero510{margin:18px 0;border-radius:var(--radius);overflow:hidden;border:1px solid #3a2d6b;
+  background:radial-gradient(120% 140% at 100% 0%,#2a1466,#140d2c)}
+.hero510 .inner{padding:26px 24px}
+.hero510 .eq{font-family:'JetBrains Mono',monospace;font-size:clamp(26px,6vw,46px);font-weight:700;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;line-height:1}
+.hero510 .a{color:#7ee787}.hero510 .b{color:#82aaff}.hero510 .plus{color:var(--ink-3)}
+.hero510 .arrow{color:var(--ink-3);font-size:.6em}
+.hero510 .bad{color:var(--red);position:relative}
+.hero510 .bad::after{content:"✕";font-size:.4em;vertical-align:super;margin-left:6px}
+.hero510 .cap{margin-top:14px;color:var(--lilac);font-size:14px;max-width:56ch}
+.hero510 .cap b{color:#fff}
+
+/* flujo ts->js infographic */
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin:18px 0;
+  background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);padding:20px 18px}
+.flow .node{text-align:center}
+.flow .node .ic{font-size:26px}
+.flow .node .nm{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;margin-top:6px;color:#fff}
+.flow .node .ds{font-size:11.5px;color:var(--ink-3);margin-top:3px}
+.flow .ts .nm{color:#82aaff}.flow .js .nm{color:#f0b429}
+.flow .ar{color:var(--violet-soft);font-size:22px;font-weight:700}
+.flow .ar small{display:block;font-size:9px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;font-weight:400}
+@media(max-width:620px){.flow{grid-template-columns:1fr;gap:6px}.flow .ar{transform:rotate(90deg);margin:2px 0}}
+
+/* recap pills */
+.recap{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.recap span{background:#1d1834;border:1px solid var(--panel-line);border-radius:99px;padding:7px 14px;font-size:13px;color:var(--ink-2)}
+.recap span b{color:var(--lilac)}
+
+/* footer */
+.foot{border-top:1px solid #1d1834;margin-top:40px;padding:22px 0 14px;text-align:center;
+  font-size:11.5px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;line-height:1.7}
+.foot a{color:var(--lilac);text-decoration:none}
+
+/* ====== PRESENTATION MODE ====== */
+body.present .sidebar,body.present .topbar,body.present .foot{display:none}
+body.present .main{padding:0}
+body.present .content{max-width:none}
+body.present .section{display:none;min-height:100vh;padding:6vh clamp(24px,8vw,120px);
+  border:none;place-content:center;max-width:1100px;margin:0 auto}
+body.present .section.slide-on{display:block;animation:slidein .4s ease}
+body.present .section h2{font-size:clamp(30px,5vw,52px)}
+body.present .section .lead{font-size:clamp(17px,2.2vw,22px)}
+body.present pre code{font-size:clamp(14px,1.6vw,18px)}
+@keyframes slidein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.present-hud{display:none}
+body.present .present-hud{
+  display:flex;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:80;
+  align-items:center;gap:14px;background:#15112acc;backdrop-filter:blur(8px);
+  border:1px solid var(--panel-line);border-radius:99px;padding:8px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-2)}
+.present-hud b{color:var(--lilac)}
+.present-hud .hk{background:#241d3e;border:1px solid #322a52;border-radius:6px;padding:2px 7px;font-size:11px}
+.present-hud button{background:none;border:none;color:var(--ink-2);cursor:pointer;font-family:inherit;font-size:12px}
+
+/* ====== responsive ====== */
+@media(max-width:880px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 0 40px #000a}
+  .sidebar.open{transform:none}
+  .menu-toggle{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;
+    background:var(--panel);border:1px solid var(--panel-line);color:var(--ink);cursor:pointer;font-size:18px}
+  .def{grid-template-columns:1fr}
+  .scrim{position:fixed;inset:0;background:#000a;z-index:40;display:none}
+  .scrim.show{display:block}
+}
+@media(min-width:881px){.menu-toggle,.scrim{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<canvas class="constellation" id="stars"></canvas>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="kicker">Dev Senior Code</div>
+    <h1>JavaScript AI Backend Developer</h1>
+    <div class="sub">Módulo 1 · Clase 2</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Tu avance</span><span id="pct">0%</span></div>
+    <div class="progress-track"><div class="progress-bar" id="pbar"></div></div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <button class="present-btn" id="presentBtn">▶ Modo presentación</button>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<main class="main">
+  <div class="topbar">
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    <div class="crumb">clase_02 / <b id="crumbNow">intro</b></div>
+  </div>
+  <div class="content" id="content"><!-- sections injected --></div>
+
+  <footer class="foot">
+    © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack<br>
+    <a href="https://linkedin.com/in/ana-alvarado-instructora-full-stack" target="_blank" rel="noopener">linkedin.com/in/ana-alvarado-instructora-full-stack</a>
+  </footer>
+</main>
+</div>
+
+<div class="present-hud">
+  <span><b id="slideNow">1</b> / <span id="slideTot">11</span></span>
+  <span>·</span>
+  <span><span class="hk">←</span> <span class="hk">→</span> navegar</span>
+  <span>·</span>
+  <button id="exitPresent"><span class="hk">Esc</span> salir</button>
+</div>
+
+<script id="DATA" type="application/json">[{"id": "intro", "icon": "🎯", "nav": "El misterio del 510", "crumb": "intro", "num": "00", "emoji": "🎯", "title": "El misterio del 510", "lead": "Antes de escribir una línea de código, un acertijo que va a guiar toda la clase. Guárdalo en la cabeza: vamos a volver a él.", "html": "\n  <div class=\"hero510\"><div class=\"inner\">\n    <div class=\"eq\"><span class=\"a\">5</span><span class=\"plus\">+</span><span class=\"b\">10</span><span class=\"arrow\">→</span><span class=\"bad\">510</span></div>\n    <div class=\"cap\">En una tienda online, un producto cuesta <b>5</b> y el envío <b>10</b>. El sistema debería mostrar <b>15</b>… pero muestra <b>510</b>.</div>\n  </div></div>\n  <h3>¿Por qué esto es un problema serio?</h3>\n  <p>No es que \"se vea feo\". Es un error que <strong>cobra mal al cliente o descuadra la contabilidad</strong>: pérdida de dinero, reclamos y desconfianza.</p>\n  <div class=\"callout danger\"><div class=\"ic\">⚠️</div><div class=\"body\">Y lo más peligroso: el programa <strong>no se rompe</strong>. Sigue corriendo como si todo estuviera bien. Un error invisible puede vivir meses sin que nadie lo note.</div></div>\n  <p>Hoy vas a entender exactamente por qué pasa esto y cómo la industria lo previene. Para llegar ahí, primero necesitas tres piezas: <strong>variables</strong>, <strong>tipos de datos</strong> y <strong>operadores</strong>.</p>\n  "}, {"id": "variables", "icon": "📦", "nav": "Variables", "crumb": "variables", "num": "01", "emoji": "📦", "title": "Variables", "lead": "Lo primero que hace un programa es guardar datos para poder usarlos y cambiarlos. Ese espacio con nombre es una variable.", "html": "\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Definición técnica</div><p>Una <strong>variable</strong> es un nombre que apunta a un espacio en la <strong>memoria RAM</strong>, donde se guarda un valor mientras el programa corre.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En la vida real</div><p>Un <strong>casillero de gimnasio con etiqueta</strong>. La etiqueta es el nombre (<code>titulo</code>); lo de adentro es el valor (<code>\"Comprar café\"</code>). Cambias el contenido, la etiqueta sigue igual.</p></div>\n  </div>\n  <div class=\"callout tip\"><div class=\"ic\">💡</div><div class=\"body\"><strong>¿Por qué la RAM y no el disco?</strong> La RAM es memoria rápida y temporal: sirve mientras el programa está vivo y se borra al cerrarlo. Por eso un dato en variable desaparece al terminar. Para que sobreviva hasta mañana hace falta una base de datos — eso es el Módulo 2.</div></div>\n\n  <h3><code>let</code> y <code>const</code>: dos tipos de casillero</h3>\n  <ul>\n    <li><code>let</code> → casillero cuyo contenido <strong>puedes cambiar</strong> después.</li>\n    <li><code>const</code> → casillero que <strong>sellas</strong>: una vez le pones algo, no lo reemplazas.</li>\n  </ul>\n  __CODE_var__\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Cuándo cada uno</div><p><code>let</code> para lo que cambia (el nombre de una tarea). <code>const</code> para lo que no debe cambiar (la fecha de creación).</p></div>\n    <div class=\"real\"><div class=\"tag\">● Caso real</div><p><code>let</code> = el <strong>carrito</strong> de una tienda (sube y baja). <code>const</code> = tu <strong>fecha de nacimiento</strong> en un perfil (se registra una vez).</p></div>\n  </div>\n  <div class=\"callout key\"><div class=\"ic\">★</div><div class=\"body\"><strong>Buena práctica de la industria:</strong> usa <code>const</code> por defecto. Protege los datos que no deben moverse y hace tu código predecible. Cambia a <code>let</code> solo cuando sabes que ese valor va a variar.</div></div>\n\n  <h3>🔴 Qué pasa si reasignas una <code>const</code></h3>\n  <p>Si intentas cambiar una constante, Node lanza un <code>TypeError</code>: <em>\"Assignment to constant variable\"</em> → <em>\"intentaste asignarle un valor nuevo a una variable constante\"</em>.</p>\n  <div class=\"callout tip\"><div class=\"ic\">🛡️</div><div class=\"body\">Eso es JavaScript <strong>protegiéndote</strong>: marcaste ese dato como inmutable y él respeta la decisión. Un error no siempre es algo malo — aquí te cuidó.</div></div>\n  ", "codes": {"var": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": null, "code": "let tituloTarea = \"Comprar café\";\nconst fechaCreacion = \"2026-06-19\";\n\nconsole.log(tituloTarea);\nconsole.log(fechaCreacion);"}}}, {"id": "tipos", "icon": "🧩", "nav": "Tipos de datos", "crumb": "tipos", "num": "02", "emoji": "🧩", "title": "Tipos de datos", "lead": "Un nombre, un número y un sí/no no son lo mismo. El tipo de un dato decide qué puedes hacer con él.", "html": "\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Definición técnica</div><p>Un <strong>tipo de dato</strong> clasifica un valor y determina dos cosas: qué puede contener y qué operaciones son válidas sobre él. Le dice al motor cómo guardarlo en memoria y qué puede hacer con él.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En la vida real</div><p>Con un <strong>número</strong> puedes sumar; con un <strong>texto</strong> sumar no tiene sentido; con un <strong>sí/no</strong> solo decides. Mismo dato \"5\", distinto tipo, distinto comportamiento.</p></div>\n  </div>\n\n  <div class=\"callout key\"><div class=\"ic\">★</div><div class=\"body\"><strong>La gran división: primitivos vs. objetos.</strong> Un <strong>primitivo</strong> es un ladrillo: una sola pieza indivisible. Un <strong>objeto</strong> es una caja con varios ladrillos ordenados. Hoy trabajamos con ladrillos sueltos; las cajas (arrays y objetos) llegan más adelante.</div></div>\n\n  <h3>El mapa completo: los 7 tipos primitivos</h3>\n  <p>Hoy usas a fondo los <strong>tres primeros</strong>. Los demás los conoces para que el mapa exista completo en tu cabeza.</p>\n  <div class=\"tipos\">\n    <div class=\"tipo\"><span class=\"lvl\">🟢</span><div class=\"tn\">string</div><div class=\"td\">texto entre comillas</div></div>\n    <div class=\"tipo\"><span class=\"lvl\">🟢</span><div class=\"tn\">number</div><div class=\"td\">enteros y decimales</div></div>\n    <div class=\"tipo\"><span class=\"lvl\">🟢</span><div class=\"tn\">boolean</div><div class=\"td\">true / false</div></div>\n    <div class=\"tipo\"><div class=\"tn\">undefined</div><div class=\"td\">sin valor (lo pone JS)</div></div>\n    <div class=\"tipo\"><div class=\"tn\">null</div><div class=\"td\">vacío a propósito (lo pones tú)</div></div>\n    <div class=\"tipo\"><div class=\"tn\">bigint</div><div class=\"td\">números gigantes</div></div>\n    <div class=\"tipo\"><div class=\"tn\">symbol</div><div class=\"td\">identificadores únicos</div></div>\n  </div>\n  <p>Todo lo que <strong>no</strong> es uno de estos siete es un <strong>objeto</strong>: arrays, funciones, fechas, una tarea completa agrupada.</p>\n\n  <h4>1 · string — texto</h4>\n  <p>Una secuencia de caracteres, siempre entre comillas.</p>\n  __CODE_str__\n  <p><strong>🎯 Dónde vive:</strong> el nombre de un usuario, la dirección de envío, el asunto de un correo, una reseña. Casi todo lo que un humano escribe es <code>string</code>.</p>\n\n  <h4>2 · number — números</h4>\n  <p>Enteros y decimales en un solo tipo. JavaScript no los separa como otros lenguajes.</p>\n  __CODE_num__\n  <p><strong>🎯 Dónde vive:</strong> el precio de un producto, la edad de un usuario, el stock de un inventario, la cantidad en el carrito.</p>\n  <div class=\"callout warn\"><div class=\"ic\">⚡</div><div class=\"body\"><code>0.1 + 0.2</code> no da <code>0.3</code>, da <code>0.30000000000000004</code>. No es un bug: los números se guardan en binario de doble precisión (IEEE 754) y, como <code>1/3</code> es infinito en base 10, <code>0.1</code> es infinito en base 2. Por eso en sistemas de dinero serios se trabaja en <strong>centavos enteros</strong>.</div></div>\n\n  <h4>3 · boolean — verdadero / falso</h4>\n  <p>Solo dos valores: <code>true</code> o <code>false</code>. Es la base de toda decisión en programación.</p>\n  __CODE_bool__\n  <p><strong>🎯 Dónde vive:</strong> ¿el usuario está logueado? ¿el pago fue aprobado? ¿el producto está agotado? ¿el correo fue leído?</p>\n\n  <h4>undefined y null — los dos \"vacíos\"</h4>\n  <p>Parecen iguales pero la diferencia es <strong>quién y con qué intención</strong>:</p>\n  <ul>\n    <li><code>undefined</code> → lo pone <strong>JavaScript</strong> cuando algo quedó sin llenar. Ej: un campo opcional \"teléfono\" que el usuario no completó.</li>\n    <li><code>null</code> → lo pones <strong>tú</strong> a propósito: \"esto está vacío y es deliberado\". Ej: un usuario que aún no subió foto de perfil.</li>\n  </ul>\n\n  <h3>typeof: pregúntale a JavaScript de qué tipo es algo</h3>\n  <p><code>typeof</code> es tu herramienta de diagnóstico: cuando no sabes qué tienes en una variable, te lo dice.</p>\n  __CODE_typeof__\n  <div class=\"callout warn\"><div class=\"ic\">🐛</div><div class=\"body\"><strong>Rareza histórica verificada:</strong> <code>typeof null</code> devuelve <code>\"object\"</code>, no <code>\"null\"</code>. Es un error que JavaScript nunca corrigió por compatibilidad. Por eso, para detectar <code>null</code> se usa <code>=== null</code>, no <code>typeof</code>.</div></div>\n  ", "codes": {"str": {"file": "clase2.js", "lang": "js", "run": null, "out": null, "code": "const titulo = \"Comprar café\";"}, "num": {"file": "clase2.js", "lang": "js", "run": null, "out": null, "code": "const prioridad = 5;\nconst precio = 99.99;"}, "bool": {"file": "clase2.js", "lang": "js", "run": null, "out": null, "code": "const completada = false;"}, "typeof": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "string  number  boolean", "code": "const titulo = \"Comprar café\";\nconst prioridad = 5;\nconst completada = false;\n\nconsole.log(typeof titulo);     // string\nconsole.log(typeof prioridad);  // number\nconsole.log(typeof completada); // boolean"}}}, {"id": "operadores", "icon": "➕", "nav": "Operadores", "crumb": "operadores", "num": "03", "emoji": "➕", "title": "Operadores", "lead": "Si una variable guarda un dato, un operador hace algo con él: calcular, comparar o combinar condiciones.", "html": "\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Definición técnica</div><p>Un <strong>operador</strong> es un símbolo que realiza una operación sobre uno o más valores (operandos) y produce un resultado.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En la vida real</div><p>Los <strong>botones de la calculadora</strong> (<code>+ − × ÷</code>) y los <strong>conectores del idioma</strong>: \"y\", \"o\", \"no\" — <em>\"si llueve Y no tengo paraguas, me mojo\"</em>.</p></div>\n  </div>\n\n  <h3>Los tres grupos</h3>\n  <ul>\n    <li><strong>Aritméticos</strong> (calculan) → producen un <strong>número</strong>: <code>+</code> <code>-</code> <code>*</code> <code>/</code></li>\n    <li><strong>Relacionales</strong> (comparan) → producen un <strong>boolean</strong>: <code>&gt;</code> <code>&lt;</code> <code>===</code> <code>!==</code></li>\n    <li><strong>Lógicos</strong> (combinan condiciones) → producen un <strong>boolean</strong>: <code>&amp;&amp;</code> (Y) · <code>||</code> (O) · <code>!</code> (NO)</li>\n  </ul>\n  <div class=\"callout key\"><div class=\"ic\">🔗</div><div class=\"body\">Comparar y combinar siempre responden una pregunta de <strong>sí o no</strong>. Por eso devuelven <code>boolean</code>: ese <code>true</code>/<code>false</code> es la materia prima con la que, en la Clase 3, el programa tomará decisiones.</div></div>\n\n  <h4>Aritméticos</h4>\n  __CODE_arit__\n  <p><strong>🎯 Caso real:</strong> el subtotal de un carrito = precio × cantidad; el total de una factura = subtotal + impuestos.</p>\n\n  <h4>Relacionales</h4>\n  __CODE_rel__\n  <p><strong>🎯 Caso real:</strong> ¿la edad es <code>&gt;= 18</code>? ¿el stock es <code>&gt; 0</code> para permitir la compra? ¿la contraseña ingresada <code>===</code> la guardada?</p>\n\n  <h4>Lógicos</h4>\n  <p>Una tarea es \"atendible ya\" si tiene prioridad alta <strong>Y</strong> todavía no está completada. El <code>!</code> (NO) voltea un boolean: <code>!completada</code> se lee \"que NO esté completada\".</p>\n  __CODE_log__\n  <ul>\n    <li><code>&amp;&amp;</code> (Y) → dejar comprar solo si <em>hay stock</em> Y <em>el pago fue aprobado</em>.</li>\n    <li><code>||</code> (O) → dar acceso si es <em>admin</em> O <em>el dueño del recurso</em>.</li>\n    <li><code>!</code> (NO) → mostrar \"Iniciar sesión\" solo si <em>NO</em> está logueado.</li>\n  </ul>\n  <div class=\"callout key\"><div class=\"ic\">★</div><div class=\"body\"><strong>Regla de oro:</strong> un <code>=</code> <strong>asigna</strong> (mete un valor en una variable). Tres <code>===</code> <strong>comparan</strong> (preguntan si dos valores son iguales). <em>Uno asigna, tres preguntan.</em></div></div>\n  ", "codes": {"arit": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "5", "code": "const tareasPendientes = 3;\nconst tareasNuevas = 2;\nconst total = tareasPendientes + tareasNuevas;\n\nconsole.log(total);"}, "rel": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "true  false", "code": "const prioridadA = 5;\nconst prioridadB = 3;\n\nconsole.log(prioridadA > prioridadB);   // true\nconsole.log(prioridadA === prioridadB); // false"}, "log": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "true", "code": "const prioridadAlta = true;\nconst completada = false;\n\nconsole.log(prioridadAlta && !completada); // true"}}}, {"id": "conversion", "icon": "🔄", "nav": "Conversión de tipos", "crumb": "conversion", "num": "04", "emoji": "🔄", "title": "Conversión de tipos", "lead": "Los datos del mundo real casi siempre llegan como texto. Antes de operar con ellos, hay que convertirlos. Esta es la primera cura del 510.", "html": "\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Definición técnica</div><p><strong>Conversión de tipos</strong> (casting) es transformar un valor de un tipo a otro de forma controlada: de <code>string</code> a <code>number</code>, de <code>number</code> a <code>string</code>, etc.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En la vida real</div><p>Un precio escrito en un papel (<code>\"5\"</code>) es texto: no lo sumas tal cual. Primero lo lees y lo pasas a número en tu cabeza. Eso es convertir.</p></div>\n  </div>\n  <div class=\"callout warn\"><div class=\"ic\">⚖️</div><div class=\"body\"><strong>Dos formas de que un tipo cambie:</strong> la <strong>conversión explícita</strong> la haces tú a propósito con una función (predecible y segura). La <strong>coerción implícita</strong> la hace JavaScript solo, en silencio (la culpable del 510). Regla: <strong>convierte tú, no dejes que JavaScript adivine.</strong></div></div>\n\n  <h3>Las tres herramientas que usas a diario</h3>\n  <ul>\n    <li><code>Number(\"5\")</code> → texto a número → <code>5</code></li>\n    <li><code>String(5)</code> → número a texto → <code>\"5\"</code></li>\n    <li><code>parseInt(\"5kg\")</code> → extrae el entero del inicio → <code>5</code></li>\n  </ul>\n\n  <h4>Convertir antes de operar</h4>\n  __CODE_conv1__\n  <p><strong>🎯 Caso real:</strong> el precio que llega de un formulario, la edad que escribe el usuario, la cantidad que viene en la URL de una página. Todo eso llega como texto y hay que convertirlo.</p>\n\n  <h4>El sentido inverso: número dentro de un texto</h4>\n  __CODE_conv2__\n  <p><strong>🎯 Caso real:</strong> armar el texto de una factura, un \"Bienvenido, usuario #42\", el cuerpo de una notificación.</p>\n  ", "codes": {"conv1": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "15", "code": "const precioTexto = \"5\";\nconst precioNumero = Number(precioTexto);\nconst envio = 10;\n\nconsole.log(precioNumero + envio); // 15"}, "conv2": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "Tienes 3 tareas", "code": "const cantidad = 3;\nconst mensaje = \"Tienes \" + String(cantidad) + \" tareas\";\n\nconsole.log(mensaje);"}}}, {"id": "io", "icon": "🖥️", "nav": "Entrada y salida", "crumb": "entrada_salida", "num": "05", "emoji": "🖥️", "title": "Entrada y salida de datos", "lead": "¿De dónde salen los datos que procesa un programa? En una app real vienen de afuera: del usuario, de otra app o de internet.", "html": "\n  <p>Por ahora, para enfocarnos en variables y tipos, los datos los <strong>ponemos nosotros en variables</strong> (entrada) y los mostramos con <code>console.log</code> (salida).</p>\n  __CODE_io__\n  <h3>Cómo crece esto a lo largo del curso</h3>\n  <div class=\"flow\">\n    <div class=\"node\"><div class=\"ic\">✍️</div><div class=\"nm\">Hoy</div><div class=\"ds\">tú escribes los datos en variables</div></div>\n    <div class=\"ar\">→<small>Clase 4</small></div>\n    <div class=\"node\"><div class=\"ic\">⌨️</div><div class=\"nm\">CLI App</div><div class=\"ds\">el programa los pide por teclado</div></div>\n    <div class=\"ar\">→<small>Módulo 2</small></div>\n    <div class=\"node\"><div class=\"ic\">🌐</div><div class=\"nm\">Backend</div><div class=\"ds\">los recibe por internet (una API)</div></div>\n  </div>\n  <p>Cada herramienta aparece cuando <strong>resuelve un problema</strong>, no antes.</p>\n  ", "codes": {"io": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "Tarea registrada: Comprar café", "code": "const nombreTarea = \"Comprar café\";\nconsole.log(\"Tarea registrada:\", nombreTarea);"}}}, {"id": "coercion", "icon": "🔬", "nav": "Por qué da 510", "crumb": "coercion", "num": "06", "emoji": "🔬", "title": "Por qué 5 + 10 da 510", "lead": "Llegó el momento de desatar el misterio. Vamos a provocar el error a propósito y ver por qué pasa.", "html": "\n  <p>Simulamos un precio que llega como <strong>texto</strong> (como llegaría de un formulario) y, sin convertirlo, le sumamos un número.</p>\n  __CODE_bug__\n  <div class=\"callout danger\"><div class=\"ic\">🤐</div><div class=\"body\">Sale <code>510</code>. <strong>No hay error rojo. No se rompe nada.</strong> El programa cree que hizo bien su trabajo.</div></div>\n\n  <h3>¿Qué pasó? Coerción.</h3>\n  <p>JavaScript <strong>no se equivocó</strong>: vio un texto (<code>\"5\"</code>) y, como el <code>+</code> también sirve para <strong>pegar</strong> textos, pegó el <code>10</code> en vez de sumar. A eso se le llama <strong>coerción</strong>: JavaScript convierte tipos por su cuenta, en silencio, mientras corre.</p>\n\n  <h3>La prueba de que el problema es solo el <code>+</code></h3>\n  <p>El <code>+</code> es especial porque también une texto. Los demás operadores no tienen esa doble función, así que con ellos JavaScript <strong>sí</strong> convierte a número solo:</p>\n  __CODE_proof__\n  <div class=\"callout key\"><div class=\"ic\">🎯</div><div class=\"body\"><strong>La lección:</strong> el peligro no es que JavaScript \"no sepa sumar\". El peligro es el <code>+</code> con texto. Y como no podemos andar memorizando en qué casos convierte y en cuáles no, necesitamos algo que nos avise antes.</div></div>\n\n  <h3>El nudo completo: tres hilos</h3>\n  <div class=\"recap\">\n    <span>1 · una <b>\"5\"</b> con comillas es texto, no número</span>\n    <span>2 · el <b>+</b> con texto pega en vez de sumar</span>\n    <span>3 · los datos reales <b>llegan como texto</b></span>\n  </div>\n  <p>Ya viste una cura: convertir a mano con <code>Number()</code>. Funciona, pero exige que el programador <em>se acuerde</em> de hacerlo siempre. ¿Y si se le olvida una vez entre mil? Por eso existe una segunda red, automática: <strong>TypeScript</strong>.</p>\n  ", "codes": {"bug": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "510", "code": "const precioProducto = \"5\";\nconst precioEnvio = 10;\nconst total = precioProducto + precioEnvio;\n\nconsole.log(total); // 510"}, "proof": {"file": "clase2.js", "lang": "js", "run": "node clase2.js", "out": "52   3   10", "code": "console.log(\"5\" + 2);  // 52  ← pega (el + une texto)\nconsole.log(\"5\" - 2);  // 3   ← resta (convierte a número)\nconsole.log(\"5\" * 2);  // 10  ← multiplica (convierte a número)"}}}, {"id": "typescript", "icon": "🛡️", "nav": "TypeScript", "crumb": "typescript", "num": "07", "emoji": "🛡️", "title": "TypeScript: la red de seguridad", "lead": "¿Y si algo te avisara, mientras escribes, que estás a punto de sumar un texto con un número? Eso es TypeScript.", "html": "\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ Definición técnica</div><p><strong>TypeScript</strong> es un lenguaje construido sobre JavaScript que añade una cosa: declarar de qué tipo es cada valor, y revisa esos tipos <em>antes</em> de ejecutar. Node no lo corre directamente: TypeScript se traduce a JavaScript.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En la vida real</div><p>El <strong>corrector ortográfico</strong> mientras escribes un correo. No escribe por ti: solo subraya en rojo \"esto está mal\" antes de que le des enviar. Tú decides; él avisa a tiempo.</p></div>\n  </div>\n  <div class=\"callout key\"><div class=\"ic\">★</div><div class=\"body\"><strong>La idea que no debes perderte:</strong> TypeScript <strong>no reemplaza</strong> a JavaScript, lo <strong>protege</strong>. Tu código TypeScript termina convertido en JavaScript normal. Es un asistente de seguridad, no un idioma nuevo que borra lo aprendido.</div></div>\n\n  <h3>Qué significa ese <code>: number</code></h3>\n  <p>Es la <strong>única sintaxis nueva</strong> de hoy. En JavaScript escribías:</p>\n  __CODE_ts0__\n  <p>En TypeScript le agregas <strong>dos puntos y el tipo</strong>:</p>\n  __CODE_ts1__\n  <div class=\"callout tip\"><div class=\"ic\">📣</div><div class=\"body\"><code>const precio: number = 5</code> se lee: <em>\"declaro precio, que será de tipo número, y vale 5\"</em>. Ese <code>: number</code> es una <strong>promesa</strong>: \"esta variable siempre guardará un número\". Si intentas meterle otra cosa, TypeScript te lo subraya.</div></div>\n  <p>Los tipos que ya conoces se escriben así — son <strong>los mismos tres del Bloque de tipos</strong>, solo dichos en voz alta para que TypeScript los vigile:</p>\n  __CODE_ts2__\n\n  <h3>Instalar (verificando primero)</h3>\n  <p>Buena práctica: primero pregunta si ya está instalado. Si responde <code>Version 5.x</code> o superior, ya está. Si no reconoce el comando, instálalo.</p>\n  __CODE_tscheck__\n  __CODE_tsinstall__\n  ", "codes": {"ts0": {"file": "JavaScript", "lang": "js", "run": null, "out": null, "code": "const precio = 5;"}, "ts1": {"file": "TypeScript", "lang": "ts", "run": null, "out": null, "code": "const precio: number = 5;"}, "ts2": {"file": "TypeScript", "lang": "ts", "run": null, "out": null, "code": "const titulo: string = \"Comprar café\";\nconst prioridad: number = 5;\nconst completada: boolean = false;"}, "tscheck": {"file": "terminal", "lang": "bash", "run": null, "out": null, "code": "tsc --version"}, "tsinstall": {"file": "terminal", "lang": "bash", "run": null, "out": null, "code": "npm install -g typescript"}}}, {"id": "dos-mundos", "icon": "⚔️", "nav": "JS vs TS en acción", "crumb": "js_vs_ts", "num": "08", "emoji": "⚔️", "title": "Dos archivos, dos mundos", "lead": "El mismo error en un .js y en un .ts. Uno calla, el otro avisa. Velo con tus propios ojos.", "html": "\n  <div class=\"callout tip\"><div class=\"ic\">🧪</div><div class=\"body\">Esto es un <strong>experimento para comparar</strong>, no es como trabajarás siempre. Al final de esta sección aclaramos el flujo real.</div></div>\n\n  <h4>Mundo JavaScript — el del error silencioso</h4>\n  __CODE_jsworld__\n  <div class=\"callout danger\"><div class=\"ic\">🤐</div><div class=\"body\">Sale <code>510</code>. Silencio total.</div></div>\n\n  <h4>Mundo TypeScript — el que te frena</h4>\n  __CODE_tsworld__\n  <div class=\"callout warn\"><div class=\"ic\">🚨</div><div class=\"body\"><strong>Antes de ejecutar</strong>, TypeScript subraya <code>precio</code> en rojo: <em>\"el tipo string no se puede asignar al tipo number\"</em> (Type 'string' is not assignable to type 'number'). El aviso llega <strong>mientras escribes</strong>, no cuando el cliente ya pagó mal.</div></div>\n\n  <h3>La prueba de que TS se convierte en JS</h3>\n  <p>El comando <code>tsc</code> toma <code>demo.ts</code> y genera un <code>demo.js</code>. Ábrelo: es JavaScript puro, sin los <code>: number</code>. Esa es la prueba de que TypeScript se <strong>traduce</strong>, no reemplaza.</p>\n  __CODE_tsc__\n  <div class=\"callout warn\"><div class=\"ic\">⚠️</div><div class=\"body\"><strong>Un detalle honesto:</strong> <code>tsc</code> te muestra el error rojo… pero por defecto <strong>igual genera el .js</strong>. TypeScript es un corrector, no un guardia con candado: te subraya el problema para que TÚ lo arregles, no te obliga. En proyectos profesionales se configura para que sí bloquee. Por hoy: <strong>el rojo es un aviso, no una pared.</strong></div></div>\n\n  <h3>¿Y entonces siempre tendré dos archivos, .js y .ts?</h3>\n  <div class=\"callout key\"><div class=\"ic\">✅</div><div class=\"body\"><strong>No.</strong> Lo de recién fueron dos archivos solo porque era un experimento. De aquí en adelante el flujo real es uno solo:</div></div>\n  <div class=\"flow\">\n    <div class=\"node ts\"><div class=\"ic\">📝</div><div class=\"nm\">.ts</div><div class=\"ds\">tú escribes aquí</div></div>\n    <div class=\"ar\">→<small>tsc</small></div>\n    <div class=\"node js\"><div class=\"ic\">⚙️</div><div class=\"nm\">.js</div><div class=\"ds\">se genera solo</div></div>\n    <div class=\"ar\">→<small>node</small></div>\n    <div class=\"node\"><div class=\"ic\">▶️</div><div class=\"nm\">corre</div><div class=\"ds\">se ejecuta el .js</div></div>\n  </div>\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ La regla</div><p>Tú <strong>nunca tocas el .js a mano</strong>: es automático. Editas la <strong>receta</strong> (.ts), no el <strong>plato cocinado</strong> (.js). El comensal (Node) come el plato, no lee la receta.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En un proyecto real</div><p>Una carpeta <code>src/</code> llena de archivos <code>.ts</code> (lo que editas) y una <code>dist/</code> con los <code>.js</code> generados (lo que se ejecuta y sube al servidor). Una sola fuente de verdad: el TypeScript.</p></div>\n  </div>\n  ", "codes": {"jsworld": {"file": "demo.js", "lang": "js", "run": "node demo.js", "out": "510", "code": "const precio = \"5\";\nconst envio = 10;\nconsole.log(precio + envio);"}, "tsworld": {"file": "demo.ts", "lang": "ts", "run": null, "out": null, "code": "const precio: number = \"5\";  // ❌ TS subraya esto en rojo\nconst envio: number = 10;\nconsole.log(precio + envio);"}, "tsc": {"file": "terminal", "lang": "bash", "run": null, "out": null, "code": "tsc demo.ts   # genera demo.js"}}}, {"id": "cursor", "icon": "🤖", "nav": "Cursor: copiloto", "crumb": "cursor", "num": "09", "emoji": "🤖", "title": "Cursor: copiloto, no piloto", "lead": "Ahora que ya hay código que vale la pena interrogar, entra la IA. Pero con una regla clara.", "html": "\n  <div class=\"callout key\"><div class=\"ic\">🧭</div><div class=\"body\"><strong>Cursor es un copiloto, no el piloto.</strong> Lo usas para que te <strong>explique o acelere</strong> código que <strong>tú entiendes</strong>, no para que piense por ti. Quien no entiende lo que Cursor escribe, no programa: copia.</div></div>\n\n  <h3>Cómo lo usas hoy</h3>\n  <p>No le pides que escriba algo nuevo. Le pides que <strong>explique</strong> algo que ya entiendes, para evaluar si Cursor explica bien y acostumbrarte a leerlo con criterio.</p>\n  <p>Abre <code>demo.ts</code> en Cursor y pídele en el chat:</p>\n  __CODE_cursor__\n  <p>Lee su respuesta y <strong>contrástala</strong> con lo que ya sabes. Si coincide, confirmas que entendiste. Si Cursor dice algo raro, lo detectas <strong>justo porque tú ya sabías la respuesta</strong>.</p>\n  <div class=\"def\">\n    <div class=\"tech\"><div class=\"tag\">▸ La clave</div><p>Si no sabes, no puedes evaluar. Por eso primero aprendes tú y después usas la IA como acelerador.</p></div>\n    <div class=\"real\"><div class=\"tag\">● En una frase</div><p>El <strong>criterio es tuyo</strong>; la <strong>velocidad es de Cursor</strong>.</p></div>\n  </div>\n  ", "codes": {"cursor": {"file": "Cursor · chat", "lang": "text", "run": null, "out": null, "code": "Explícame por qué esta línea marca error de tipos."}}}, {"id": "quiz", "icon": "🧠", "nav": "Ponte a prueba", "crumb": "quiz", "num": "10", "emoji": "🧠", "title": "Ponte a prueba", "lead": "Piensa tú la respuesta antes de revelarla. No es examen: es para ver si los conceptos quedaron firmes.", "html": "\n  __QUIZ__\n  ", "quiz": [{"q": "En una app, el nombre de una tarea se puede editar, pero su fecha de creación nunca debería cambiar. ¿Qué usas para cada uno?", "a": "<code>let</code> para el nombre (cambia) y <code>const</code> para la fecha (no debe cambiar). De hecho, la buena práctica es usar <code>const</code> por defecto y cambiar a <code>let</code> solo cuando sabes que el valor va a variar."}, {"q": "Si escribes <code>const prioridad = &quot;5&quot;;</code> con comillas, ¿qué responde <code>typeof prioridad</code>?", "a": "<code>string</code>. Las comillas mandan: aunque veas un cinco, JavaScript lo trató como texto. Esta confusión entre &quot;parece número&quot; y &quot;es texto&quot; es justo la que causa el 510."}, {"q": "Si <code>undefined</code> y <code>null</code> los dos significan &quot;no hay valor&quot;, ¿para qué existen los dos?", "a": "No son lo mismo: la diferencia es quién y con qué intención. <code>undefined</code> lo pone JavaScript cuando algo quedó sin llenar. <code>null</code> lo pones tú a propósito para decir &quot;esto está vacío y es deliberado&quot;."}, {"q": "¿Por qué se usa <code>===</code> (tres signos) y no <code>=</code> (uno) para comparar?", "a": "Un <code>=</code> asigna (mete un valor en una variable). Tres <code>===</code> comparan (preguntan si dos valores son iguales). Regla: uno asigna, tres preguntan."}, {"q": "¿Por qué <code>&quot;5&quot; + 10</code> da <code>510</code> y no <code>15</code>? ¿Y por qué es peor que un error que rompe el programa?", "a": "El <code>+</code> también sirve para pegar texto, así que JavaScript pegó el 10 al texto &quot;5&quot; (coerción). Es peor que un error visible porque nadie se entera: el programa sigue, el cliente paga mal y el bug vive meses sin que nadie lo note."}, {"q": "El archivo .js no dijo nada y el .ts te frenó. En un proyecto que mueve dinero de verdad, ¿cuál prefieres y por qué?", "a": "TypeScript, y por eso la industria lo adoptó como estándar en backend serio (todo nuestro Módulo 2 con NestJS es TypeScript). Cuesta un poco más escribir, pero atrapa errores antes de que lleguen a producción. Es revisar el paracaídas en tierra, no en el aire."}, {"q": "Si no entendieras nada de tipos, ¿podrías darte cuenta de si Cursor te explica bien o mal?", "a": "No. Si no sabes, no puedes evaluar. Por eso primero aprendes tú y después usas la IA como acelerador. El criterio es tuyo; la velocidad es de Cursor."}]}, {"id": "proxima", "icon": "🚀", "nav": "Para la próxima clase", "crumb": "proxima_clase", "num": "11", "emoji": "🚀", "title": "Para la próxima clase", "lead": "Un reto para llevar a casa que abre la puerta a la Clase 3.", "html": "\n  <h3>Recapitulación en una frase</h3>\n  <div class=\"recap\">\n    <span>📦 guardar datos en <b>variables</b></span>\n    <span>🧩 el mapa de <b>tipos</b></span>\n    <span>🟢 los 3 de uso diario: <b>string · number · boolean</b></span>\n    <span>➕ <b>operar</b> con ellos</span>\n    <span>🔄 <b>convertir</b> tipos a mano</span>\n    <span>🔬 el peligro silencioso de la <b>coerción</b></span>\n    <span>🛡️ <b>TypeScript</b> como guardián</span>\n  </div>\n\n  <h3>Sube tu trabajo a GitHub</h3>\n  <p>El trabajo que no se guarda, se pierde. Cierra subiendo lo de hoy:</p>\n  __CODE_git__\n\n  <h3>🧩 El reto para pensar</h3>\n  <div class=\"callout key\"><div class=\"ic\">🤔</div><div class=\"body\">Hoy una tarea tiene prioridad <code>5</code>. ¿Qué pasaría si quisieras que el programa <strong>decida solo</strong>: <em>\"si la prioridad es mayor a 3, márcala como urgente\"</em>? ¿Con qué de lo que vimos hoy se construye esa decisión?</div></div>\n  <div class=\"quiz\">\n    <div class=\"q-ix\">PISTA REVELABLE</div>\n    <div class=\"q-text\">¿Ya lo pensaste? Revela la dirección.</div>\n    <button class=\"reveal-btn\" data-rev>💡 Ver la pista</button>\n    <div class=\"answer\"><div class=\"a-tag\">Hacia dónde va</div><p>La respuesta vive en los <strong>operadores relacionales</strong> (<code>&gt;</code>) que vimos hoy, que producen un <code>boolean</code>. La Clase 3 convierte ese <code>true</code>/<code>false</code> en <strong>decisiones reales</strong> con condicionales (<code>if</code>). Todo lo de hoy fue preparar el terreno para que el programa empiece a <em>decidir</em>.</p></div>\n  </div>\n  ", "codes": {"git": {"file": "terminal", "lang": "bash", "run": null, "out": null, "code": "git add .\ngit commit -m \"Clase 2: variables, tipos, operadores y TypeScript\"\ngit push"}}}]</script>
+<script>(function(){
+"use strict";
+var SECTIONS = JSON.parse(document.getElementById("DATA").textContent);
+
+/* ---------- syntax highlight (tokenizer, HTML-safe) ---------- */
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function span(cls,txt){return '<span class="'+cls+'">'+esc(txt)+'</span>';}
+
+function hi(code, lang){
+  if(lang==="text") return esc(code);
+  var out="", i=0, n=code.length;
+  var KW={const:1,let:1,"var":1,"function":1,"return":1,"if":1,"else":1,console:1};
+  var TY={number:1,string:1,boolean:1,"null":1,undefined:1,object:1,symbol:1,bigint:1};
+  var FN={log:1,Number:1,String:1,parseInt:1,typeof:1};
+  var BOOL={"true":1,"false":1};
+  function isWord(c){return /[A-Za-z_$]/.test(c);}
+  function isWordCont(c){return /[A-Za-z0-9_$]/.test(c);}
+  while(i<n){
+    var c=code[i];
+    // comments
+    if(lang!=="bash" && c==="/" && code[i+1]==="/"){var j=code.indexOf("\n",i);if(j<0)j=n;out+=span("tk-com",code.slice(i,j));i=j;continue;}
+    if(lang==="bash" && c==="#"){var k=code.indexOf("\n",i);if(k<0)k=n;out+=span("tk-com",code.slice(i,k));i=k;continue;}
+    // strings
+    if(c==='"'||c==="'"||c==="`"){var q=c,j2=i+1;while(j2<n&&code[j2]!==q){if(code[j2]==="\\")j2++;j2++;}j2=Math.min(j2+1,n);out+=span("tk-str",code.slice(i,j2));i=j2;continue;}
+    // numbers
+    if(/[0-9]/.test(c)){var j3=i;while(j3<n&&/[0-9.]/.test(code[j3]))j3++;out+=span("tk-num",code.slice(i,j3));i=j3;continue;}
+    // words
+    if(isWord(c)){var j4=i;while(j4<n&&isWordCont(code[j4]))j4++;var w=code.slice(i,j4);
+      var cls = KW[w]?"tk-key":TY[w]?"tk-typ":BOOL[w]?"tk-bool":FN[w]?"tk-fn":null;
+      out+= cls?span(cls,w):esc(w); i=j4; continue;}
+    // operators (only in code langs)
+    if(lang!=="bash" && /[+\-*/=<>!&|]/.test(c)){
+      var j5=i;while(j5<n&&/[+\-*/=<>!&|]/.test(code[j5]))j5++;
+      out+=span("tk-op",code.slice(i,j5));i=j5;continue;}
+    if(lang==="bash" && c==="-"){var j6=i;while(j6<n&&/[-\w]/.test(code[j6]))j6++;out+=span("tk-op",code.slice(i,j6));i=j6;continue;}
+    if(lang==="bash" && /[a-z]/.test(c)){var j7=i;while(j7<n&&/[a-z]/.test(code[j7]))j7++;var bw=code.slice(i,j7);
+      out+= /^(npm|tsc|node|git)$/.test(bw)?span("tk-fn",bw):esc(bw); i=j7; continue;}
+    out+=esc(c); i++;
+  }
+  return out;
+}
+
+function codeBlock(c){
+  var head='<div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>'
+    + '<span class="code-file">'+esc(c.file)+'</span>'
+    + '<button class="copy-btn" type="button">copiar</button></div>';
+  var pre='<pre><code>'+hi(c.code,c.lang)+'</code></pre>';
+  var run="";
+  if(c.run){ run='<div class="run"><span class="arrow">▶</span> '+esc(c.run); if(c.out){run+='&nbsp;&nbsp;<span style="color:#6a6486">→</span>&nbsp; '+esc(c.out);} run+='</div>'; }
+  var b64=btoa(unescape(encodeURIComponent(c.code)));
+  return '<div class="code" data-raw="'+b64+'">'+head+pre+run+'</div>';
+}
+
+function quizBlock(items){
+  var h="";
+  items.forEach(function(it,ix){
+    h+='<div class="quiz"><div class="q-ix">RETO '+(ix+1)+'</div>'
+      + '<div class="q-text">'+it.q+'</div>'
+      + '<button class="reveal-btn" type="button" data-rev>💡 Revelar respuesta</button>'
+      + '<div class="answer"><div class="a-tag">Respuesta correcta</div><p>'+it.a+'</p></div></div>';
+  });
+  return h;
+}
+
+/* ---------- render sections ---------- */
+var content=document.getElementById("content");
+var nav=document.getElementById("nav");
+var html="";
+SECTIONS.forEach(function(sec){
+  var body=sec.html;
+  // inject code blocks
+  if(sec.codes){
+    Object.keys(sec.codes).forEach(function(k){
+      var blk=codeBlock(sec.codes[k]);
+      body=body.replace("__CODE_"+k+"__", function(){return blk;});
+    });
+  }
+  if(sec.quiz){ body=body.replace("__QUIZ__", function(){return quizBlock(sec.quiz);}); }
+  html+='<section class="section" id="sec-'+sec.id+'" data-crumb="'+sec.crumb+'">'
+    + '<div class="sec-eyebrow"><span class="num">'+sec.num+'</span> Clase 2 · módulo 1</div>'
+    + '<h2><span class="emoji">'+sec.emoji+'</span> '+sec.title+'</h2>'
+    + (sec.lead?'<p class="lead">'+sec.lead+'</p>':'')
+    + body + '</section>';
+  // nav
+  var a=document.createElement("a");
+  a.href="#sec-"+sec.id; a.dataset.id=sec.id;
+  a.innerHTML='<span class="ico">'+sec.icon+'</span><span>'+sec.nav+'</span><span class="seen"></span>';
+  nav.appendChild(a);
+});
+content.insertAdjacentHTML("afterbegin",html);
+
+/* ---------- copy buttons ---------- */
+content.addEventListener("click",function(e){
+  var btn=e.target.closest(".copy-btn");
+  if(btn){
+    var b64=btn.closest(".code").getAttribute("data-raw");
+    var text=decodeURIComponent(escape(atob(b64)));
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent="✓ copiado"; btn.classList.add("copied");
+      setTimeout(function(){btn.textContent="copiar";btn.classList.remove("copied");},1500);
+    });
+    return;
+  }
+  var rev=e.target.closest("[data-rev]");
+  if(rev){
+    var ans=rev.parentElement.querySelector(".answer");
+    var open=ans.classList.toggle("show");
+    rev.innerHTML= open ? "🙈 Ocultar respuesta" : "💡 Revelar respuesta";
+  }
+});
+
+/* ---------- nav active + progress ---------- */
+var links=Array.prototype.slice.call(nav.querySelectorAll("a"));
+var secEls=Array.prototype.slice.call(content.querySelectorAll(".section"));
+var seen={}; var total=secEls.length;
+var pbar=document.getElementById("pbar"), pct=document.getElementById("pct");
+var crumbNow=document.getElementById("crumbNow");
+
+function markSeen(id){
+  if(seen[id])return; seen[id]=1;
+  var n=Object.keys(seen).length;
+  var p=Math.round(n/total*100);
+  pbar.style.width=p+"%"; pct.textContent=p+"%";
+  links.forEach(function(l){ if(l.dataset.id===id) l.classList.add("done"); });
+}
+function setActive(id){
+  links.forEach(function(l){ l.classList.toggle("active", l.dataset.id===id); });
+  var sec=document.getElementById("sec-"+id);
+  if(sec){ crumbNow.textContent=sec.dataset.crumb; }
+}
+
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      var id=en.target.id.replace("sec-","");
+      setActive(id); markSeen(id);
+    }
+  });
+},{rootMargin:"-45% 0px -45% 0px",threshold:0});
+secEls.forEach(function(s){io.observe(s);});
+markSeen(SECTIONS[0].id); setActive(SECTIONS[0].id);
+
+/* ---------- mobile menu ---------- */
+var sidebar=document.getElementById("sidebar"), scrim=document.getElementById("scrim");
+document.getElementById("menuToggle").addEventListener("click",function(){
+  sidebar.classList.add("open"); scrim.classList.add("show");
+});
+scrim.addEventListener("click",closeMenu);
+function closeMenu(){sidebar.classList.remove("open");scrim.classList.remove("show");}
+nav.addEventListener("click",function(e){ if(e.target.closest("a")) closeMenu(); });
+
+/* ---------- PRESENTATION MODE ---------- */
+var present=false, slide=0;
+var slideTot=document.getElementById("slideTot"), slideNow=document.getElementById("slideNow");
+slideTot.textContent=total;
+var presentBtn=document.getElementById("presentBtn");
+var exitBtn=document.getElementById("exitPresent");
+
+function showSlide(n){
+  slide=Math.max(0,Math.min(total-1,n));
+  secEls.forEach(function(s,i){ s.classList.toggle("slide-on", i===slide); });
+  slideNow.textContent=slide+1;
+  markSeen(SECTIONS[slide].id); setActive(SECTIONS[slide].id);
+  window.scrollTo(0,0);
+}
+function enterPresent(){
+  present=true; document.body.classList.add("present");
+  // start at current section in view
+  var cur=0; secEls.forEach(function(s,i){ var r=s.getBoundingClientRect(); if(r.top<window.innerHeight*0.5) cur=i; });
+  showSlide(cur);
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
+}
+function exitPresent(){
+  present=false; document.body.classList.remove("present");
+  secEls.forEach(function(s){ s.classList.remove("slide-on"); });
+  if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen().catch(function(){});
+  var el=document.getElementById("sec-"+SECTIONS[slide].id); if(el) el.scrollIntoView();
+}
+presentBtn.addEventListener("click",enterPresent);
+exitBtn.addEventListener("click",exitPresent);
+
+document.addEventListener("keydown",function(e){
+  if(!present){
+    if(e.key==="p"||e.key==="P"){ enterPresent(); }
+    return;
+  }
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){ e.preventDefault(); showSlide(slide+1); }
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); showSlide(slide-1); }
+  else if(e.key==="Escape"){ exitPresent(); }
+  else if(e.key==="Home"){ showSlide(0); }
+  else if(e.key==="End"){ showSlide(total-1); }
+});
+document.addEventListener("fullscreenchange",function(){
+  if(!document.fullscreenElement && present) exitPresent();
+});
+
+/* ---------- constellation background ---------- */
+var cv=document.getElementById("stars"), ctx=cv.getContext("2d"), pts=[], raf;
+function sizeCv(){ cv.width=innerWidth; cv.height=innerHeight; }
+function initPts(){
+  pts=[]; var n=Math.min(70,Math.floor(innerWidth/22));
+  for(var i=0;i<n;i++){ pts.push({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25}); }
+}
+var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(var i=0;i<pts.length;i++){
+    var p=pts[i]; p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>cv.width)p.vx*=-1; if(p.y<0||p.y>cv.height)p.vy*=-1;
+    ctx.beginPath(); ctx.arc(p.x,p.y,1.4,0,6.28); ctx.fillStyle="#7d4df5"; ctx.fill();
+    for(var j=i+1;j<pts.length;j++){
+      var q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d=dx*dx+dy*dy;
+      if(d<13000){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle="rgba(96,24,240,"+(0.14*(1-d/13000))+")"; ctx.lineWidth=1; ctx.stroke(); }
+    }
+  }
+  raf=requestAnimationFrame(draw);
+}
+sizeCv(); initPts();
+if(!reduce){ draw(); } else { /* static frame */ draw(); cancelAnimationFrame(raf); }
+addEventListener("resize",function(){ sizeCv(); initPts(); });
+})();
+</script>
+</body>
+</html>

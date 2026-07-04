@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 3 · Condicionales, ciclos y funciones — Dev Senior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#5418CC;
+  --violet:#6018F0;
+  --dark:#3C1884;
+  --lilac:#B69BF5;
+  --lilac-soft:#D9CCFA;
+  --bg:#0B0713;
+  --bg-2:#120A22;
+  --card:#180F2B;
+  --card-2:#1F1437;
+  --border:#2C1F49;
+  --border-bright:#3D2A66;
+  --text:#EDE7FB;
+  --text-dim:#A99FC4;
+  --text-faint:#6E6390;
+  --ok:#34D399;
+  --warn:#FBBF24;
+  --danger:#F87171;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ---------- constellation bg ---------- */
+#constellation{position:fixed;inset:0;z-index:0;opacity:.5;pointer-events:none}
+
+/* ---------- progress top bar ---------- */
+#progress-top{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--violet),var(--lilac));z-index:200;transition:width .25s ease;box-shadow:0 0 12px var(--violet)}
+
+/* ---------- layout ---------- */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:300px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(24,15,43,.94),rgba(11,7,19,.94));
+  border-right:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;
+  padding:26px 18px;
+  z-index:50;
+}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px 20px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.brand-logo{
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--violet),var(--dark));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:20px;color:#fff;
+  box-shadow:0 4px 16px rgba(96,24,240,.4);
+}
+.brand-txt h1{font-size:13px;font-weight:800;letter-spacing:.3px;line-height:1.25}
+.brand-txt span{font-size:11px;color:var(--lilac);font-weight:600}
+
+.progress-wrap{padding:0 8px 16px}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-bottom:7px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.progress-track{height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--lilac));border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+
+.nav{flex:1;overflow-y:auto;margin:0 -6px;padding:0 6px}
+.nav::-webkit-scrollbar{width:5px}
+.nav::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:9px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 12px;border-radius:11px;cursor:pointer;
+  color:var(--text-dim);font-size:13.5px;font-weight:500;
+  transition:all .16s ease;margin-bottom:3px;position:relative;
+  border:1px solid transparent;
+}
+.nav-item:hover{background:var(--card-2);color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,rgba(96,24,240,.22),rgba(96,24,240,.08));color:#fff;border-color:var(--border-bright)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:linear-gradient(var(--violet),var(--lilac));border-radius:9px}
+.nav-ico{width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;border-radius:8px;background:var(--card-2);transition:all .16s}
+.nav-item.active .nav-ico{background:var(--violet);box-shadow:0 2px 10px rgba(96,24,240,.5)}
+.nav-num{margin-left:auto;font-size:10px;font-family:var(--mono);color:var(--text-faint);font-weight:700}
+.nav-check{margin-left:auto;color:var(--ok);font-size:13px;display:none}
+.nav-item.seen .nav-check{display:block}
+.nav-item.seen .nav-num{display:none}
+
+.sidebar-foot{padding:14px 8px 0;border-top:1px solid var(--border);margin-top:10px}
+.present-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px;border-radius:11px;border:1px solid var(--border-bright);
+  background:linear-gradient(135deg,var(--indigo),var(--dark));
+  color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .18s;
+}
+.present-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(84,24,204,.5)}
+.kbd-hint{text-align:center;font-size:10.5px;color:var(--text-faint);margin-top:9px}
+.kbd{font-family:var(--mono);background:var(--card-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:10px;color:var(--lilac)}
+
+/* ---------- main ---------- */
+.main{flex:1;min-width:0;position:relative}
+.content{max-width:880px;margin:0 auto;padding:54px 44px 90px}
+
+.section{display:none;animation:fade .45s ease}
+.section.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--lilac);margin-bottom:14px;padding:5px 13px;background:rgba(96,24,240,.12);border:1px solid var(--border-bright);border-radius:99px}
+h2.section-title{font-size:38px;font-weight:900;line-height:1.12;letter-spacing:-1px;margin-bottom:10px}
+h2.section-title .accent{background:linear-gradient(120deg,var(--lilac),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-lead{font-size:17px;color:var(--text-dim);margin-bottom:32px;max-width:680px}
+
+h3{font-size:21px;font-weight:800;margin:34px 0 13px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+h3 .h3-bar{width:4px;height:20px;background:linear-gradient(var(--violet),var(--lilac));border-radius:9px;flex-shrink:0}
+p{margin-bottom:14px;color:var(--text)}
+p.dim{color:var(--text-dim)}
+strong{color:#fff;font-weight:700}
+em{color:var(--lilac);font-style:italic}
+
+/* def cards */
+.def-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:680px){.def-grid{grid-template-columns:1fr}}
+.def-card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px}
+.def-card .def-tag{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:9px;display:inline-flex;align-items:center;gap:6px}
+.def-card.tech .def-tag{color:var(--lilac)}
+.def-card.life .def-tag{color:var(--warn)}
+.def-card p{font-size:14.5px;margin:0;color:var(--text-dim)}
+.def-card p em{color:var(--text);font-style:italic}
+
+/* code block */
+.code-wrap{position:relative;margin:18px 0}
+.code-head{display:flex;align-items:center;justify-content:space-between;background:var(--card-2);border:1px solid var(--border);border-bottom:none;border-radius:12px 12px 0 0;padding:9px 15px}
+.code-file{font-family:var(--mono);font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:8px}
+.code-dot{width:9px;height:9px;border-radius:50%;background:var(--violet)}
+.copy-btn{background:transparent;border:1px solid var(--border-bright);color:var(--text-dim);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:7px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.copy-btn:hover{background:var(--violet);color:#fff;border-color:var(--violet)}
+.copy-btn.done{background:var(--ok);color:#06281c;border-color:var(--ok)}
+pre{background:#0C0818;border:1px solid var(--border);border-radius:0 0 12px 12px;padding:17px 18px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.7}
+pre::-webkit-scrollbar{height:7px}
+pre::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:9px}
+code{font-family:var(--mono)}
+p code,li code{background:var(--card-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.86em;color:var(--lilac)}
+/* syntax */
+.tok-key{color:#C792EA}.tok-str{color:#C3E88D}.tok-num{color:#F78C6C}.tok-com{color:#5E6687;font-style:italic}.tok-fn{color:#82AAFF}.tok-op{color:#89DDFF}.tok-bool{color:#FF9CAC}
+
+/* run line */
+.run{display:flex;gap:11px;align-items:flex-start;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.25);border-radius:11px;padding:13px 16px;margin:14px 0;font-size:14px}
+.run .run-ico{color:var(--ok);flex-shrink:0;margin-top:1px}
+.run p{margin:0;color:var(--text-dim);font-size:14px}
+.run code{background:rgba(52,211,153,.12);color:#9af5cf;border-color:transparent}
+
+/* tip banner */
+.tip{display:flex;gap:13px;background:linear-gradient(135deg,rgba(96,24,240,.14),rgba(96,24,240,.04));border:1px solid var(--border-bright);border-left:3px solid var(--violet);border-radius:12px;padding:16px 18px;margin:20px 0}
+.tip .tip-ico{font-size:20px;flex-shrink:0}
+.tip p{margin:0;font-size:14.5px;color:var(--text)}
+.tip.gold{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.03));border-left-color:var(--warn);border-color:rgba(251,191,36,.3)}
+
+/* socratic reveal */
+.socratic{background:var(--card);border:1px solid var(--border-bright);border-radius:15px;padding:22px;margin:22px 0;position:relative;overflow:hidden}
+.socratic::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--violet),var(--lilac))}
+.soc-q{display:flex;gap:11px;align-items:flex-start;margin-bottom:16px}
+.soc-q .soc-ico{font-size:19px;flex-shrink:0}
+.soc-q p{margin:0;font-size:16px;font-weight:600;color:#fff}
+.soc-reveal-btn{display:inline-flex;align-items:center;gap:8px;background:var(--card-2);border:1px solid var(--border-bright);color:var(--lilac);font-family:var(--sans);font-size:13px;font-weight:700;padding:9px 16px;border-radius:9px;cursor:pointer;transition:all .18s}
+.soc-reveal-btn:hover{background:var(--violet);color:#fff;border-color:var(--violet)}
+.soc-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,margin .3s,opacity .3s;opacity:0}
+.soc-answer.open{max-height:600px;opacity:1;margin-top:16px}
+.soc-answer-inner{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.25);border-radius:11px;padding:15px 17px}
+.soc-answer-inner .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--ok);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.soc-answer-inner p{margin:0;font-size:14.5px;color:var(--text)}
+
+/* flow diagram (signature) */
+.flow{margin:24px 0;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+.flow svg{width:100%;height:auto;display:block}
+.flow-cap{text-align:center;font-size:12.5px;color:var(--text-faint);padding:6px 0 10px;font-family:var(--mono)}
+
+/* falsy chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.chip{font-family:var(--mono);font-size:13px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.35);color:#fca5a5;padding:8px 15px;border-radius:9px;font-weight:600}
+.chip.t{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);color:#86efac}
+
+/* compare good/bad */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:680px){.cmp{grid-template-columns:1fr}}
+.cmp-col .cmp-head{font-size:12.5px;font-weight:800;padding:8px 14px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:7px}
+.cmp-col.bad .cmp-head{background:rgba(248,113,113,.12);color:#fca5a5;border:1px solid rgba(248,113,113,.3);border-bottom:none}
+.cmp-col.good .cmp-head{background:rgba(52,211,153,.12);color:#86efac;border:1px solid rgba(52,211,153,.3);border-bottom:none}
+.cmp-col pre{border-radius:0 0 11px 11px;margin:0;font-size:12.5px}
+.cmp-col.bad pre{border-color:rgba(248,113,113,.3)}
+.cmp-col.good pre{border-color:rgba(52,211,153,.3)}
+
+/* error type cards */
+.err-card{border-radius:14px;padding:2px;margin:16px 0}
+.err-card.syntax{background:linear-gradient(135deg,rgba(251,191,36,.4),transparent)}
+.err-card.logic{background:linear-gradient(135deg,rgba(248,113,113,.5),transparent)}
+.err-inner{background:var(--card);border-radius:12px;padding:18px 20px}
+.err-badge{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:5px 12px;border-radius:8px;margin-bottom:12px}
+.err-card.syntax .err-badge{background:rgba(251,191,36,.15);color:var(--warn)}
+.err-card.logic .err-badge{background:rgba(248,113,113,.15);color:var(--danger)}
+
+/* footer / closing */
+.closing{background:linear-gradient(135deg,var(--card-2),var(--card));border:1px solid var(--border-bright);border-radius:18px;padding:30px;margin:26px 0}
+.bridge{background:linear-gradient(135deg,rgba(96,24,240,.16),rgba(96,24,240,.04));border:1px solid var(--border-bright);border-radius:16px;padding:24px;margin:20px 0;text-align:center}
+.bridge .b-ico{font-size:30px;margin-bottom:10px}
+.bridge h4{font-size:19px;font-weight:800;margin-bottom:10px}
+.bridge p{color:var(--text-dim);font-size:15px;max-width:560px;margin:0 auto 8px}
+
+/* recap grid */
+.recap{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:20px 0}
+@media(max-width:680px){.recap{grid-template-columns:1fr}}
+.recap-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.recap-card .r-ico{font-size:26px;margin-bottom:9px}
+.recap-card h5{font-size:15px;font-weight:800;margin-bottom:5px}
+.recap-card p{font-size:12.5px;color:var(--text-faint);margin:0}
+
+footer{border-top:1px solid var(--border);padding:24px 44px;text-align:center;font-size:12px;color:var(--text-faint);position:relative;z-index:1}
+footer a{color:var(--lilac);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* section foot nav */
+.sec-nav{display:flex;justify-content:space-between;gap:14px;margin-top:46px;padding-top:24px;border-top:1px solid var(--border)}
+.sec-nav button{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 18px;cursor:pointer;text-align:left;transition:all .18s;color:var(--text);font-family:var(--sans)}
+.sec-nav button:hover:not(:disabled){background:var(--card-2);border-color:var(--border-bright);transform:translateY(-1px)}
+.sec-nav button:disabled{opacity:.3;cursor:default}
+.sec-nav button.next{text-align:right}
+.sec-nav .sn-lbl{font-size:11px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.sec-nav .sn-title{font-size:14.5px;font-weight:700;color:#fff;margin-top:3px}
+
+/* mobile */
+.menu-toggle{display:none;position:fixed;top:14px;left:14px;z-index:120;background:var(--violet);border:none;width:44px;height:44px;border-radius:12px;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(84,24,204,.5)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;backdrop-filter:blur(2px)}
+@media(max-width:920px){
+  .menu-toggle{display:flex;align-items:center;justify-content:center}
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .3s ease;width:290px}
+  .sidebar.open{transform:none}
+  .overlay.show{display:block}
+  .content{padding:74px 22px 70px}
+  h2.section-title{font-size:30px}
+}
+
+/* presentation mode */
+body.present .sidebar,body.present .menu-toggle,body.present #progress-top{display:none}
+body.present .content{max-width:1100px;padding:60px 70px;display:flex;flex-direction:column;justify-content:center;min-height:100vh}
+body.present .sec-nav{display:none}
+body.present .main{display:flex;align-items:center}
+body.present h2.section-title{font-size:46px}
+body.present .section-lead{font-size:20px}
+body.present footer{display:none}
+.present-hud{display:none}
+body.present .present-hud{display:flex;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);gap:14px;align-items:center;background:rgba(24,15,43,.92);border:1px solid var(--border-bright);border-radius:99px;padding:9px 18px;z-index:150;backdrop-filter:blur(10px)}
+.present-hud .ph-dot{display:flex;gap:6px}
+.present-hud .d{width:7px;height:7px;border-radius:50%;background:var(--border-bright);transition:all .2s}
+.present-hud .d.on{background:var(--lilac);width:20px;border-radius:9px}
+.present-hud .ph-txt{font-size:12px;color:var(--text-dim);font-family:var(--mono)}
+.present-hud .ph-exit{background:var(--card-2);border:1px solid var(--border-bright);color:var(--text-dim);font-size:11px;padding:4px 11px;border-radius:8px;cursor:pointer;font-family:var(--sans);font-weight:600}
+.present-hud .ph-exit:hover{color:#fff;background:var(--violet)}
+</style>
+</head>
+<body>
+<div id="progress-top"></div>
+<canvas id="constellation"></canvas>
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">d/</div>
+      <div class="brand-txt">
+        <h1>JavaScript AI Backend</h1>
+        <span>Clase 3 · Módulo 1</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Tu avance</span><span id="pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-foot">
+      <button class="present-btn" onclick="enterPresent()">▶ Modo presentación</button>
+      <div class="kbd-hint">Navega con <span class="kbd">←</span> <span class="kbd">→</span> · sal con <span class="kbd">Esc</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="content" id="content"></div>
+    <footer>
+      © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · <a href="https://linkedin.com/in/ana-alvarado-instructora-full-stack" target="_blank">linkedin.com/in/ana-alvarado-instructora-full-stack</a>
+    </footer>
+  </main>
+</div>
+
+<div class="present-hud">
+  <button class="ph-exit" onclick="exitPresent()">Esc · salir</button>
+  <div class="ph-dot" id="hudDots"></div>
+  <span class="ph-txt" id="hudTxt">1 / 9</span>
+</div>
+
+<script>
+/* ============ CONTENT DATA ============ */
+const sections = [
+  {
+    id:'intro', icon:'🚀', nav:'Lo que ya sabes',
+    eyebrow:'Repaso vivo',
+    title:['Antes de avanzar, ','mira cuánto sabes'],
+    lead:'No te voy a contar lo que aprendiste en las clases anteriores. Lo vas a comprobar tú mismo. Tienes un entorno montado, sabes guardar datos y hasta detectaste un error silencioso.',
+    body:`
+      <h3><span class="h3-bar"></span>De dónde venimos</h3>
+      <p class="dim">En la Clase 1 montaste tu entorno: instalaste Node, que te deja correr JavaScript <strong>fuera del navegador</strong>, en tu propia máquina. Por eso puedes ejecutar <code>node archivo.js</code> en la terminal.</p>
+      <p class="dim">En la Clase 2 conociste las variables, los tipos de datos y un misterio: el del <strong>510</strong>.</p>
+
+      <div class="tip gold">
+        <span class="tip-ico">🕵️</span>
+        <p>Un precio llegó como texto <code>"5"</code> y al sumarle <code>10</code> el resultado fue <code>"510"</code>, no <code>15</code>. JavaScript no se equivocó: hizo <strong>coerción</strong>. Como uno era texto, convirtió el otro a texto y los <strong>pegó</strong> en vez de sumarlos.</p>
+      </div>
+
+      <div class="code-wrap" data-code="console.log(&quot;5&quot; + 10);   // → &quot;510&quot;  (concatena)
+console.log(5 + 10);     // → 15     (suma de verdad)">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>repaso.js</span></div>
+      </div>
+
+      <p class="dim">Y conociste a <strong>TypeScript</strong>: le haces una promesa con <code>: number</code> y, si la rompes, te subraya en rojo <em>antes</em> de ejecutar. El criterio sigue siendo tuyo; TypeScript solo te avisa a tiempo.</p>
+
+      <div class="tip">
+        <span class="tip-ico">🎯</span>
+        <p>Hoy das el salto más importante hasta ahora: que el programa <strong>tome decisiones por sí solo</strong>.</p>
+      </div>
+    `
+  },
+  {
+    id:'decision', icon:'💼', nav:'El reto del negocio',
+    eyebrow:'Caso real',
+    title:['Una empresa necesita ','que el código decida'],
+    lead:'Antes de ver una herramienta, sintamos por qué la necesitamos. Este es el problema que vamos a resolver hoy.',
+    body:`
+      <div class="tip gold">
+        <span class="tip-ico">🏢</span>
+        <p>Imagina una app de tareas usada por una empresa, con <strong>cientos de tareas</strong>. El jefe pide algo simple: <em>que las tareas con prioridad mayor a 3 se marquen solas como URGENTE</em>. Nadie las va a marcar a mano. ¿Cómo le enseñamos al programa a <strong>decidir</strong> eso por sí mismo?</p>
+      </div>
+
+      <p>La pieza que falta se llama <strong>condicional</strong>. Y se apoya en algo que <strong>ya tienes</strong>: los operadores relacionales de la Clase 2 (<code>&gt;</code>, <code>&lt;</code>, <code>===</code>).</p>
+      <p class="dim">El operador <code>prioridad &gt; 3</code> ya te da un <code>true</code> o un <code>false</code>. Hoy aprendes a <strong>actuar</strong> según ese resultado.</p>
+
+      <div class="tip">
+        <span class="tip-ico">🔗</span>
+        <p>Esta es exactamente la pregunta que quedó abierta al final de la Clase 2. Hoy tiene respuesta.</p>
+      </div>
+    `
+  },
+  {
+    id:'condicionales', icon:'🔀', nav:'Condicionales',
+    eyebrow:'Tema 1',
+    title:['El nacimiento ','de la lógica'],
+    lead:'El if es la primera vez que el programa deja de ejecutarse en línea recta y empieza a bifurcarse. Decide.',
+    body:`
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Definición técnica</div><p>Un <strong>condicional</strong> evalúa una expresión que da <code>true</code> o <code>false</code>, y ejecuta un bloque de código solo si el resultado es <code>true</code>.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 En la vida real</div><p>Es lo que hace tu cabeza todo el día: <em>"si está lloviendo, llevo paraguas"</em>. La condición se evalúa, y la acción ocurre solo si se cumple.</p></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El <code>if</code> más simple</h3>
+      <p class="dim">Evalúa lo que está entre paréntesis; si es <code>true</code>, corre lo de las llaves; si es <code>false</code>, lo salta. Este código va en un archivo nuevo: crea <code>clase3.js</code>.</p>
+      <div class="code-wrap" data-code="const prioridad = 5;
+
+if (prioridad > 3) {
+  console.log(&quot;Esta tarea es URGENTE&quot;);
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>clase3.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>Con <code>5</code> sale el mensaje, porque <code>5 &gt; 3</code> es <code>true</code>. Cambia <code>prioridad</code> a <code>2</code>: <strong>no sale nada</strong>. La condición fue <code>false</code> y el bloque se saltó. No hacer nada también es una decisión válida.</p></div>
+
+      <h3><span class="h3-bar"></span>El <code>else</code>: el otro camino</h3>
+      <p class="dim">"Haz esto si se cumple… y si no, haz esto otro."</p>
+      <div class="code-wrap" data-code="const prioridad = 2;
+
+if (prioridad > 3) {
+  console.log(&quot;URGENTE&quot;);
+} else {
+  console.log(&quot;normal&quot;);
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>clase3.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>Siempre sale <strong>uno de los dos</strong>: nunca ninguno, nunca los dos.</p></div>
+
+      <h3><span class="h3-bar"></span>El <code>else if</code>: más de dos caminos</h3>
+      <p class="dim">La vida no siempre es blanco o negro. A veces hay niveles.</p>
+      <div class="code-wrap" data-code="const prioridad = 4;
+
+if (prioridad >= 5) {
+  console.log(&quot;crítica&quot;);
+} else if (prioridad >= 3) {
+  console.log(&quot;alta&quot;);
+} else {
+  console.log(&quot;baja&quot;);
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>clase3.js</span></div>
+      </div>
+      <div class="tip">
+        <span class="tip-ico">🔑</span>
+        <p>JavaScript revisa las condiciones <strong>de arriba hacia abajo</strong> y se queda con <strong>la primera que sea <code>true</code></strong>. Por eso las condiciones más exigentes van <strong>primero</strong>.</p>
+      </div>
+
+      <div class="socratic" data-answer="Saldría 'alta', no 'crítica'. Como 5 >= 3 ya es true, JavaScript se queda con esa condición y nunca evalúa la de abajo. Por eso las condiciones más exigentes van primero.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>Si pongo la condición <code>&gt;= 3</code> arriba de <code>&gt;= 5</code>, ¿qué pasaría con una prioridad de <code>5</code>?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El mismo patrón, otros mundos</h3>
+      <div class="cmp">
+        <div class="cmp-col good"><div class="cmp-head">🏧 Cajero / saldo</div><pre><code><span class="tok-key">const</span> saldo = <span class="tok-num">100</span>;
+<span class="tok-key">const</span> retiro = <span class="tok-num">150</span>;
+
+<span class="tok-key">if</span> (retiro &lt;= saldo) {
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"Aprobado"</span>);
+} <span class="tok-key">else</span> {
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"Sin fondos"</span>);
+}</code></pre></div>
+        <div class="cmp-col good"><div class="cmp-head">🔞 Edad / acceso</div><pre><code><span class="tok-key">const</span> edad = <span class="tok-num">17</span>;
+
+<span class="tok-key">if</span> (edad &gt;= <span class="tok-num">18</span>) {
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"Permitido"</span>);
+} <span class="tok-key">else</span> {
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"Denegado"</span>);
+}</code></pre></div>
+      </div>
+    `
+  },
+  {
+    id:'truthy', icon:'⚖️', nav:'Verdadero y falso',
+    eyebrow:'Tema 2',
+    title:['Verdadero y falso ','de verdad'],
+    lead:'¿Qué pasa si dentro de un if pones un valor solo, sin comparar? JavaScript tiene su propia idea de qué es "verdadero".',
+    body:`
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Definición técnica</div><p>Cuando JavaScript evalúa un valor como condición, lo convierte a <code>true</code> o <code>false</code>. A los que se vuelven <code>false</code> los llamamos <strong>falsy</strong>; al resto, <strong>truthy</strong>.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 Para qué sirve</div><p>Para preguntar <em>"¿este dato existe / tiene contenido?"</em> sin escribir comparaciones largas.</p></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>Los únicos seis valores falsy</h3>
+      <p class="dim">Solo estos seis se consideran <code>false</code>. Memoriza esta lista corta:</p>
+      <div class="chips">
+        <span class="chip">false</span><span class="chip">0</span><span class="chip">"" (texto vacío)</span><span class="chip">null</span><span class="chip">undefined</span><span class="chip">NaN</span>
+      </div>
+      <p class="dim"><strong>Todo lo demás es truthy</strong>, incluso cosas que sorprenden:</p>
+      <div class="code-wrap" data-code="if (&quot;0&quot;)  console.log(&quot;entra&quot;);   // entra: &quot;0&quot; es texto, no vacío
+if ([])   console.log(&quot;entra&quot;);   // entra: un array vacío es truthy
+if (&quot; &quot;)  console.log(&quot;entra&quot;);   // entra: un espacio es texto no vacío">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>truthy.js</span></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>En nuestro gestor de tareas</h3>
+      <div class="code-wrap" data-code="const titulo = &quot;&quot;;
+
+if (titulo) {
+  console.log(&quot;La tarea tiene título&quot;);
+} else {
+  console.log(&quot;Falta el título&quot;);   // ← entra aquí: &quot;&quot; es falsy
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>truthy.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>Sale "Falta el título" porque el texto vacío es falsy. Cambia <code>titulo</code> a <code>"Pagar factura"</code> y ahora sí entra al primer camino.</p></div>
+
+      <div class="socratic" data-answer="Diría que SÍ tiene título. Un espacio es texto no vacío, así que es truthy. Es una trampa real en producción: por eso más adelante se limpian los espacios antes de validar.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>Si una tarea tiene como título un espacio en blanco <code>" "</code>, ¿el programa diría que tiene título o que le falta?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+    `
+  },
+  {
+    id:'ciclos', icon:'🔁', nav:'Ciclos',
+    eyebrow:'Tema 3',
+    title:['Repetir sin ','escribir mil veces'],
+    lead:'Un if decide una vez. Pero una empresa no tiene una tarea: tiene cientos. Necesitamos repetir sin reescribir.',
+    body:`
+      <div class="tip gold">
+        <span class="tip-ico">📋</span>
+        <p>Tenemos 200 tareas y queremos revisar cuáles son urgentes. ¿Vamos a escribir 200 <code>if</code>? Nadie hace eso. Le pedimos al programa que <strong>recorra</strong> la lista por nosotros.</p>
+      </div>
+
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Definición técnica</div><p>Un <strong>ciclo</strong> repite un bloque de código mientras se cumpla una condición, o una vez por cada elemento de una colección.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 En la vida real</div><p>Es "revisar uno por uno": <em>pasar lista en un salón, nombre por nombre, hasta el último</em>.</p></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El <code>for</code> clásico</h3>
+      <p class="dim">Tiene tres partes: desde dónde empieza, hasta cuándo sigue, y cómo avanza cada vuelta.</p>
+      <div class="code-wrap" data-code="for (let i = 0; i < 3; i++) {
+  console.log(&quot;Vuelta número &quot; + i);
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>ciclos.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>Imprime las vueltas 0, 1 y 2. <code>let i = 0</code> empieza en 0 · <code>i &lt; 3</code> sigue mientras sea menor a 3 · <code>i++</code> suma 1 cada vuelta.</p></div>
+      <div class="tip">
+        <span class="tip-ico">🔑</span>
+        <p>Aquí usamos <code>let i</code>, no <code>const</code>, porque el contador <strong>cambia</strong> en cada vuelta. Es la excepción a la regla de "<code>const</code> por defecto": cuando algo muta de verdad, <code>let</code>.</p>
+      </div>
+
+      <div class="socratic" data-answer="Porque < 3 significa 'estrictamente menor que 3'. Cuando i llega a 3, la condición 3 < 3 es false y el ciclo se detiene antes de entrar. Empezar en 0 y parar antes del total es lo normal en programación.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>¿Por qué imprime hasta el <code>2</code> y no llega al <code>3</code>, si dije <code>&lt; 3</code>?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El <code>for...of</code>: recorrer una lista</h3>
+      <p class="dim">Casi siempre lo que queremos es recorrer <strong>una lista de cosas</strong>. Una lista se escribe entre corchetes <code>[ ]</code>.</p>
+      <div class="code-wrap" data-code="const tareas = [&quot;Pagar factura&quot;, &quot;Regar plantas&quot;, &quot;Llamar cliente&quot;];
+
+for (const tarea of tareas) {
+  console.log(&quot;Tarea: &quot; + tarea);
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>ciclos.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>Se lee casi como español: "para cada <code>tarea</code> dentro de <code>tareas</code>…".</p></div>
+
+      <h3><span class="h3-bar"></span>Juntando todo: ciclo + condicional</h3>
+      <p>Aquí la clase se conecta. Recorremos las tareas <strong>y</strong> decidimos sobre cada una. Esto es el problema del negocio, resuelto.</p>
+      <div class="code-wrap" data-code="const tareas = [
+  { titulo: &quot;Pagar factura&quot;, prioridad: 5 },
+  { titulo: &quot;Regar plantas&quot;, prioridad: 2 },
+  { titulo: &quot;Llamar cliente&quot;, prioridad: 4 }
+];
+
+for (const tarea of tareas) {
+  if (tarea.prioridad > 3) {
+    console.log(tarea.titulo + &quot; → URGENTE&quot;);
+  } else {
+    console.log(tarea.titulo + &quot; → normal&quot;);
+  }
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>ciclos.js</span></div>
+      </div>
+      <div class="tip gold">
+        <span class="tip-ico">⭐</span>
+        <p>Este es el momento clave: el programa <strong>recorrió la lista y decidió por sí mismo</strong>. Recorrer datos y decidir sobre ellos es el corazón de cualquier sistema real. Lo demás son variaciones de esto.</p>
+      </div>
+
+      <div class="socratic" data-answer="Ni una sola línea. El mismo ciclo funciona con 3 o con 5.000. Esa es la magia del ciclo: el código no crece con los datos. Por eso programar escala.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>Si la lista tuviera 5.000 tareas en vez de 3, ¿cuánto código tendríamos que cambiar?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+    `
+  },
+  {
+    id:'funciones', icon:'🧩', nav:'Funciones',
+    eyebrow:'Tema 4 · el corazón',
+    title:['Funciones: ','no te repitas'],
+    lead:'Si necesitaras la misma lógica en cinco partes del programa, ¿la copiarías cinco veces? Las funciones existen para no repetirnos.',
+    body:`
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Definición técnica</div><p>Una <strong>función</strong> es un bloque de código con nombre que se <strong>define una vez</strong> y se ejecuta las veces que quieras. Puede recibir datos (parámetros) y devolver un resultado (retorno).</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 En la vida real</div><p>Es una <strong>receta</strong>: la escribes una vez y la usas cada vez que cocinas. Le das ingredientes distintos (parámetros) y obtienes un plato (retorno).</p></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>La función más simple</h3>
+      <p class="dim">Definirla <strong>no la ejecuta</strong>: hay que <strong>llamarla</strong> por su nombre.</p>
+      <div class="code-wrap" data-code="function saludar() {
+  console.log(&quot;Hola, bienvenido al gestor de tareas&quot;);
+}
+
+saludar();   // ← esto la ejecuta
+saludar();   // ← la usamos otra vez sin reescribirla">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>funciones.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>El saludo sale <strong>dos veces</strong>: definimos una, ejecutamos dos.</p></div>
+
+      <h3><span class="h3-bar"></span>Con parámetros: darle datos de entrada</h3>
+      <p class="dim">Una receta sin ingredientes siempre da lo mismo. Los <strong>parámetros</strong> reciben datos distintos cada vez.</p>
+      <div class="code-wrap" data-code="function saludarA(nombre) {
+  console.log(&quot;Hola, &quot; + nombre);
+}
+
+saludarA(&quot;Ana&quot;);      // Hola, Ana
+saludarA(&quot;Carlos&quot;);   // Hola, Carlos">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>funciones.js</span></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>Con retorno: que devuelvan un resultado</h3>
+      <p class="dim"><code>console.log</code> solo <strong>muestra</strong>. Pero muchas veces queremos que la función nos <strong>entregue</strong> un valor para seguir usándolo. Eso es <code>return</code>.</p>
+      <div class="code-wrap" data-code="function clasificar(prioridad) {
+  if (prioridad > 3) {
+    return &quot;URGENTE&quot;;
+  } else {
+    return &quot;normal&quot;;
+  }
+}
+
+const resultado = clasificar(5);
+console.log(resultado);       // URGENTE
+console.log(clasificar(2));   // normal">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>funciones.js</span></div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-ico">🔑</span>
+        <p><strong>Mostrar vs. devolver:</strong> <code>console.log(...)</code> muestra algo en pantalla y se acabó. <code>return ...</code> entrega un valor que el programa puede seguir usando.</p>
+      </div>
+
+      <div class="socratic" data-answer="Devuelve undefined — ese valor que significa 'vacío, sin asignar'. No da error: simplemente no entrega nada útil. Si una función debe darnos un resultado, necesita su return.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>¿Qué crees que devuelve una función que <strong>no tiene</strong> <code>return</code>?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+    `
+  },
+  {
+    id:'encadenar', icon:'🔗', nav:'Encadenar funciones',
+    eyebrow:'Tema 4 · lo más potente',
+    title:['El return de una ','alimenta a otra'],
+    lead:'Aquí está la verdadera razón de ser de return. Como la función devuelve un valor, otra puede tomarlo y construir algo más grande.',
+    body:`
+      <p>Mira: <code>construirEtiqueta</code> <strong>no sabe</strong> clasificar — le pide ese trabajo a <code>clasificar</code> y usa su resultado.</p>
+      <div class="code-wrap" data-code="function clasificar(prioridad) {
+  if (prioridad > 3) return &quot;URGENTE&quot;;
+  else return &quot;normal&quot;;
+}
+
+function construirEtiqueta(titulo, prioridad) {
+  const nivel = clasificar(prioridad);   // ← usa el RETURN de clasificar
+  return titulo + &quot; [&quot; + nivel + &quot;]&quot;;
+}
+
+console.log(construirEtiqueta(&quot;Pagar factura&quot;, 5));   // Pagar factura [URGENTE]
+console.log(construirEtiqueta(&quot;Regar plantas&quot;, 2));   // Regar plantas [normal]">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>encadenar.js</span></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El flujo del valor, paso a paso</h3>
+      <div class="flow">
+        <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+          <defs>
+            <linearGradient id="gv" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#6018F0"/><stop offset="1" stop-color="#3C1884"/>
+            </linearGradient>
+            <linearGradient id="gok" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#059669"/>
+            </linearGradient>
+            <marker id="arr" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#B69BF5"/></marker>
+            <marker id="arrk" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#34D399"/></marker>
+          </defs>
+
+          <!-- box 1 -->
+          <rect x="150" y="14" width="420" height="50" rx="11" fill="url(#gv)" opacity=".9"/>
+          <text x="360" y="38" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">construirEtiqueta("Pagar factura", 5)</text>
+          <text x="360" y="55" fill="#D9CCFA" font-size="11" text-anchor="middle">necesita el nivel → llama a clasificar(5)</text>
+
+          <line x1="360" y1="64" x2="360" y2="92" stroke="#B69BF5" stroke-width="2" marker-end="url(#arr)"/>
+
+          <!-- box 2 -->
+          <rect x="240" y="94" width="240" height="46" rx="11" fill="#1F1437" stroke="#3D2A66"/>
+          <text x="360" y="113" fill="#82AAFF" font-size="13" font-weight="700" text-anchor="middle">clasificar(5)</text>
+          <text x="360" y="130" fill="#A99FC4" font-size="11" text-anchor="middle">5 &gt; 3 es true</text>
+
+          <line x1="360" y1="140" x2="360" y2="166" stroke="#B69BF5" stroke-width="2" marker-end="url(#arr)"/>
+
+          <!-- return box -->
+          <rect x="250" y="168" width="220" height="40" rx="10" fill="rgba(52,211,153,.12)" stroke="#34D399"/>
+          <text x="360" y="193" fill="#86efac" font-size="13" font-weight="700" text-anchor="middle">return "URGENTE"</text>
+
+          <!-- the value travels back -->
+          <path d="M470,188 C560,188 560,250 470,250" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrk)"/>
+          <text x="588" y="222" fill="#34D399" font-size="10.5" text-anchor="middle">el valor</text>
+          <text x="588" y="236" fill="#34D399" font-size="10.5" text-anchor="middle">viaja de vuelta</text>
+
+          <!-- nivel box -->
+          <rect x="240" y="230" width="240" height="40" rx="10" fill="#1F1437" stroke="#3D2A66"/>
+          <text x="360" y="255" fill="#fff" font-size="13" text-anchor="middle">nivel = "URGENTE"</text>
+
+          <line x1="360" y1="270" x2="360" y2="288" stroke="#B69BF5" stroke-width="2" marker-end="url(#arr)"/>
+
+          <!-- final -->
+          <rect x="170" y="290" width="380" height="38" rx="10" fill="url(#gv)" opacity=".9"/>
+          <text x="360" y="314" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">return "Pagar factura [URGENTE]"</text>
+        </svg>
+        <div class="flow-cap">Cada función hace su parte y se pasa el resultado a la siguiente</div>
+      </div>
+
+      <div class="tip gold">
+        <span class="tip-ico">🏃</span>
+        <p>El <code>return</code> no es para mostrar: es para <strong>entregar</strong>. Una función entrega su resultado a la siguiente, como una <strong>banda de relevos</strong>. Por eso <code>return</code> es tan distinto de <code>console.log</code>: uno termina ahí, el otro sigue el viaje.</p>
+      </div>
+
+      <div class="socratic" data-answer="No. console.log imprimiría 'URGENTE' suelto, pero clasificar ya no devolvería nada — devolvería undefined. Entonces 'nivel' quedaría en undefined y la etiqueta saldría rota: 'Pagar factura [undefined]'. Sin return, no hay relevo.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>Si en <code>clasificar</code> cambiáramos <code>return</code> por <code>console.log</code>, ¿seguiría funcionando <code>construirEtiqueta</code>?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>El cierre del círculo</h3>
+      <p class="dim">Reescribimos el ciclo del tema anterior usando la función. La regla "urgente si > 3" vive ahora en <strong>un solo sitio</strong>.</p>
+      <div class="code-wrap" data-code="function clasificar(prioridad) {
+  if (prioridad > 3) return &quot;URGENTE&quot;;
+  else return &quot;normal&quot;;
+}
+
+const tareas = [
+  { titulo: &quot;Pagar factura&quot;, prioridad: 5 },
+  { titulo: &quot;Regar plantas&quot;, prioridad: 2 },
+  { titulo: &quot;Llamar cliente&quot;, prioridad: 4 }
+];
+
+for (const tarea of tareas) {
+  console.log(tarea.titulo + &quot; → &quot; + clasificar(tarea.prioridad));
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>encadenar.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>El día que el jefe diga "ahora urgente es &gt; 4", cambias <strong>una línea</strong> y todo el programa se actualiza.</p></div>
+
+      <h3><span class="h3-bar"></span>Un guiño a TypeScript</h3>
+      <p class="dim">Todo lo de hoy fue en <code>.js</code>. Pero recuerda a TypeScript: así se vería <strong>esta misma función</strong> con la promesa de tipos.</p>
+      <div class="code-wrap" data-code="function clasificar(prioridad: number): string {
+  if (prioridad > 3) return &quot;URGENTE&quot;;
+  else return &quot;normal&quot;;
+}">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>clasificar.ts</span></div>
+      </div>
+      <div class="tip">
+        <span class="tip-ico">🛡️</span>
+        <p><code>prioridad: number</code> promete que entra un número, y <code>: string</code> promete que sale texto. Si alguien llamara <code>clasificar("hola")</code>, TypeScript lo subrayaría en rojo <strong>antes de correr</strong> — igual que te protegió del <code>510</code>. La misma lógica, con un chaleco de seguridad encima.</p>
+      </div>
+    `
+  },
+  {
+    id:'organizacion', icon:'🏗️', nav:'Organizar el código',
+    eyebrow:'Tema 5',
+    title:['Reutilizar ','y separar'],
+    lead:'Dos buenas prácticas que marcan la diferencia entre código de principiante y código profesional.',
+    body:`
+      <h3><span class="h3-bar"></span>Reutilización de lógica</h3>
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Técnico</div><p>Escribir una regla <strong>una sola vez</strong> y usarla desde donde se necesite, en lugar de copiarla.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 Vida real</div><p>Es tener <strong>una sola</strong> llave maestra en vez de una copia distinta en cada bolsillo. Si cambias la cerradura, cambias una llave, no diez.</p></div>
+      </div>
+      <p class="dim"><code>clasificar</code> es lógica reutilizada: la regla "urgente si > 3" vive en un punto. A esto los profesionales lo llaman <strong>DRY</strong> — <em>Don't Repeat Yourself</em>, no te repitas.</p>
+
+      <h3><span class="h3-bar"></span>Separación de responsabilidades</h3>
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Técnico</div><p>Cada función debe encargarse de <strong>una sola cosa</strong>. La que clasifica, clasifica; no debería además imprimir, guardar y enviar correos.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 Vida real</div><p>Es una cocina con estaciones. El que corta verduras no es el que lava platos. Si una sola persona hiciera todo, sería el caos.</p></div>
+      </div>
+
+      <div class="cmp">
+        <div class="cmp-col bad"><div class="cmp-head">❌ Una función que hace de todo</div><pre><code><span class="tok-key">function</span> <span class="tok-fn">procesarTarea</span>(titulo, prioridad) {
+  <span class="tok-key">if</span> (prioridad &gt; <span class="tok-num">3</span>) {
+    console.<span class="tok-fn">log</span>(titulo + <span class="tok-str">" URGENTE"</span>);
+  } <span class="tok-key">else</span> {
+    console.<span class="tok-fn">log</span>(titulo + <span class="tok-str">" normal"</span>);
+  }
+}</code></pre></div>
+        <div class="cmp-col good"><div class="cmp-head">✅ Separadas: decide vs. muestra</div><pre><code><span class="tok-key">function</span> <span class="tok-fn">clasificar</span>(prioridad) {
+  <span class="tok-key">if</span> (prioridad &gt; <span class="tok-num">3</span>) <span class="tok-key">return</span> <span class="tok-str">"URGENTE"</span>;
+  <span class="tok-key">else</span> <span class="tok-key">return</span> <span class="tok-str">"normal"</span>;
+}
+<span class="tok-com">// clasificar solo clasifica.</span>
+console.<span class="tok-fn">log</span>(<span class="tok-str">"Pagar factura → "</span> + <span class="tok-fn">clasificar</span>(<span class="tok-num">5</span>));</code></pre></div>
+      </div>
+
+      <div class="socratic" data-answer="Porque si clasificar imprime, solo sirve para imprimir. Si devuelve, sirve para todo: imprimir, guardar en archivo, mandar por correo, pintar en una web. Una función que devuelve es reutilizable; una que imprime queda atada a una sola tarea.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>¿Por qué es mejor que <code>clasificar</code> <strong>devuelva</strong> el nivel en vez de imprimirlo ella misma?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+    `
+  },
+  {
+    id:'scope-errores', icon:'🧭', nav:'Alcance y errores',
+    eyebrow:'Tema 6',
+    title:['Alcance ','y dos tipos de error'],
+    lead:'Por qué una variable de una función no se ve por fuera, y por qué no todos los errores son iguales.',
+    body:`
+      <h3><span class="h3-bar"></span>Alcance (scope)</h3>
+      <div class="def-grid">
+        <div class="def-card tech"><div class="def-tag">⚙️ Técnico</div><p>El <strong>alcance</strong> es la zona del programa donde una variable existe. Una variable con <code>let</code> o <code>const</code> dentro de un bloque <code>{ }</code> solo vive dentro de ese bloque.</p></div>
+        <div class="def-card life"><div class="def-tag">🌍 Vida real</div><p>Son los cuartos de una casa. Lo que está en tu habitación no estorba en la cocina. Cada función tiene su propio cuarto de variables.</p></div>
+      </div>
+      <div class="code-wrap" data-code="function calcular() {
+  const interno = 10;
+  console.log(interno);   // funciona: estamos dentro
+}
+
+calcular();
+console.log(interno);      // ❌ error: &quot;interno&quot; no existe aquí afuera">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>scope.js</span></div>
+      </div>
+      <div class="run"><span class="run-ico">▶</span><p>La segunda línea lanza un error que se lee como <code>interno is not defined</code>. No es que el programa esté mal escrito: es JavaScript protegiéndote de usar algo fuera de su cuarto.</p></div>
+
+      <div class="socratic" data-answer="Sería un caos. En un programa grande, cientos de variables se pisarían entre sí, cambiándose por accidente. El alcance permite que cada función trabaje tranquila en su cuarto. Ordena.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>¿Por qué sería un problema que <strong>todas</strong> las variables se vieran desde <strong>todas</strong> partes?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>Dos tipos de error que debes distinguir</h3>
+      <p class="dim">No todos los errores son iguales. Esta distinción es de lo más útil de toda la clase.</p>
+
+      <div class="err-card syntax"><div class="err-inner">
+        <span class="err-badge">⚠️ Error de sintaxis</span>
+        <p style="margin-bottom:12px">El código está <strong>mal escrito</strong> y el programa <strong>ni siquiera arranca</strong>.</p>
+        <pre><code><span class="tok-key">const</span> prioridad = <span class="tok-num">5</span>
+<span class="tok-key">if</span> (prioridad &gt; <span class="tok-num">3</span> {        <span class="tok-com">// ← falta un paréntesis</span>
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"URGENTE"</span>);
+}</code></pre>
+        <p style="margin:12px 0 0;font-size:13.5px;color:var(--text-dim)">Al correr sale un <code>SyntaxError</code>. JavaScript no entiende la frase, así que no ejecuta nada. La buena noticia: te avisa de una.</p>
+      </div></div>
+
+      <div class="err-card logic"><div class="err-inner">
+        <span class="err-badge">🐛 Error lógico</span>
+        <p style="margin-bottom:12px">El código está <strong>bien escrito</strong>, corre sin quejarse… pero da el resultado <strong>equivocado</strong>. Es el más peligroso porque <strong>no avisa</strong>.</p>
+        <pre><code><span class="tok-key">function</span> <span class="tok-fn">esUrgente</span>(prioridad) {
+  <span class="tok-key">return</span> prioridad &lt; <span class="tok-num">3</span>;       <span class="tok-com">// ← BUG: debería ser &gt; 3</span>
+}
+
+console.<span class="tok-fn">log</span>(<span class="tok-str">"¿Prioridad 5 es urgente?"</span>, <span class="tok-fn">esUrgente</span>(<span class="tok-num">5</span>));</code></pre>
+        <p style="margin:12px 0 0;font-size:13.5px;color:var(--text-dim)">No hay error rojo. Pero la respuesta es falsa: dijo que una prioridad de 5 <strong>no</strong> es urgente. El programa "funciona" y aun así está mal.</p>
+      </div></div>
+
+      <div class="socratic" data-answer="El lógico, de lejos. El de sintaxis te grita y no te deja seguir hasta arreglarlo. El lógico se queda callado, el programa corre, y el error puede llegar hasta el usuario final. ¿Recuerdas el 510 de la Clase 2? Ese fue un error lógico: nunca salió en rojo, simplemente el resultado estaba mal.">
+        <div class="soc-q"><span class="soc-ico">💬</span><p>¿Cuál de los dos errores es más peligroso: el de sintaxis o el lógico?</p></div>
+        <button class="soc-reveal-btn">🤔 Piénsalo… y revela</button>
+        <div class="soc-answer"><div class="soc-answer-inner"><div class="lbl">✓ Respuesta</div><p></p></div></div>
+      </div>
+    `
+  },
+  {
+    id:'cierre', icon:'🎓', nav:'Cierre y reto',
+    eyebrow:'Para llevar',
+    title:['Lo que lograste ','y lo que viene'],
+    lead:'Hoy le enseñaste al programa a decidir, a repetir y a reutilizar lógica. Y los juntaste para clasificar tareas solo.',
+    body:`
+      <div class="recap">
+        <div class="recap-card"><div class="r-ico">🔀</div><h5>Decidir</h5><p>if / else / else if</p></div>
+        <div class="recap-card"><div class="r-ico">🔁</div><h5>Repetir</h5><p>for · for...of</p></div>
+        <div class="recap-card"><div class="r-ico">🧩</div><h5>Reutilizar</h5><p>funciones + return</p></div>
+      </div>
+
+      <h3><span class="h3-bar"></span>Guarda tu trabajo en GitHub</h3>
+      <p class="dim">Como siempre, cerramos guardando. El trabajo que no se sube, no existe. Estos comandos empaquetan lo de hoy con un mensaje y lo suben al repositorio.</p>
+      <div class="code-wrap" data-code="git add .
+git commit -m &quot;Clase 3: condicionales, ciclos y funciones&quot;
+git push">
+        <div class="code-head"><span class="code-file"><span class="code-dot"></span>terminal</span></div>
+      </div>
+
+      <div class="bridge">
+        <div class="b-ico">🌉</div>
+        <h4>Para pensar hasta la próxima clase</h4>
+        <p>Hoy las tareas estaban escritas por nosotros dentro del código. Pero una app real le pide al <strong>usuario</strong> que escriba sus tareas.</p>
+        <p>¿Cómo crees que un programa puede <strong>esperar</strong> a que la persona escriba algo y use esa respuesta?</p>
+        <p style="margin-top:14px;color:var(--lilac);font-size:13.5px">En la Clase 4 llega la entrada por teclado, el menú de opciones y el "repetir hasta salir". Armamos la CLI App completa — el proyecto integrador del módulo. Todo lo de hoy se vuelve una aplicación de verdad.</p>
+      </div>
+    `
+  }
+];
+
+/* ============ RENDER ============ */
+const nav=document.getElementById('nav');
+const content=document.getElementById('content');
+const seen=new Set();
+let current=0;
+
+sections.forEach((s,i)=>{
+  const item=document.createElement('div');
+  item.className='nav-item'+(i===0?' active':'');
+  item.innerHTML=`<span class="nav-ico">${s.icon}</span><span>${s.nav}</span><span class="nav-num">${String(i+1).padStart(2,'0')}</span><span class="nav-check">✓</span>`;
+  item.onclick=()=>goTo(i);
+  nav.appendChild(item);
+
+  const sec=document.createElement('section');
+  sec.className='section'+(i===0?' active':'');
+  sec.id='sec-'+i;
+  sec.innerHTML=`
+    <div class="eyebrow">${s.eyebrow}</div>
+    <h2 class="section-title">${s.title[0]}<span class="accent">${s.title[1]}</span></h2>
+    <p class="section-lead">${s.lead}</p>
+    ${s.body}
+    <div class="sec-nav">
+      <button class="prev" ${i===0?'disabled':''}><div class="sn-lbl">← Anterior</div><div class="sn-title">${i>0?sections[i-1].nav:''}</div></button>
+      <button class="next" ${i===sections.length-1?'disabled':''}><div class="sn-lbl">Siguiente →</div><div class="sn-title">${i<sections.length-1?sections[i+1].nav:''}</div></button>
+    </div>`;
+  content.appendChild(sec);
+  sec.querySelector('.prev').onclick=()=>goTo(i-1);
+  sec.querySelector('.next').onclick=()=>goTo(i+1);
+});
+
+/* build code blocks (avoids HTML parsing issues, adds copy + highlight) */
+document.querySelectorAll('.code-wrap').forEach(w=>{
+  const raw=w.getAttribute('data-code');
+  const head=w.querySelector('.code-head');
+  const btn=document.createElement('button');
+  btn.className='copy-btn';
+  btn.innerHTML='⧉ Copiar';
+  btn.onclick=()=>{
+    navigator.clipboard.writeText(raw).then(()=>{
+      btn.classList.add('done');btn.innerHTML='✓ Copiado';
+      setTimeout(()=>{btn.classList.remove('done');btn.innerHTML='⧉ Copiar';},1600);
+    });
+  };
+  head.appendChild(btn);
+  const pre=document.createElement('pre');
+  const code=document.createElement('code');
+  code.innerHTML=highlight(raw);
+  pre.appendChild(code);
+  w.appendChild(pre);
+});
+
+/* socratic reveals */
+document.querySelectorAll('.socratic').forEach(s=>{
+  const ans=s.getAttribute('data-answer');
+  s.querySelector('.soc-answer-inner p').textContent=ans;
+  const btn=s.querySelector('.soc-reveal-btn');
+  const panel=s.querySelector('.soc-answer');
+  btn.onclick=()=>{
+    panel.classList.toggle('open');
+    btn.innerHTML=panel.classList.contains('open')?'✓ Respuesta revelada':'🤔 Piénsalo… y revela';
+  };
+});
+
+/* ============ syntax highlighter (char tokenizer, safe) ============ */
+function highlight(src){
+  const kw=new Set(['const','let','var','function','if','else','for','of','in','return','while','switch','case','break','default']);
+  const bools=new Set(['true','false','null','undefined','NaN']);
+  let out='',i=0;const n=src.length;
+  const esc=c=>c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c;
+  while(i<n){
+    const c=src[i];
+    // line comment
+    if(c==='/'&&src[i+1]==='/'){let j=i;while(j<n&&src[j]!=='\n')j++;out+='<span class="tok-com">'+[...src.slice(i,j)].map(esc).join('')+'</span>';i=j;continue;}
+    // string
+    if(c==='"'||c==="'"){const q=c;let j=i+1;while(j<n&&src[j]!==q){if(src[j]==='\\')j++;j++;}j++;out+='<span class="tok-str">'+[...src.slice(i,Math.min(j,n))].map(esc).join('')+'</span>';i=Math.min(j,n);continue;}
+    // number
+    if(/[0-9]/.test(c)&&!/[A-Za-z_]/.test(src[i-1]||'')){let j=i;while(j<n&&/[0-9.]/.test(src[j]))j++;out+='<span class="tok-num">'+src.slice(i,j)+'</span>';i=j;continue;}
+    // word
+    if(/[A-Za-z_$]/.test(c)){let j=i;while(j<n&&/[A-Za-z0-9_$]/.test(src[j]))j++;const word=src.slice(i,j);
+      let k=j;while(k<n&&src[k]===' ')k++;
+      if(kw.has(word))out+='<span class="tok-key">'+word+'</span>';
+      else if(bools.has(word))out+='<span class="tok-bool">'+word+'</span>';
+      else if(src[k]==='(')out+='<span class="tok-fn">'+word+'</span>';
+      else out+=esc2(word);
+      i=j;continue;}
+    // operators
+    if('+-*/<>=!&|'.includes(c)){out+='<span class="tok-op">'+esc(c)+'</span>';i++;continue;}
+    out+=esc(c);i++;
+  }
+  return out;
+}
+function esc2(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ============ navigation ============ */
+function goTo(i){
+  if(i<0||i>=sections.length)return;
+  document.querySelectorAll('.section')[current].classList.remove('active');
+  document.querySelectorAll('.nav-item')[current].classList.remove('active');
+  current=i;
+  const sec=document.querySelectorAll('.section')[i];
+  const item=document.querySelectorAll('.nav-item')[i];
+  sec.classList.add('active');item.classList.add('active');
+  seen.add(i);item.classList.add('seen');
+  updateProgress();
+  if(!document.body.classList.contains('present')){
+    document.querySelector('.main').scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  if(window.innerWidth<=920)closeMenu();
+  updateHud();
+}
+function updateProgress(){
+  const p=Math.round((seen.size/sections.length)*100);
+  document.getElementById('pfill').style.width=p+'%';
+  document.getElementById('pct').textContent=p+'%';
+  document.getElementById('progress-top').style.width=((current+1)/sections.length*100)+'%';
+}
+updateProgress();
+
+/* ============ presentation mode ============ */
+function enterPresent(){
+  document.body.classList.add('present');
+  if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
+  buildHud();updateHud();
+}
+function exitPresent(){
+  document.body.classList.remove('present');
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+}
+function buildHud(){
+  const d=document.getElementById('hudDots');d.innerHTML='';
+  sections.forEach((_,i)=>{const x=document.createElement('span');x.className='d'+(i===current?' on':'');d.appendChild(x);});
+}
+function updateHud(){
+  document.getElementById('hudTxt').textContent=(current+1)+' / '+sections.length;
+  const dots=document.querySelectorAll('#hudDots .d');
+  dots.forEach((x,i)=>x.classList.toggle('on',i===current));
+}
+
+/* ============ keyboard ============ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){goTo(current+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){goTo(current-1);}
+  else if(e.key==='Escape'&&document.body.classList.contains('present')){exitPresent();}
+  else if((e.key==='p'||e.key==='P')&&!document.body.classList.contains('present')&&!/input|textarea/i.test(document.activeElement.tagName)){enterPresent();}
+});
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('present');});
+
+/* ============ mobile menu ============ */
+function toggleMenu(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
+function closeMenu(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+
+/* ============ constellation ============ */
+const cv=document.getElementById('constellation'),cx=cv.getContext('2d');
+let W,H,pts;
+function initC(){W=cv.width=innerWidth;H=cv.height=innerHeight;pts=Array.from({length:Math.min(70,Math.floor(W/22))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28}));}
+function drawC(){
+  cx.clearRect(0,0,W,H);
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<130){cx.strokeStyle=`rgba(132,90,230,${.16*(1-d/130)})`;cx.lineWidth=1;cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.stroke();}
+    }
+    cx.fillStyle='rgba(155,120,240,.65)';cx.beginPath();cx.arc(pts[i].x,pts[i].y,1.5,0,7);cx.fill();
+  }
+  requestAnimationFrame(drawC);
+}
+initC();drawC();
+addEventListener('resize',initC);
+</script>
+</body>
+</html>
