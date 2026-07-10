@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+  © 2026 Ana Alvarado — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack.
+  Material de autoría exclusiva. Prohibida su reproducción, redistribución,
+  modificación o uso fuera del contexto de clase sin autorización escrita.
+============================================================================
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       META FIJO — no tocar
+       ════════════════════════════════════════════════════════════════════ -->
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+
+  <!-- ┌──────────────────────────────────────────────────────────────────┐
+       │  HUECO 1 · TÍTULO DE LA CLASE                                      │
+       │  Cambia solo el texto de <title> por el de la clase.               │
+       └──────────────────────────────────────────────────────────────────┘ -->
+  <title>Módulo 2 · Clase 1 · Setup NestJS · Ana Alvarado</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══════════════════════════════════════════════════════════════════
+       ESTILOS FIJOS — no se regeneran entre clases.
+       Lo ÚNICO que se cambia aquí es el bloque "ACENTO POR EMPRESA".
+       ══════════════════════════════════════════════════════════════════ */
+
+    /* ┌────────────────────────────────────────────────────────────────┐
+       │  HUECO 2 · ACENTO POR EMPRESA                                    │
+       │  Descomenta el bloque de la empresa de esta clase.               │
+       │  Solo uno de los dos debe quedar activo.                         │
+       └────────────────────────────────────────────────────────────────┘ */
+
+    :root {
+      /* ── DEV SENIOR (morado) ── ACTIVO POR DEFECTO ── */
+      --accent:      #A88CFF;   /* acento principal en modo oscuro */
+      --accent-2:    #8B6FE8;   /* acento secundario / hover */
+      --accent-ink:  #5418CC;   /* acento fuerte para modo claro */
+
+      /* ── GENERATION COLOMBIA (azul) ── descomenta para usar ──
+      --accent:      #4FA3D9;
+      --accent-2:    #3B8BC4;
+      --accent-ink:  #006CA8;
+      */
+    }
+
+    /* ── PALETA MODO OSCURO (por defecto) ── */
+    :root {
+      --bg:        #16151C;
+      --surface:   #1C1B24;
+      --surface-2: #23222D;
+      --border:    #2C2A38;
+      --text:      #EAE8F0;
+      --text-dim:  #9C98A8;
+      --code-bg:   #121016;
+      --code-text: #E4E1EA;
+      --shadow:    rgba(0,0,0,0.3);
+    }
+
+    /* ── PALETA MODO CLARO (papel cálido) ── */
+    :root[data-tema="claro"] {
+      --bg:        #FAF8F3;
+      --surface:   #F4F1EA;
+      --surface-2: #FFFFFF;
+      --border:    #E8E3D9;
+      --text:      #2A2620;
+      --text-dim:  #8A8478;
+      --code-bg:   #2A2620;
+      --code-text: #F0EDE6;
+      --shadow:    rgba(0,0,0,0.08);
+      --accent:    var(--accent-ink);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.35s, color 0.35s;
+      user-select: none;               /* protección: no seleccionar en general */
+    }
+
+    /* ── LAYOUT: barra lateral fija + contenido centrado ── */
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 0.5px solid var(--border);
+      padding: 28px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    .sidebar-brand {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+      line-height: 1.25;
+    }
+    .sidebar-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 26px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 13.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      border-left: 2px solid transparent;
+      border-radius: 0 8px 8px 0;
+    }
+    .nav-item:hover { background: var(--surface-2); color: var(--text); }
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 500;
+      border-left: 2px solid var(--accent);
+      background: var(--surface-2);
+    }
+    .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+    /* ── ÁREA DE CONTENIDO: columna centrada (clave para proyectar) ── */
+    .content-area { flex: 1; padding: 0 24px; }
+    .content-column {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 48px 0 80px;
+    }
+
+    /* ── ENCABEZADO DE CLASE ── */
+    .clase-header { margin-bottom: 36px; }
+    .clase-kicker {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .clase-titulo {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 34px;
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    /* ── SECCIONES ── */
+    .seccion { margin-bottom: 44px; scroll-margin-top: 32px; }
+    .seccion-numero {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .seccion h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 25px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .seccion h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 24px 0 10px;
+    }
+    .seccion p { margin-bottom: 14px; color: var(--text); }
+    .seccion strong { font-weight: 600; color: var(--text); }
+
+    /* ── TARJETA ── */
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    /* ── BLOQUE TIP / DESTACADO (borde de acento, sin relleno de color) ── */
+    .tip {
+      background: var(--surface);
+      border-left: 2px solid var(--accent);
+      border-radius: 0;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      transition: background 0.35s;
+    }
+    .tip-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .tip p { margin: 0; color: var(--text-dim); font-size: 14.5px; }
+
+    /* ── DEFINICIÓN (técnica + vida real) ── */
+    .definicion { border-left: 2px solid var(--border); padding-left: 18px; margin-bottom: 18px; }
+    .definicion .tecnica { color: var(--text); margin-bottom: 8px; }
+    .definicion .real { color: var(--text-dim); font-size: 14.5px; }
+    .definicion .real::before { content: "🌎 "; }
+
+    /* ── BLOQUE DE REFLEXIÓN (colapsable) ── */
+    .reflexion {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      transition: background 0.35s;
+    }
+    .reflexion-pregunta {
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .reflexion-pregunta::before { content: "💭"; }
+    .ver-explicacion {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--accent);
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .explicacion {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .explicacion.abierta { max-height: 600px; }
+    .explicacion-inner {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 0.5px solid var(--border);
+      color: var(--text-dim);
+      font-size: 14.5px;
+    }
+
+    /* ── BLOQUE DE CÓDIGO (seleccionable + botón copiar) ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+    .code-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+    .code-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+    .copy-btn {
+      background: transparent;
+      border: 0.5px solid var(--border);
+      color: var(--text-dim);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .code-block pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      user-select: text;               /* protección: código SÍ seleccionable */
+    }
+    .code-block code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--code-text);
+      user-select: text;
+    }
+    .code-block pre, .code-block code { -webkit-user-select: text; }
+
+    /* ── AVISO DE COPYRIGHT (tarjeta seria) ── */
+    .aviso-copyright {
+      border-left: 3px solid var(--accent);
+      background: var(--surface);
+      border-radius: 0;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+    }
+    .aviso-titulo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .aviso-copyright p { font-size: 13px; color: var(--text-dim); margin: 0; }
+
+    /* ── PIE DE PÁGINA ── */
+    .footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 0.5px solid var(--border);
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    /* ── MARCA DE AGUA FIJA ── */
+    .watermark {
+      position: fixed;
+      bottom: 14px;
+      right: 16px;
+      font-size: 11px;
+      color: var(--text-dim);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 50;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── BOTONES FLOTANTES (toggle tema + modo presentación) ── */
+    .controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 60;
+    }
+    .ctrl-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 0.5px solid var(--border);
+      background: var(--surface-2);
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.25s;
+    }
+    .ctrl-btn:hover { border-color: var(--accent); }
+
+    /* ── BARRA DE PROGRESO ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 70;
+      transition: width 0.15s;
+    }
+
+    /* ── MODO PRESENTACIÓN ── */
+    body.presentacion .sidebar,
+    body.presentacion .watermark,
+    body.presentacion .controls { display: none; }
+    body.presentacion .seccion { display: none; }
+    body.presentacion .seccion.slide-activa {
+      display: block;
+      min-height: 80vh;
+      animation: fadeIn 0.3s ease;
+    }
+    body.presentacion .content-column { max-width: 940px; padding-top: 80px; }
+    body.presentacion .clase-header { display: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .slide-hint {
+      display: none;
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: var(--text-dim);
+      background: var(--surface);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      z-index: 60;
+    }
+    body.presentacion .slide-hint { display: block; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 0.5px solid var(--border); }
+      .content-column { padding: 32px 0 60px; }
+      .clase-titulo { font-size: 27px; }
+      .watermark { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- CONTROLES FIJOS -->
+  <div class="controls">
+    <button class="ctrl-btn" id="temaBtn" aria-label="Cambiar tema claro u oscuro" title="Claro / oscuro">☀️</button>
+    <button class="ctrl-btn" id="presentBtn" aria-label="Modo presentación" title="Modo presentación (P)">▢</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar">
+      <!-- ┌──────────────────────────────────────────────────────────┐
+           │  HUECO 3 · NAVEGACIÓN                                      │
+           │  Un .nav-item por sección. El href apunta al id.          │
+           └──────────────────────────────────────────────────────────┘ -->
+      <div class="sidebar-brand">JavaScript AI Backend Developer</div>
+      <div class="sidebar-sub">Módulo 2 · Clase 1</div>
+      <nav id="nav">
+        <a class="nav-item active" href="#sec-1"><span class="nav-icon">🚀</span> Del CLI al backend</a>
+        <a class="nav-item" href="#sec-2"><span class="nav-icon">🧩</span> Qué es NestJS</a>
+        <a class="nav-item" href="#sec-3"><span class="nav-icon">🏷️</span> Decoradores e inyección</a>
+        <a class="nav-item" href="#sec-4"><span class="nav-icon">🍴</span> Mesero, cocinero, restaurante</a>
+        <a class="nav-item" href="#sec-5"><span class="nav-icon">⚙️</span> Instalar y crear el proyecto</a>
+        <a class="nav-item" href="#sec-6"><span class="nav-icon">🖥️</span> Encender el servidor</a>
+        <a class="nav-item" href="#sec-7"><span class="nav-icon">📂</span> Los archivos base</a>
+        <a class="nav-item" href="#sec-8"><span class="nav-icon">🛒</span> API de productos</a>
+        <a class="nav-item" href="#sec-9"><span class="nav-icon">🔎</span> Probar la API</a>
+        <a class="nav-item" href="#sec-10"><span class="nav-icon">☁️</span> Subir a GitHub</a>
+        <a class="nav-item" href="#sec-11"><span class="nav-icon">🧠</span> Cierre y repaso</a>
+      </nav>
+    </aside>
+
+    <!-- CONTENIDO -->
+    <main class="content-area">
+      <div class="content-column">
+
+        <!-- ENCABEZADO -->
+        <header class="clase-header">
+          <!-- HUECO 1 (repetido) · kicker + título de la clase -->
+          <div class="clase-kicker">Dev Senior · Módulo 2 — Backend profesional</div>
+          <h1 class="clase-titulo">Tu primer backend con NestJS</h1>
+        </header>
+
+        <!-- AVISO DE COPYRIGHT (fijo) -->
+        <div class="aviso-copyright">
+          <div class="aviso-titulo">© AVISO DE DERECHOS DE AUTOR</div>
+          <p>Este material es de <strong>autoría exclusiva de Ana Alvarado</strong> y su acceso está limitado a las y los <strong>estudiantes de esta cohorte</strong>. Queda prohibida su reproducción, redistribución o uso fuera de clase sin autorización escrita de la autora.</p>
+        </div>
+
+        <!-- ┌────────────────────────────────────────────────────────────┐
+             │  HUECO 4 · SECCIONES DE CONTENIDO                            │
+             │  Aquí va TODO el contenido del .md. Una <section> por tema.  │
+             │  Usa los patrones de abajo (card, tip, definición,          │
+             │  reflexión, código). Numera con .seccion-numero "01 ·".      │
+             └────────────────────────────────────────────────────────────┘ -->
+
+        <!-- ══ 01 ══ -->
+        <section class="seccion slide-activa" id="sec-1">
+          <div class="seccion-numero">01 · EL GRAN SALTO</div>
+          <h2>🚀 Del CLI al backend</h2>
+
+          <p>En el módulo anterior construiste programas que corrían en <strong>tu</strong> computador, en <strong>tu</strong> terminal, pedían datos por teclado y, al terminar, se apagaban. Perfecto para aprender lógica. Pero imagina que una empresa quiere que 500 personas usen tu programa <strong>al mismo tiempo</strong>, cada una desde su propio computador. Ese programa ya no sirve.</p>
+
+          <p>Lo que hace falta es un programa distinto: uno que viva en un computador central, esté <strong>siempre encendido</strong> y atienda a mucha gente a la vez. Eso es un <strong>backend</strong>, y hoy construyes el tuyo.</p>
+
+          <div class="definicion">
+            <p class="tecnica"><strong>Backend:</strong> el programa que vive en un servidor (un computador central siempre encendido) y responde a las peticiones de otros programas o usuarios.</p>
+            <p class="real">Es como la cocina de un restaurante: tú no la ves desde la mesa, pero está ahí, encendida, atendiendo todos los pedidos que llegan de todas las mesas al tiempo.</p>
+          </div>
+
+          <h3>Qué cambia respecto al módulo anterior</h3>
+          <div class="card">
+            <p>Antes: un usuario (tú) · el programa arrancaba y terminaba · pedías datos por teclado · corrías un archivo con <code>node</code>.</p>
+            <p>Ahora: muchos usuarios a la vez · el servidor queda encendido esperando · los datos llegan por <strong>peticiones a URLs</strong> · un <strong>framework</strong> (NestJS) te da la estructura.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">Si le pasaras tu programa del módulo anterior a 500 personas por WhatsApp, ¿todas verían y compartirían la misma información?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">No. Cada persona correría <strong>su propia copia aislada</strong>, con sus propios datos, sin nada en común. Por eso necesitas un solo programa central al que todos se conecten: un backend. Es justo lo que hoy vas a levantar.</div>
+            </div>
+          </div>
+
+          <p>Al final de esta clase vas a tener una <strong>API</strong> de un catálogo de productos: cuando alguien la consulte, devuelve la lista; cuando alguien envíe un producto nuevo, lo agrega.</p>
+
+          <div class="definicion">
+            <p class="tecnica"><strong>API:</strong> la forma en que dos programas se hablan entre sí, con reglas claras de qué pedir y qué se responde.</p>
+            <p class="real">Es el mesero de un restaurante: tú no entras a la cocina, le pides al mesero y él te trae. Hoy tú construyes ese mesero para que otros programas le hagan pedidos.</p>
+          </div>
+        </section>
+
+        <!-- ══ 02 ══ -->
+        <section class="seccion" id="sec-2">
+          <div class="seccion-numero">02 · LA HERRAMIENTA</div>
+          <h2>🧩 Qué es NestJS</h2>
+
+          <div class="definicion">
+            <p class="tecnica"><strong>NestJS</strong> es un framework de Node.js para construir el backend de una aplicación. Está escrito en TypeScript y organiza el código en tres piezas que se repiten siempre: <strong>módulos, controladores y servicios</strong>.</p>
+            <p class="real">Es un restaurante bien montado: cada persona tiene un solo trabajo y todo el mundo sabe dónde está cada cosa.</p>
+          </div>
+
+          <p>Con Node.js a secas ya se pueden hacer servidores. Entonces, ¿por qué las empresas le ponen encima un framework que las obliga a organizar el código de cierta forma? Porque cuando un proyecto crece y lo tocan muchas personas durante años, la libertad total se vuelve <strong>caos</strong>: cada quien ordena distinto y nadie encuentra nada.</p>
+
+          <p>NestJS impone una <strong>estructura común y predecible</strong>. Un desarrollador nuevo entra a cualquier proyecto Nest y sabe de inmediato dónde está todo. La regla no es una jaula: es un idioma compartido.</p>
+
+          <div class="tip">
+            <div class="tip-label">Idea clave</div>
+            <p>Un framework no te quita libertad porque sí: te la cambia por orden. Y en equipos, el orden vale más que la libertad.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">¿Por qué sería un problema que cada desarrollador de un equipo organizara el código a su manera?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">Porque nadie entendería el trabajo de los demás sin explicaciones largas, y cada cambio de persona costaría semanas. Una estructura común hace que el código sea de todos, no solo de quien lo escribió. Ese es el mayor regalo de NestJS.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 03 ══ -->
+        <section class="seccion" id="sec-3">
+          <div class="seccion-numero">03 · CONCEPTOS NUEVOS</div>
+          <h2>🏷️ Decoradores e inyección de dependencias</h2>
+
+          <p>Antes de escribir código, dos ideas nuevas que verás por todos lados en Nest. Si estas quedan claras, el resto se vuelve fácil.</p>
+
+          <h3>Los decoradores (ese símbolo <code>@</code>)</h3>
+          <div class="definicion">
+            <p class="tecnica">Un <strong>decorador</strong> es una etiqueta que le pega información extra a una clase, un método o un parámetro, para que Nest sepa qué papel cumple. No cambia lo que hace por dentro; le añade un rol.</p>
+            <p class="real">Es el gafete de un empleado: la persona es la misma, pero el gafete dice "MESERO" o "COCINERO". Nest lee el gafete y sabe qué hacer con cada clase.</p>
+          </div>
+          <p>Por ejemplo, <code>@Controller('productos')</code> es un gafete que dice: "esta clase es el mesero de la sección productos".</p>
+
+          <h3>La inyección de dependencias</h3>
+          <div class="definicion">
+            <p class="tecnica"><strong>Inyección de dependencias:</strong> cuando una clase recibe ya listas las herramientas que necesita, en lugar de fabricarlas ella misma. Nest las crea y se las entrega.</p>
+            <p class="real">El mesero no fabrica a su cocinero. Al llegar a trabajar, el restaurante ya le asignó uno y se lo puso al lado, listo para usar. El mesero solo lo pide.</p>
+          </div>
+
+          <div class="tip">
+            <div class="tip-label">Por qué importa</div>
+            <p>El mesero no tiene que saber cómo se construye un cocinero: solo lo usa. Eso hace el código más simple y más fácil de mantener. Lo verás en acción cuando escribamos el controlador.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">Cuando escribas <code>this.productosService.obtenerTodos()</code> sin haber creado el servicio con <code>new</code>, ¿de dónde salió ese servicio?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">Salió del <strong>constructor</strong>: ahí Nest inyectó el servicio ya construido y te lo entregó listo. Tú solo lo declaraste como algo que necesitas; el framework se encargó de dártelo. Eso es la inyección de dependencias.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 04 ══ -->
+        <section class="seccion" id="sec-4">
+          <div class="seccion-numero">04 · EL MODELO MENTAL</div>
+          <h2>🍴 Mesero, cocinero y restaurante</h2>
+
+          <p>Toda la clase gira alrededor de tres archivos que trabajan en equipo. Guárdalos bien, porque los verás en cada proyecto Nest de aquí en adelante.</p>
+
+          <div class="card">
+            <p>🧑‍💼 <strong>Controlador</strong> (<code>*.controller.ts</code>) — el <strong>mesero</strong>. Recibe la petición y devuelve la respuesta. No cocina.</p>
+            <p>👨‍🍳 <strong>Servicio</strong> (<code>*.service.ts</code>) — el <strong>cocinero</strong>. Hace la lógica y maneja los datos. No habla con el cliente.</p>
+            <p>🏠 <strong>Módulo</strong> (<code>*.module.ts</code>) — el <strong>restaurante</strong>. Agrupa y conecta al mesero con su cocinero.</p>
+          </div>
+
+          <h3>El flujo, paso a paso</h3>
+          <div class="tip">
+            <div class="tip-label">Recórrelo mentalmente</div>
+            <p>Llega una petición → el <strong>mesero</strong> la recibe → le pide al <strong>cocinero</strong> que haga el trabajo → el cocinero devuelve el resultado → el mesero lo responde a quien preguntó.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">¿Por qué separar mesero y cocinero? ¿No sería más fácil que uno solo hiciera todo?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">Porque mezclar responsabilidades vuelve el código imposible de mantener. Si el mesero cocina y atiende, cuando algo falle no sabrás si el problema fue atendiendo o cocinando. Separando, cada pieza se prueba y se corrige por aparte. Es la misma separación de responsabilidades que ya aplicaste al partir un proyecto en varios archivos.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 05 ══ -->
+        <section class="seccion" id="sec-5">
+          <div class="seccion-numero">05 · MANOS A LA OBRA</div>
+          <h2>⚙️ Instalar y crear el proyecto</h2>
+
+          <h3>1. Verifica tu versión de Node.js</h3>
+          <p>NestJS 11 necesita <strong>Node.js 20 o superior</strong>. En la terminal (en VS Code: menú <em>Terminal → New Terminal</em>) escribe:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>node --version</code></pre>
+          </div>
+          <p>Debe aparecer <code>v20.x.x</code>, <code>v22.x.x</code> o superior. Si sale una versión menor, entra a <strong>nodejs.org</strong>, descarga la versión <strong>LTS</strong> (la recomendada), instálala como cualquier programa, reinicia la terminal y vuelve a verificar.</p>
+
+          <h3>2. Instala el CLI de NestJS</h3>
+          <p>El <strong>CLI</strong> es una herramienta que crea proyectos y archivos por ti, ya organizados. Se instala una sola vez en tu computador (la bandera <code>-g</code> significa "global", disponible para todos tus proyectos):</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>npm install -g @nestjs/cli</code></pre>
+          </div>
+          <p>Confirma que quedó instalado:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>nest --version</code></pre>
+          </div>
+
+          <h3>3. Crea el proyecto</h3>
+          <p>Primero, ubica la terminal en la carpeta donde guardas tus proyectos (con <code>cd</code>, "change directory"). Por ejemplo:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>cd Documentos/dev-senior</code></pre>
+          </div>
+          <p>Y ahí, crea el proyecto:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>nest new catalogo-api</code></pre>
+          </div>
+          <p>El nombre <code>catalogo-api</code> es solo el que elegimos: podría ser otro, pero siempre en minúsculas, sin espacios (usa guiones) y sin tildes ni ñ. Cuando el CLI pregunte el gestor de paquetes, elige <strong>npm</strong> con las flechas y Enter. La instalación tarda uno o dos minutos.</p>
+
+          <div class="tip">
+            <div class="tip-label">¿Y si hago clic derecho → New Folder?</div>
+            <p><code>nest new</code> no crea una carpeta vacía: crea una <strong>casa ya amoblada</strong> con toda la configuración y las dependencias instaladas, lista para arrancar. Una carpeta vacía sería un lote de tierra: te tocaría construir todo a mano.</p>
+          </div>
+        </section>
+
+        <!-- ══ 06 ══ -->
+        <section class="seccion" id="sec-6">
+          <div class="seccion-numero">06 · ENCENDER</div>
+          <h2>🖥️ Encender el servidor</h2>
+
+          <p>Entra a la carpeta que se creó y arranca el servidor en modo desarrollo:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>cd catalogo-api
+npm run start:dev</code></pre>
+          </div>
+
+          <p>Aparecen varias líneas verdes. La clave es la última: <strong><code>Nest application successfully started</code></strong>. Si sale eso, tu servidor está encendido y escuchando.</p>
+
+          <div class="tip">
+            <div class="tip-label">start:dev</div>
+            <p>Este modo <strong>vigila tus cambios</strong>: cada vez que guardas un archivo, el servidor se reinicia solo para aplicarlo. Comodísimo mientras desarrollas.</p>
+          </div>
+
+          <h3>Míralo responder</h3>
+          <p>Un servidor no se prueba en la terminal, se prueba en el <strong>navegador</strong>. Abre Chrome y entra a:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">navegador</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>http://localhost:3000</code></pre>
+          </div>
+          <p>Debe aparecer el texto <strong>Hello World!</strong>. Ese texto lo generó y lo envió tu propio servidor. Acabas de correr tu primer backend. 🎉</p>
+
+          <div class="definicion">
+            <p class="tecnica"><code>localhost</code> significa "este mismo computador". El <code>3000</code> es el <strong>puerto</strong>: la puerta numerada por donde tu servidor escucha.</p>
+            <p class="real">Es como una dirección: <code>localhost</code> es el edificio (tu computador) y <code>3000</code> es el número del apartamento donde vive tu servidor. Para visitarlo necesitas los dos datos.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">En el módulo anterior tus programas terminaban solos. ¿Por qué este se queda "encendido" sin cerrarse?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">Porque un servidor no hace una tarea y se va: se queda escuchando peticiones indefinidamente, listo para responder cuando alguien llegue. Esa es la diferencia esencial entre un programa de una sola corrida y un backend.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 07 ══ -->
+        <section class="seccion" id="sec-7">
+          <div class="seccion-numero">07 · ORIENTARSE</div>
+          <h2>📂 Los archivos base</h2>
+
+          <p>El proyecto trae muchos archivos, pero todo tu código vive en la carpeta <strong><code>src/</code></strong>. El resto es configuración que hoy no tocas. Dentro de <code>src/</code>, los que importan:</p>
+
+          <div class="card">
+            <p><code>main.ts</code> — el <strong>botón de encendido</strong>. El primero que se ejecuta.</p>
+            <p><code>app.module.ts</code> — el <strong>restaurante principal</strong>.</p>
+            <p><code>app.controller.ts</code> — un mesero de ejemplo (el del "Hello World").</p>
+            <p><code>app.service.ts</code> — un cocinero de ejemplo.</p>
+          </div>
+
+          <h3>main.ts — el encendido</h3>
+          <p>Este archivo crea la aplicación y le dice "ponte a escuchar en el puerto 3000". Casi nunca lo modificas, pero es bueno saber qué hace.</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">src/main.ts (solo lo leemos)</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();</code></pre>
+          </div>
+          <p>La línea clave es <code>app.listen(... 3000)</code>: es la que pone al servidor a escuchar y hace que no se apague.</p>
+
+          <h3>app.module.ts — el restaurante</h3>
+          <p>El decorador <code>@Module</code> declara "esto es un restaurante" y adentro registra sus meseros (<code>controllers</code>) y cocineros (<code>providers</code>).</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">src/app.module.ts (solo lo leemos)</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}</code></pre>
+          </div>
+          <div class="tip">
+            <div class="tip-label">El corazón de todo módulo</div>
+            <p>Esas tres listas — <code>imports</code>, <code>controllers</code>, <code>providers</code> — aparecen en cada módulo de Nest. Vale la pena reconocerlas de memoria.</p>
+          </div>
+        </section>
+
+        <!-- ══ 08 ══ -->
+        <section class="seccion" id="sec-8">
+          <div class="seccion-numero">08 · CONSTRUIR</div>
+          <h2>🛒 Tu API de productos</h2>
+
+          <p>Dejamos el "Hello World" y construimos algo propio: una sección de productos con su mesero, su cocinero y su registro en el restaurante. En lugar de crear los tres archivos a mano, el CLI los genera <strong>ya conectados</strong>.</p>
+
+          <h3>1. Genera el módulo</h3>
+          <p>Con la terminal ubicada dentro de la carpeta del proyecto (<code>catalogo-api</code>):</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal · dentro de catalogo-api</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>nest generate module productos</code></pre>
+          </div>
+          <p>Verás <code>CREATE</code> del archivo nuevo y, sobre todo, <code>UPDATE src/app.module.ts</code>: Nest abrió tu archivo principal y registró solo el nuevo módulo en la lista <code>imports</code>. Eso es el framework encargándose de las conexiones por ti.</p>
+
+          <h3>2. Genera el controlador y el servicio</h3>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal · dentro de catalogo-api</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>nest generate controller productos
+nest generate service productos</code></pre>
+          </div>
+          <p>También se crean archivos que terminan en <code>.spec.ts</code>: son para pruebas automáticas. Por ahora los ignoramos y no los borramos.</p>
+
+          <h3>3. El cocinero: escribe el servicio</h3>
+          <p>El servicio guarda los datos y la lógica. Por ahora los productos viven en un <strong>array en memoria</strong> (sin base de datos todavía). Es el mismo tipo de array de objetos que ya usaste antes; lo nuevo es el <code>@Injectable()</code> de arriba.</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">src/productos/productos.service.ts — reemplaza todo</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class ProductosService {
+  private productos = [
+    { id: 1, nombre: 'Teclado mecánico', precio: 120000, stock: 15 },
+    { id: 2, nombre: 'Mouse inalámbrico', precio: 45000, stock: 30 },
+  ];
+
+  obtenerTodos() {
+    return this.productos;
+  }
+
+  crear(nuevo: { nombre: string; precio: number; stock: number }) {
+    const producto = {
+      id: this.productos.length + 1,
+      nombre: nuevo.nombre,
+      precio: nuevo.precio,
+      stock: nuevo.stock,
+    };
+    this.productos.push(producto);
+    return producto;
+  }
+}</code></pre>
+          </div>
+          <div class="card">
+            <p><code>@Injectable()</code> → el gafete que dice "soy un cocinero; Nest puede inyectarme donde me pidan".</p>
+            <p><code>private productos</code> → la despensa: solo el cocinero la toca desde adentro.</p>
+            <p><code>obtenerTodos()</code> → devuelve la lista completa.</p>
+            <p><code>crear(nuevo)</code> → arma un producto con un id nuevo, lo agrega con <code>.push()</code> y lo devuelve.</p>
+          </div>
+
+          <h3>4. El mesero: escribe el controlador</h3>
+          <p>El controlador recibe las peticiones y le pide al servicio que trabaje. Aquí aparecen <code>@Get()</code> (consultar), <code>@Post()</code> (crear) y <code>@Body()</code> (leer los datos que llegan).</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">src/productos/productos.controller.ts — reemplaza todo</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ProductosService } from './productos.service';
+
+@Controller('productos')
+export class ProductosController {
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Get()
+  obtenerTodos() {
+    return this.productosService.obtenerTodos();
+  }
+
+  @Post()
+  crear(@Body() nuevo: { nombre: string; precio: number; stock: number }) {
+    return this.productosService.crear(nuevo);
+  }
+}</code></pre>
+          </div>
+          <div class="card">
+            <p><code>@Controller('productos')</code> → el gafete del mesero: todo lo que llegue a <code>/productos</code> es suyo.</p>
+            <p><code>constructor(...productosService...)</code> → aquí Nest <strong>inyecta</strong> el cocinero y se lo pone al lado al mesero.</p>
+            <p><code>@Get()</code> → responde cuando alguien <strong>consulta</strong> <code>/productos</code>.</p>
+            <p><code>@Post()</code> → responde cuando alguien <strong>envía</strong> un producto nuevo a <code>/productos</code>.</p>
+            <p><code>@Body()</code> → lee los datos que vienen en la petición (como leer el papelito del pedido).</p>
+          </div>
+
+          <div class="definicion">
+            <p class="tecnica"><strong>GET y POST</strong> son métodos HTTP: los verbos que dicen qué quiere hacer quien te habla. GET = leer/consultar (no cambia nada). POST = crear/enviar algo nuevo.</p>
+            <p class="real">GET es "muéstrame la carta"; POST es "anota este nuevo pedido". Hay más (PUT para actualizar, DELETE para borrar) y los verás en la próxima clase.</p>
+          </div>
+        </section>
+
+        <!-- ══ 09 ══ -->
+        <section class="seccion" id="sec-9">
+          <div class="seccion-numero">09 · PROBAR</div>
+          <h2>🔎 Probar la API</h2>
+
+          <p>Guarda todo. Como el servidor corre con <code>start:dev</code>, se reinicia solo. En la terminal del servidor aparecen las rutas mapeadas: <code>Mapped {/productos, GET}</code> y <code>Mapped {/productos, POST}</code>.</p>
+
+          <h3>Consultar (GET)</h3>
+          <p>En el navegador entra a:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">navegador</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>http://localhost:3000/productos</code></pre>
+          </div>
+          <p>Aparece la lista con los dos productos de ejemplo, en formato <strong>JSON</strong>. 🎉</p>
+
+          <div class="definicion">
+            <p class="tecnica"><strong>JSON</strong> es el formato estándar en que las APIs mandan datos. Se parece muchísimo a los objetos y arrays de JavaScript que ya conoces.</p>
+            <p class="real">Es el idioma común en que los programas se pasan información, sin importar en qué lenguaje esté escrito cada uno.</p>
+          </div>
+
+          <h3>Crear (POST)</h3>
+          <p>El navegador, escribiendo una URL, solo sabe hacer GET. Para <strong>crear</strong> un producto se hace una petición POST enviando los datos. Así se ve desde la terminal:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal (nueva)</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>curl -X POST http://localhost:3000/productos -H "Content-Type: application/json" -d "{\"nombre\":\"Monitor 24\",\"precio\":650000,\"stock\":8}"</code></pre>
+          </div>
+          <p>Responde con el producto creado, ya con su <code>id: 3</code>. Si recargas <code>http://localhost:3000/productos</code> en el navegador, el "Monitor 24" ya aparece en la lista.</p>
+
+          <div class="tip">
+            <div class="tip-label">Próxima clase</div>
+            <p>Probar un POST así, escribiendo comandos largos, es incómodo. Por eso la próxima clase instalamos <strong>Postman</strong>, una herramienta hecha justo para probar APIs con comodidad.</p>
+          </div>
+        </section>
+
+        <!-- ══ 10 ══ -->
+        <section class="seccion" id="sec-10">
+          <div class="seccion-numero">10 · GUARDAR</div>
+          <h2>☁️ Subir a GitHub</h2>
+
+          <p>Como siempre, el trabajo se sube. Buena noticia: al crear el proyecto, Nest <strong>ya inicializó el repositorio Git</strong> y dejó un <code>.gitignore</code> que evita subir <code>node_modules</code>. Lo que falta es tu primer commit:</p>
+          <div class="code-block">
+            <div class="code-head">
+              <span class="code-file">terminal · dentro de catalogo-api</span>
+              <button class="copy-btn">Copiar</button>
+            </div>
+            <pre><code>git add .
+git commit -m "Clase 1 Modulo 2: setup NestJS y primera API de productos"</code></pre>
+          </div>
+          <p>Crear el repositorio en GitHub y hacer <code>git push</code> ya lo dominas del módulo anterior.</p>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">¿Por qué es buena idea que <code>node_modules</code> nunca se suba a GitHub?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">Porque son miles de archivos pesados que cualquiera puede regenerar en segundos con <code>npm install</code>, leyendo la lista de dependencias del <code>package.json</code>. Subirlos solo ensucia y engorda el repositorio. Por eso el <code>.gitignore</code> los excluye a propósito.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 11 ══ -->
+        <section class="seccion" id="sec-11">
+          <div class="seccion-numero">11 · CIERRE</div>
+          <h2>🧠 Cierre y repaso</h2>
+
+          <p>Hoy diste un salto grande: pasaste de programas de una sola corrida a un <strong>servidor de verdad</strong>, con la estructura profesional que usan las empresas.</p>
+
+          <div class="card">
+            <p>✅ Entiendes qué es un <strong>backend</strong> y por qué se necesita.</p>
+            <p>✅ Sabes qué es <strong>NestJS</strong> y por qué un framework impone estructura.</p>
+            <p>✅ Reconoces los <strong>decoradores</strong> (<code>@</code>) y la <strong>inyección de dependencias</strong>.</p>
+            <p>✅ Distingues <strong>mesero</strong> (controlador), <strong>cocinero</strong> (servicio) y <strong>restaurante</strong> (módulo).</p>
+            <p>✅ Creaste un proyecto, encendiste un servidor y construiste una <strong>API con GET y POST</strong>.</p>
+            <p>✅ Subiste tu trabajo a GitHub.</p>
+          </div>
+
+          <div class="reflexion">
+            <div class="reflexion-pregunta">Creaste el "Monitor 24" y lo viste aparecer. Si apagas el servidor y lo vuelves a prender, ¿el Monitor 24 seguirá ahí?</div>
+            <span class="ver-explicacion">▸ Ver explicación</span>
+            <div class="explicacion">
+              <div class="explicacion-inner">No. El array vive en la <strong>memoria</strong> del programa; al reiniciar, el código vuelve a tener solo los dos productos originales y todo lo que creaste se pierde. Para que los datos <strong>sobrevivan</strong>, hacen falta guardarlos en un lugar permanente: una <strong>base de datos</strong>. Eso es exactamente lo que construimos en la próxima clase.</div>
+            </div>
+          </div>
+
+          <div class="tip">
+            <div class="tip-label">Lo que viene</div>
+            <p>Hoy construiste el mesero y el cocinero. La próxima clase le damos una despensa de verdad que no se borra al apagar la luz: bases de datos y ORM.</p>
+          </div>
+        </section>
+
+        <!-- FIN HUECO 4 -->
+
+        <!-- PIE DE PÁGINA (fijo) -->
+        <footer class="footer">
+          © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MARCA DE AGUA FIJA -->
+  <div class="watermark">© 2026 Ana Alvarado</div>
+
+  <!-- HINT MODO PRESENTACIÓN -->
+  <div class="slide-hint">← → para navegar · Esc para salir</div>
+
+  <script>
+  /* ══════════════════════════════════════════════════════════════════════
+     SCRIPT FIJO — no se regenera entre clases.
+     Toggle tema con memoria · navegación · presentación · copiar · consola.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  /* ── Mensajes de consola (protección de autoría) ── */
+  console.log('%c© 2026 Ana Alvarado', 'color:#A88CFF;font-weight:bold;font-size:16px');
+  console.log('Educadora Tech & Desarrolladora Full Stack — Todos los derechos reservados.');
+  console.log('Este material es de autoría exclusiva. Prohibida su reproducción o redistribución sin autorización.');
+
+  /* ── Toggle tema claro/oscuro con memoria ── */
+  const root = document.documentElement;
+  const temaBtn = document.getElementById('temaBtn');
+  const temaGuardado = localStorage.getItem('ana-tema');
+  if (temaGuardado === 'claro') { root.setAttribute('data-tema', 'claro'); temaBtn.textContent = '🌙'; }
+  temaBtn.addEventListener('click', () => {
+    const esClaro = root.getAttribute('data-tema') === 'claro';
+    if (esClaro) { root.removeAttribute('data-tema'); temaBtn.textContent = '☀️'; localStorage.setItem('ana-tema', 'oscuro'); }
+    else { root.setAttribute('data-tema', 'claro'); temaBtn.textContent = '🌙'; localStorage.setItem('ana-tema', 'claro'); }
+  });
+
+  /* ── Botones de copiar código ── */
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.closest('.code-block').querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copiado';
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      });
+    });
+  });
+
+  /* ── Ver explicación (colapsable) ── */
+  document.querySelectorAll('.ver-explicacion').forEach(link => {
+    link.addEventListener('click', () => {
+      const exp = link.nextElementSibling;
+      const abierta = exp.classList.toggle('abierta');
+      link.innerHTML = (abierta ? '▾ Ocultar explicación' : '▸ Ver explicación');
+    });
+  });
+
+  /* ── Navegación: resaltar sección activa al hacer scroll ── */
+  const secciones = document.querySelectorAll('.seccion');
+  const navItems = document.querySelectorAll('.nav-item');
+  const progressBar = document.getElementById('progressBar');
+
+  window.addEventListener('scroll', () => {
+    let actual = '';
+    secciones.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 80) actual = sec.id;
+    });
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + actual);
+    });
+    const h = document.body.scrollHeight - window.innerHeight;
+    progressBar.style.width = (window.scrollY / h * 100) + '%';
+  });
+
+  /* ── Modo presentación ── */
+  const presentBtn = document.getElementById('presentBtn');
+  let slideActual = 0;
+  const slides = Array.from(secciones);
+
+  function entrarPresentacion() {
+    document.body.classList.add('presentacion');
+    slideActual = 0;
+    mostrarSlide();
+    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  }
+  function salirPresentacion() {
+    document.body.classList.remove('presentacion');
+    slides.forEach(s => s.classList.remove('slide-activa'));
+    if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  }
+  function mostrarSlide() {
+    slides.forEach((s, i) => s.classList.toggle('slide-activa', i === slideActual));
+    window.scrollTo(0, 0);
+  }
+  presentBtn.addEventListener('click', entrarPresentacion);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'p' && !document.body.classList.contains('presentacion')) { entrarPresentacion(); }
+    if (!document.body.classList.contains('presentacion')) return;
+    if (e.key === 'Escape') salirPresentacion();
+    if (e.key === 'ArrowRight' && slideActual < slides.length - 1) { slideActual++; mostrarSlide(); }
+    if (e.key === 'ArrowLeft' && slideActual > 0) { slideActual--; mostrarSlide(); }
+  });
+
+  /* ── Protección: clic derecho desactivado excepto en bloques de código ── */
+  document.addEventListener('contextmenu', (e) => {
+    if (!e.target.closest('.code-block')) e.preventDefault();
+  });
+  </script>
+</body>
+</html>
