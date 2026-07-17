@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+  © 2026 Ana Alvarado — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack.
+  Material de autoría exclusiva. Prohibida su reproducción, redistribución,
+  modificación o uso fuera del contexto de clase sin autorización escrita.
+  linkedin.com/in/ana-alvarado-instructora-full-stack
+============================================================================
+  ARCHIVOS QUE ACOMPAÑAN A ESTE HTML:
+    · ana-estilos-editorial.css
+    · ana-clase-editorial.js
+============================================================================
+-->
+<html lang="es" data-empresa="dev-senior">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>Clase 02 · Modelado de datos, Prisma y PostgreSQL · Ana Alvarado</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ana-estilos-editorial.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <div class="controls" aria-label="Controles de lectura">
+    <button class="ctrl-btn" id="temaBtn" type="button" aria-label="Activar tema claro" title="Cambiar tema">
+      <span aria-hidden="true">☀</span>
+    </button>
+    <button class="ctrl-btn" id="presentBtn" type="button" aria-label="Iniciar modo presentación" title="Presentación (P)">
+      <span aria-hidden="true">▣</span>
+    </button>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sidebar-eyebrow">Libro de clase</div>
+      <div class="sidebar-brand">JavaScript AI Backend Developer</div>
+      <div class="sidebar-sub">Clase 02 · Módulo 02</div>
+      <div class="sidebar-rule"></div>
+
+      <nav id="nav">
+        <a class="nav-item active" href="#persistencia">
+      <span class="nav-index">01</span>
+      <span class="nav-label">Memoria y persistencia</span>
+    </a>
+<a class="nav-item" href="#sql-nosql">
+      <span class="nav-index">02</span>
+      <span class="nav-label">SQL y NoSQL</span>
+    </a>
+<a class="nav-item" href="#modelado">
+      <span class="nav-index">03</span>
+      <span class="nav-label">Entidades y relaciones</span>
+    </a>
+<a class="nav-item" href="#orm-prisma">
+      <span class="nav-index">04</span>
+      <span class="nav-label">ORM y Prisma</span>
+    </a>
+<a class="nav-item" href="#configuracion-prisma">
+      <span class="nav-index">05</span>
+      <span class="nav-label">Configurar Prisma</span>
+    </a>
+<a class="nav-item" href="#schema-migracion">
+      <span class="nav-index">06</span>
+      <span class="nav-label">Modelo y migración</span>
+    </a>
+<a class="nav-item" href="#prisma-nest">
+      <span class="nav-index">07</span>
+      <span class="nav-label">Prisma con Nest</span>
+    </a>
+<a class="nav-item" href="#crud-persistente">
+      <span class="nav-index">08</span>
+      <span class="nav-label">CRUD persistente</span>
+    </a>
+<a class="nav-item" href="#pruebas-cierre">
+      <span class="nav-index">09</span>
+      <span class="nav-label">Pruebas y cierre</span>
+    </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>ANA ALVARADO</span>
+        <span>EDUCACIÓN TECH</span>
+      </div>
+    </aside>
+
+    <main class="content-area" id="contenido">
+      <article class="content-column">
+        <header class="clase-header">
+          <div class="clase-kicker">Dev Senior · Módulo 2 · Clase 02</div>
+          <h1 class="clase-titulo">Modelado de datos, Prisma y PostgreSQL</h1>
+          <p class="clase-bajada">Convertirás el catálogo en memoria en una API persistente con entidades relacionadas, migraciones y operaciones iniciales de creación y consulta.</p>
+        </header>
+
+        <div class="aviso-copyright" role="note">
+          <div class="aviso-titulo">Material exclusivo de clase</div>
+          <p>Este recurso es de <strong>autoría de Ana Alvarado</strong> y está destinado a estudiantes de la cohorte. No se autoriza su reproducción o redistribución fuera del contexto formativo.</p>
+        </div>
+
+        
+<section class="seccion slide-activa" id="persistencia">
+  <div class="seccion-meta"><span>01</span><span>FUNDAMENTO</span></div>
+  <h2>Memoria y persistencia</h2>
+
+  <div class="apertura">
+    <p class="apertura-label">Punto de partida</p>
+    <p class="apertura-pregunta">La clase pasada creaste productos dentro de un arreglo. Si el servidor se apaga, ¿qué ocurre con los datos de una tienda real?</p>
+  </div>
+
+  <p>En la clase anterior, los productos vivían dentro de un arreglo de JavaScript. Mientras NestJS estaba encendido, todo parecía funcionar: podías crear un producto, consultarlo y verlo en la respuesta.</p>
+
+  <p>El problema aparece cuando el proceso termina. El arreglo estaba en la memoria RAM del servidor; al reiniciar NestJS, esa memoria se libera y el archivo vuelve a ejecutarse desde cero.</p>
+
+  <div class="separador-editorial"><span>Modelo mental</span></div>
+
+  <div class="modelo-mental">
+    <p class="componente-label">Cómo imaginarlo</p>
+    <p>La memoria RAM funciona como un tablero de clase: permite escribir rápido, pero lo que queda allí desaparece cuando se borra. PostgreSQL funciona como un cuaderno: tarda un poco más en guardar, pero conserva la información aunque el servidor se apague.</p>
+  </div>
+
+  <div class="definicion">
+    <div class="definicion-bloque">
+      <p class="componente-label">Definición técnica</p>
+      <p class="tecnica">La persistencia es la capacidad de conservar información más allá de la ejecución actual de un programa.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">En palabras sencillas</p>
+      <p class="sencilla">Los datos dejan de depender de que NestJS esté encendido.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">Ejemplo real</p>
+      <p class="real">Un pedido creado hoy debe seguir existiendo mañana, incluso si el servidor se reinicia durante la noche.</p>
+    </div>
+  </div>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">MODELO</span>
+          <span class="code-file">Flujo de la clase anterior</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-markup">Petición POST → Controlador → Servicio → Array en RAM → Respuesta</code></pre>
+    </div>
+    
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">MODELO</span>
+          <span class="code-file">Flujo con persistencia</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-markup">Petición HTTP → Controlador → Servicio → Prisma ORM → PostgreSQL → Disco</code></pre>
+    </div>
+    
+
+  <div class="reflexion">
+    <p class="reflexion-label">Antes de continuar</p>
+    <div class="reflexion-pregunta">¿El único problema de un arreglo es que se borra al reiniciar?</div>
+    <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+    <div class="explicacion" aria-hidden="true">
+      <div class="explicacion-inner">No. También aparecen problemas de integridad, concurrencia, relaciones, consultas y respaldo. Persistir es solo el primer paso para tratar los datos como un recurso real del negocio.</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Problema</th><th>Ejemplo en la tienda</th></tr></thead>
+    <tbody>
+      <tr><td>Persistencia</td><td>El pedido debe existir mañana.</td></tr>
+      <tr><td>Integridad</td><td>Un producto no puede pertenecer a una categoría inexistente.</td></tr>
+      <tr><td>Unicidad</td><td>No puede haber dos usuarios con el mismo correo.</td></tr>
+      <tr><td>Concurrencia</td><td>Varias personas pueden comprar al mismo tiempo.</td></tr>
+      <tr><td>Consultas</td><td>Buscar productos por precio, categoría o stock.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="seccion" id="sql-nosql">
+  <div class="seccion-meta"><span>02</span><span>FUNDAMENTO</span></div>
+  <h2>SQL y NoSQL</h2>
+
+  <p>Guardar datos en un archivo también permite sobrevivir a un reinicio, pero un archivo no está diseñado para resolver búsquedas complejas, acceso simultáneo, restricciones ni relaciones.</p>
+
+  <div class="definicion">
+    <div class="definicion-bloque">
+      <p class="componente-label">Base de datos</p>
+      <p class="tecnica">Sistema especializado en almacenar, organizar y recuperar información de forma segura, permanente y eficiente.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">SQL</p>
+      <p class="sencilla">Organiza los datos en tablas relacionadas, con una estructura definida de antemano.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">NoSQL</p>
+      <p class="real">Usa estructuras más flexibles, como documentos parecidos a JSON, que no siempre comparten exactamente los mismos campos.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Usa SQL cuando...</th><th>Usa NoSQL cuando...</th></tr></thead>
+    <tbody>
+      <tr><td>Los datos tienen estructura estable.</td><td>La estructura cambia con frecuencia.</td></tr>
+      <tr><td>Hay relaciones fuertes entre entidades.</td><td>Los datos son mayormente independientes.</td></tr>
+      <tr><td>La consistencia es crítica.</td><td>La flexibilidad y la escala pesan más.</td></tr>
+      <tr><td>Ejemplo: ventas, inventario, nómina.</td><td>Ejemplo: logs, caché, contenido flexible.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caso-negocio">
+    <p class="componente-label">Caso de negocio</p>
+    <h3>Una tienda con relaciones</h3>
+    <p>Un usuario realiza pedidos, una categoría agrupa productos y cada pedido contiene varios productos. Este dominio necesita relaciones claras y consistencia, por eso PostgreSQL es una elección adecuada.</p>
+  </div>
+
+  <div class="reflexion">
+    <p class="reflexion-label">Antes de continuar</p>
+    <div class="reflexion-pregunta">¿Cuál es mejor: SQL o NoSQL?</div>
+    <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+    <div class="explicacion" aria-hidden="true">
+      <div class="explicacion-inner">Ninguna es mejor en todos los casos. La pregunta profesional es cuál resuelve mejor el problema actual. En esta tienda necesitamos relaciones y consistencia, por eso usaremos PostgreSQL.</div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="modelado">
+  <div class="seccion-meta"><span>03</span><span>MODELADO</span></div>
+  <h2>Entidades y relaciones</h2>
+
+  <p>Antes de crear tablas, debes entender qué conceptos existen en el negocio y cómo se conectan. Modelar primero evita construir estructuras difíciles de mantener.</p>
+
+  <div class="modelo-mental">
+    <p class="componente-label">Cómo detectar entidades</p>
+    <p>Escucha los sustantivos del dominio: los usuarios hacen pedidos de productos que pertenecen a categorías. Cada concepto con identidad propia puede convertirse en una entidad.</p>
+  </div>
+
+  <div class="definicion">
+    <div class="definicion-bloque">
+      <p class="componente-label">Entidad</p>
+      <p class="tecnica">Concepto del negocio del que necesitamos guardar información.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">Clave primaria</p>
+      <p class="sencilla">Identificador único de cada fila. Funciona como una cédula.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">Clave foránea</p>
+      <p class="real">Columna que guarda la clave primaria de otra tabla y crea la relación.</p>
+    </div>
+  </div>
+
+  <h3>Relación uno a muchos</h3>
+  <p>Una categoría puede tener muchos productos, pero cada producto pertenece a una sola categoría. La clave foránea se guarda en el lado “muchos”: <em>Producto</em> guarda <em>categoriaId</em>.</p>
+
+  <h3>Relación muchos a muchos</h3>
+  <p>Un pedido puede contener muchos productos y un producto puede aparecer en muchos pedidos. Esta relación necesita una tabla intermedia: <em>DetallePedido</em>.</p>
+
+  <div class="caso-negocio">
+    <p class="componente-label">Decisión de modelado</p>
+    <h3>El precio histórico</h3>
+    <p>El detalle del pedido debe guardar la cantidad y el precio pagado en ese momento. Si el precio del producto cambia mañana, las facturas antiguas no deben modificarse.</p>
+  </div>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">MODELO</span>
+          <span class="code-file">Diagrama del dominio</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-markup">Usuario 1 ─── N Pedido
+Categoria 1 ─── N Producto
+Pedido 1 ─── N DetallePedido
+Producto 1 ─── N DetallePedido</code></pre>
+    </div>
+    
+
+  <div class="reflexion">
+    <p class="reflexion-label">Antes de continuar</p>
+    <div class="reflexion-pregunta">¿Por qué no guardar todo en una sola tabla gigante?</div>
+    <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+    <div class="explicacion" aria-hidden="true">
+      <div class="explicacion-inner">Porque repetirías datos, crearías contradicciones y harías más costosos los cambios. Separar entidades reduce redundancia y permite que cada dato tenga un lugar claro.</div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="orm-prisma">
+  <div class="seccion-meta"><span>04</span><span>FUNDAMENTO</span></div>
+  <h2>ORM y Prisma</h2>
+
+  <p>PostgreSQL trabaja con tablas y SQL. NestJS trabaja con objetos y TypeScript. Un ORM conecta esos dos mundos.</p>
+
+  <div class="definicion">
+    <div class="definicion-bloque">
+      <p class="componente-label">Definición técnica</p>
+      <p class="tecnica">ORM significa <em>Object-Relational Mapping</em>. Traduce operaciones sobre objetos a consultas SQL.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">En palabras sencillas</p>
+      <p class="sencilla">Tú escribes TypeScript y Prisma genera el SQL necesario.</p>
+    </div>
+    <div class="definicion-bloque">
+      <p class="componente-label">Ejemplo real</p>
+      <p class="real">Funciona como un traductor: tu aplicación habla TypeScript y PostgreSQL habla SQL.</p>
+    </div>
+  </div>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">COMPARAR</span>
+          <span class="code-file">Consulta escrita en SQL</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-sql">SELECT id, nombre, precio FROM productos WHERE stock &gt; 0;</code></pre>
+    </div>
+    
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">COMPARAR</span>
+          <span class="code-file">Consulta escrita con Prisma</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">return this.prisma.producto.findMany({
+  where: { stock: { gt: 0 } },
+});</code></pre>
+    </div>
+    
+
+  <div class="tip">
+    <p class="componente-label">Buena práctica</p>
+    <p>El ORM no reemplaza el conocimiento de SQL. Debes saber leer las consultas y entender relaciones para detectar problemas de rendimiento o modelado.</p>
+  </div>
+</section>
+
+<section class="seccion" id="configuracion-prisma">
+  <div class="seccion-meta"><span>05</span><span>IMPLEMENTACIÓN</span></div>
+  <h2>Configurar Prisma 7</h2>
+
+  <h3>Crear la base de datos</h3>
+  <p>PostgreSQL ya está instalado. Ahora debes crear una base vacía llamada <em>catalogo_db</em>.</p>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · crear catalogo_db</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">psql -U postgres -c &quot;CREATE DATABASE catalogo_db;&quot;</code></pre>
+    </div>
+    
+
+  <h3>Instalar dependencias</h3>
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Instalaremos Prisma, el adaptador de PostgreSQL, el driver y la configuración de entorno.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>Cada paquete cumple una función distinta dentro de la conexión entre NestJS y PostgreSQL.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Qué dependencias se usan en ejecución y cuáles solo durante el desarrollo.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · raíz de catalogo-api</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npm install @prisma/client @prisma/adapter-pg pg @nestjs/config
+npm install --save-dev prisma dotenv</code></pre>
+    </div>
+    
+
+  <h3>Inicializar Prisma</h3>
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Crearemos la estructura inicial de Prisma dentro del proyecto.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>Necesitamos un archivo para el modelo, otro para la configuración y otro para las credenciales.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Qué archivos genera Prisma y qué responsabilidad tiene cada uno.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · raíz de catalogo-api</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma init --datasource-provider postgresql --output ../src/generated/prisma</code></pre>
+    </div>
+    
+
+  <h3>Configurar la conexión</h3>
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Escribiremos la URL de conexión utilizando tus credenciales locales.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>Prisma necesita saber dónde está PostgreSQL y qué base debe utilizar.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo se compone una cadena de conexión y qué partes debes personalizar.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">.env</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">DATABASE_URL=&quot;postgresql://postgres:TU_CONTRASENA@localhost:5432/catalogo_db?schema=public&quot;</code></pre>
+    </div>
+    
+
+  <div class="advertencia">
+    <p class="componente-label">Error frecuente</p>
+    <p><strong>Qué ocurre:</strong> la conexión falla aunque el usuario y la contraseña parezcan correctos.</p>
+    <p><strong>Cómo leerlo:</strong> revisa si la contraseña contiene caracteres como <em>@</em>, <em>#</em> o <em>/</em>.</p>
+    <p><strong>Cómo resolverlo:</strong> codifica esos caracteres en formato URL, por ejemplo <em>@</em> como <em>%40</em>.</p>
+  </div>
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Configuraremos dónde está el schema, dónde se guardan las migraciones y cómo se obtiene DATABASE_URL.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>En Prisma 7, la URL ya no se declara dentro de schema.prisma.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>La separación entre el modelo de datos y la configuración del CLI.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">prisma.config.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import &#x27;dotenv/config&#x27;;
+import { defineConfig } from &#x27;prisma/config&#x27;;
+
+export default defineConfig({
+  schema: &#x27;prisma/schema.prisma&#x27;,
+  migrations: {
+    path: &#x27;prisma/migrations&#x27;,
+  },
+  datasource: {
+    url: process.env[&#x27;DATABASE_URL&#x27;],
+  },
+});</code></pre>
+    </div>
+    
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Configuraremos la generación del cliente y el proveedor PostgreSQL.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>NestJS usa CommonJS, por eso el cliente generado debe usar el mismo formato.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Por qué output y moduleFormat son importantes en Prisma 7.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">prisma/schema.prisma · generator y datasource</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-javascript">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}</code></pre>
+    </div>
+    
+</section>
+
+<section class="seccion" id="schema-migracion">
+  <div class="seccion-meta"><span>06</span><span>IMPLEMENTACIÓN</span></div>
+  <h2>Crear el modelo y migrar</h2>
+
+  <p>Ahora convertiremos el modelo del negocio en un schema que Prisma pueda interpretar.</p>
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Definiremos usuarios, categorías, productos, pedidos y detalles.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>El schema debe representar las reglas del negocio antes de crear tablas reales.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo se expresan claves, restricciones, relaciones y tipos de datos en Prisma.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">AGREGAR</span>
+          <span class="code-file">prisma/schema.prisma · modelos</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-javascript">enum EstadoPedido {
+  PENDIENTE
+  PAGADO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+}
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  creadoEn DateTime @default(now())
+  pedidos  Pedido[]
+
+  @@map(&quot;usuarios&quot;)
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  creadoEn  DateTime   @default(now())
+  productos Producto[]
+
+  @@map(&quot;categorias&quot;)
+}
+
+model Producto {
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  descripcion   String?
+  precio        Decimal         @db.Decimal(12, 2)
+  stock         Int             @default(0)
+  categoriaId   Int
+  creadoEn      DateTime        @default(now())
+  actualizadoEn DateTime        @updatedAt
+  categoria     Categoria       @relation(fields: [categoriaId], references: [id])
+  detalles      DetallePedido[]
+
+  @@index([categoriaId])
+  @@map(&quot;productos&quot;)
+}
+
+model Pedido {
+  id        Int             @id @default(autoincrement())
+  estado    EstadoPedido    @default(PENDIENTE)
+  total     Decimal         @db.Decimal(12, 2)
+  usuarioId Int
+  creadoEn  DateTime        @default(now())
+  usuario   Usuario         @relation(fields: [usuarioId], references: [id])
+  detalles  DetallePedido[]
+
+  @@index([usuarioId])
+  @@map(&quot;pedidos&quot;)
+}
+
+model DetallePedido {
+  id             Int      @id @default(autoincrement())
+  cantidad       Int
+  precioUnitario Decimal  @db.Decimal(12, 2)
+  pedidoId       Int
+  productoId     Int
+  pedido         Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  producto       Producto @relation(fields: [productoId], references: [id])
+
+  @@unique([pedidoId, productoId])
+  @@index([productoId])
+  @@map(&quot;detalles_pedido&quot;)
+}</code></pre>
+    </div>
+    
+
+  <div class="tip">
+    <p class="componente-label">Decisión importante</p>
+    <p>Para dinero se utiliza <em>Decimal</em>, no <em>Float</em>. Los valores monetarios necesitan precisión exacta y no deben acumular errores de redondeo.</p>
+  </div>
+
+  <h3>Aplicar la primera migración</h3>
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Crearemos las tablas reales a partir del schema.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>El archivo schema.prisma describe el estado deseado, pero PostgreSQL todavía no conoce esas tablas.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo una migración convierte el modelo en cambios versionados sobre la base.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · raíz de catalogo-api</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma migrate dev --name modelo_inicial</code></pre>
+    </div>
+    
+
+  <div class="modelo-mental">
+    <p class="componente-label">Cómo imaginarlo</p>
+    <p>Las migraciones funcionan como commits para la estructura de la base de datos. Cada archivo registra un cambio que puede repetirse en otros entornos.</p>
+  </div>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · abrir Prisma Studio</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma studio</code></pre>
+    </div>
+    
+</section>
+
+<section class="seccion" id="prisma-nest">
+  <div class="seccion-meta"><span>07</span><span>ARQUITECTURA</span></div>
+  <h2>Conectar Prisma con NestJS</h2>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · generar infraestructura Prisma</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">nest generate module prisma
+nest generate service prisma --no-spec</code></pre>
+    </div>
+    
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Crearemos un servicio inyectable que hereda las operaciones de PrismaClient.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>La aplicación necesita abrir la conexión al iniciar y cerrarla al apagarse.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo integrar Prisma con el ciclo de vida y la inyección de dependencias de NestJS.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/prisma/prisma.service.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable, OnModuleDestroy, OnModuleInit } from &#x27;@nestjs/common&#x27;;
+import { PrismaPg } from &#x27;@prisma/adapter-pg&#x27;;
+import { PrismaClient } from &#x27;../generated/prisma/client&#x27;;
+
+@Injectable()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  constructor() {
+    const connectionString = process.env.DATABASE_URL;
+
+    if (!connectionString) {
+      throw new Error(&#x27;DATABASE_URL no está definida. Revisa el archivo .env.&#x27;);
+    }
+
+    const adapter = new PrismaPg({ connectionString });
+    super({ adapter });
+  }
+
+  async onModuleInit(): Promise&lt;void&gt; {
+    await this.$connect();
+  }
+
+  async onModuleDestroy(): Promise&lt;void&gt; {
+    await this.$disconnect();
+  }
+}</code></pre>
+    </div>
+    
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Exportaremos PrismaService desde un módulo global.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>Productos, categorías, usuarios y pedidos necesitarán la misma conexión.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo compartir infraestructura transversal sin repetir imports en cada módulo.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/prisma/prisma.module.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Global, Module } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;./prisma.service&#x27;;
+
+@Global()
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService],
+})
+export class PrismaModule {}</code></pre>
+    </div>
+    
+</section>
+
+<section class="seccion" id="crud-persistente">
+  <div class="seccion-meta"><span>08</span><span>CONSTRUCCIÓN</span></div>
+  <h2>Reemplazar el arreglo por PostgreSQL</h2>
+
+  <h3>Categorías</h3>
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">EJECUTAR</span>
+          <span class="code-file">Terminal · generar recurso categorías</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">nest generate module categorias
+nest generate controller categorias --no-spec
+nest generate service categorias --no-spec</code></pre>
+    </div>
+    
+
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Implementaremos creación y consulta de categorías usando Prisma.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>Un producto necesita una categoría existente para mantener la relación.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo usar create, findMany, include y orderBy.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/categorias/categorias.service.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+
+type CrearCategoriaInput = {
+  nombre: string;
+};
+
+@Injectable()
+export class CategoriasService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(datos: CrearCategoriaInput) {
+    return this.prisma.categoria.create({
+      data: { nombre: datos.nombre },
+    });
+  }
+
+  obtenerTodas() {
+    return this.prisma.categoria.findMany({
+      include: { productos: true },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+}</code></pre>
+    </div>
+    
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/categorias/categorias.controller.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Get, Post } from &#x27;@nestjs/common&#x27;;
+import { CategoriasService } from &#x27;./categorias.service&#x27;;
+
+type CrearCategoriaBody = {
+  nombre: string;
+};
+
+@Controller(&#x27;categorias&#x27;)
+export class CategoriasController {
+  constructor(private readonly categoriasService: CategoriasService) {}
+
+  @Post()
+  crear(@Body() body: CrearCategoriaBody) {
+    return this.categoriasService.crear(body);
+  }
+
+  @Get()
+  obtenerTodas() {
+    return this.categoriasService.obtenerTodas();
+  }
+}</code></pre>
+    </div>
+    
+
+  <h3>Productos</h3>
+  
+    
+        <div class="antes-codigo">
+          <p class="componente-label">Qué vamos a hacer</p>
+          <p>Eliminaremos el arreglo y consultaremos directamente PostgreSQL.</p>
+          <p class="componente-label">Por qué lo hacemos</p>
+          <p>La base debe asignar los identificadores y conservar los registros.</p>
+          <p class="componente-label">Qué aprenderás</p>
+          <p>Cómo crear, listar y buscar productos incluyendo su categoría.</p>
+        </div>
+        
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/productos/productos.service.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+
+type CrearProductoInput = {
+  nombre: string;
+  descripcion?: string;
+  precio: number;
+  stock: number;
+  categoriaId: number;
+};
+
+@Injectable()
+export class ProductosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(datos: CrearProductoInput) {
+    return this.prisma.producto.create({
+      data: datos,
+      include: { categoria: true },
+    });
+  }
+
+  obtenerTodos() {
+    return this.prisma.producto.findMany({
+      include: { categoria: true },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerPorId(id: number) {
+    return this.prisma.producto.findUnique({
+      where: { id },
+      include: { categoria: true },
+    });
+  }
+}</code></pre>
+    </div>
+    
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">REEMPLAZAR</span>
+          <span class="code-file">src/productos/productos.controller.ts</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Get, Param, ParseIntPipe, Post } from &#x27;@nestjs/common&#x27;;
+import { ProductosService } from &#x27;./productos.service&#x27;;
+
+type CrearProductoBody = {
+  nombre: string;
+  descripcion?: string;
+  precio: number;
+  stock: number;
+  categoriaId: number;
+};
+
+@Controller(&#x27;productos&#x27;)
+export class ProductosController {
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Post()
+  crear(@Body() body: CrearProductoBody) {
+    return this.productosService.crear(body);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.productosService.obtenerTodos();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerPorId(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.productosService.obtenerPorId(id);
+  }
+}</code></pre>
+    </div>
+    
+
+  <div class="tip">
+    <p class="componente-label">Arquitectura en acción</p>
+    <p>El controlador cambia muy poco. La fuente de datos cambió del arreglo a PostgreSQL dentro del servicio. Esta separación evita que la capa HTTP dependa de la tecnología de persistencia.</p>
+  </div>
+</section>
+
+<section class="seccion" id="pruebas-cierre">
+  <div class="seccion-meta"><span>09</span><span>VERIFICACIÓN</span></div>
+  <h2>Probar la persistencia</h2>
+
+  <p>El orden importa: primero debes crear una categoría y después un producto que apunte a ella.</p>
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">PROBAR</span>
+          <span class="code-file">Postman · POST /categorias</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Periféricos&quot; }</code></pre>
+    </div>
+    
+
+  
+    
+    <div class="code-block">
+      <div class="code-head">
+        <div>
+          <span class="code-context">PROBAR</span>
+          <span class="code-file">Postman · POST /productos</span>
+        </div>
+        <button class="copy-btn" type="button">Copiar código</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{
+  &quot;nombre&quot;: &quot;Teclado mecánico&quot;,
+  &quot;descripcion&quot;: &quot;Switches intercambiables&quot;,
+  &quot;precio&quot;: 120000,
+  &quot;stock&quot;: 15,
+  &quot;categoriaId&quot;: 1
+}</code></pre>
+    </div>
+    
+
+  <div class="caso-negocio">
+    <p class="componente-label">Prueba de fuego</p>
+    <h3>Apaga y vuelve a encender</h3>
+    <p>Consulta los productos, detén NestJS con <em>Ctrl + C</em>, vuelve a iniciar con <em>npm run start:dev</em> y repite la consulta. El producto debe seguir allí.</p>
+  </div>
+
+  <div class="reflexion">
+    <p class="reflexion-label">Antes de continuar</p>
+    <div class="reflexion-pregunta">¿Por qué el producto sigue existiendo después del reinicio?</div>
+    <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+    <div class="explicacion" aria-hidden="true">
+      <div class="explicacion-inner">Porque ya no vive dentro del proceso de NestJS. Ahora está almacenado en PostgreSQL, en disco. El servidor puede reiniciarse sin borrar los datos.</div>
+    </div>
+  </div>
+
+  <div class="advertencia">
+    <p class="componente-label">Errores frecuentes</p>
+    <p><strong>P1012:</strong> revisa que la URL no esté dentro de <em>schema.prisma</em>.</p>
+    <p><strong>Authentication failed:</strong> verifica usuario, contraseña y caracteres especiales.</p>
+    <p><strong>Can't reach database server:</strong> confirma que PostgreSQL esté activo y use el puerto correcto.</p>
+    <p><strong>Cannot find module:</strong> ejecuta <em>npx prisma generate</em> y revisa la ruta de salida.</p>
+  </div>
+
+  <div class="practica">
+    <p class="componente-label">Práctica integradora</p>
+    <h3>Demuestra que el catálogo es persistente</h3>
+    <p>Construye una evidencia completa desde la creación de los datos hasta su recuperación después de reiniciar el servidor.</p>
+    <ol class="pasos">
+      <li><span>01</span><p>Crea una categoría y dos productos relacionados.</p></li>
+      <li><span>02</span><p>Consulta la lista y verifica que cada producto incluya su categoría.</p></li>
+      <li><span>03</span><p>Reinicia NestJS y repite la consulta.</p></li>
+      <li><span>04</span><p>Explica con tus palabras la diferencia entre memoria y persistencia.</p></li>
+    </ol>
+  </div>
+
+  <div class="tip">
+    <p class="componente-label">Puente a la siguiente clase</p>
+    <p>La API ya guarda datos, pero todavía acepta valores inválidos como precios negativos o nombres vacíos. La siguiente clase agregará DTOs, validaciones y respuestas HTTP claras.</p>
+  </div>
+</section>
+
+
+        <footer class="footer">
+          © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack
+        </footer>
+      </article>
+    </main>
+  </div>
+
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <div class="slide-status" id="slideStatus" aria-live="polite"></div>
+  <div class="slide-hint">← → navegar · Esc salir · espacio avanzar</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="ana-clase-editorial.js"></script>
+</body>
+</html>
