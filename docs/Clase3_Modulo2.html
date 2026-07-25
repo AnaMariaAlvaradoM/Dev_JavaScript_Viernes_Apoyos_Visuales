@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+  © 2026 Ana Alvarado — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack.
+  Material de autoría exclusiva. Prohibida su reproducción, redistribución,
+  modificación o uso fuera del contexto de clase sin autorización escrita.
+  linkedin.com/in/ana-alvarado-instructora-full-stack
+============================================================================
+  ARCHIVOS QUE ACOMPAÑAN A ESTE HTML (deben estar en la misma carpeta):
+    · ana-estilos.css → identidad visual y acento por empresa
+    · ana-clase.js    → navegación, tema, presentación y código
+============================================================================
+-->
+<!-- ACENTO POR EMPRESA · cambia SOLO este atributo: "dev-senior" (morado) o "generation" (azul) -->
+<html lang="es" data-empresa="dev-senior">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+
+  <!-- HUECO 1 · título de la clase -->
+  <title>Clase 03 · CRUD completo y lógica de negocio · Ana Alvarado</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="ana-estilos.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <div class="controls" aria-label="Controles de lectura">
+    <button class="ctrl-btn" id="temaBtn" type="button" aria-label="Activar tema claro" title="Cambiar tema">
+      <span aria-hidden="true">☀</span>
+    </button>
+    <button class="ctrl-btn" id="presentBtn" type="button" aria-label="Iniciar modo presentación" title="Presentación (P)">
+      <span aria-hidden="true">▣</span>
+    </button>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <!-- HUECOS 1 y 3 · marca lateral + navegación -->
+      <div class="sidebar-eyebrow">Libro de clase</div>
+      <div class="sidebar-brand">JavaScript AI Backend Developer</div>
+      <div class="sidebar-sub">Clase 03 · Módulo 02</div>
+      <div class="sidebar-rule"></div>
+
+      <nav id="nav">
+        <a class="nav-item active" href="#sec-1">
+          <span class="nav-index">01</span>
+          <span class="nav-label">🧭 El problema</span>
+        </a>
+        <a class="nav-item" href="#sec-2">
+          <span class="nav-index">02</span>
+          <span class="nav-label">🛡️ DTOs</span>
+        </a>
+        <a class="nav-item" href="#sec-3">
+          <span class="nav-index">03</span>
+          <span class="nav-label">🚪 ValidationPipe</span>
+        </a>
+        <a class="nav-item" href="#sec-4">
+          <span class="nav-index">04</span>
+          <span class="nav-label">🔄 CRUD Producto</span>
+        </a>
+        <a class="nav-item" href="#sec-5">
+          <span class="nav-index">05</span>
+          <span class="nav-label">🌐 Errores HTTP</span>
+        </a>
+        <a class="nav-item" href="#sec-6">
+          <span class="nav-index">06</span>
+          <span class="nav-label">🤖 Replicar patrón</span>
+        </a>
+        <a class="nav-item" href="#sec-7">
+          <span class="nav-index">07</span>
+          <span class="nav-label">🧾 Pedidos</span>
+        </a>
+        <a class="nav-item" href="#sec-8">
+          <span class="nav-index">08</span>
+          <span class="nav-label">✅ Cierre</span>
+        </a>
+        <a class="nav-item" href="#sec-9">
+          <span class="nav-index">09</span>
+          <span class="nav-label">🧰 Errores comunes</span>
+        </a>
+        <a class="nav-item" href="#sec-10">
+          <span class="nav-index">10</span>
+          <span class="nav-label">📌 Checklist final</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>ANA ALVARADO</span>
+        <span>EDUCACIÓN TECH</span>
+      </div>
+    </aside>
+
+    <main class="content-area" id="contenido">
+      <article class="content-column">
+        <header class="clase-header">
+          <!-- HUECO 1 · kicker + título + bajada -->
+          <div class="clase-kicker">JavaScript AI Backend Developer · Módulo 2 · Clase 3</div>
+          <h1 class="clase-titulo">CRUD completo + lógica de negocio + arquitectura limpia</h1>
+          <p class="clase-bajada">Construirás una API que valida datos, completa el CRUD, traduce errores a HTTP y crea pedidos mediante transacciones seguras.</p>
+        </header>
+
+        <div class="aviso-copyright" role="note">
+          <div class="aviso-titulo">Material exclusivo de clase</div>
+          <p>Este recurso es de <strong>autoría de Ana Alvarado</strong> y está destinado a estudiantes de la cohorte. No se autoriza su reproducción o redistribución fuera del contexto formativo.</p>
+        </div>
+
+        <!-- ┌──────────────────────────────────────────────────────────────┐
+             │ HUECO 4 · SECCIONES: todo el contenido real de la guía .md   │
+             │ Componentes disponibles:                                    │
+             │ .apertura · .separador-editorial · .definicion               │
+             │ .modelo-mental · .caso-negocio · .tip · .advertencia         │
+             │ .pasos · .reflexion · .code-block · .practica                │
+             └──────────────────────────────────────────────────────────────┘ -->
+
+        
+        <section class="seccion slide-activa" id="sec-1">
+          <div class="seccion-meta"><span>01</span><span>FUNDAMENTO</span></div>
+          <h2>🧭 El problema</h2>
+          <h3>Punto de partida</h3>
+<div class="apertura"><p class="apertura-label">Punto de partida</p><p class="apertura-pregunta"><strong>&quot;La clase pasada le dimos memoria permanente al backend: los productos sobreviven al apagón. Ahora imaginen que soy un cliente malintencionado y mando este producto: nombre vacío, <code>precio: -5000</code>, <code>stock: -999</code>. Le doy Enviar. ¿Qué hace nuestra API con eso?&quot;</strong></p></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>Lo acepta feliz.</strong> La base de datos verifica que <code>precio</code> sea un número — y <code>-5000</code> es un número perfectamente válido. Verifica <strong>tipos</strong>, no <strong>reglas de negocio</strong>. Nadie ha dicho todavía que un precio deba ser positivo, ni que un nombre no pueda estar vacío. Nuestra API acepta basura mientras tenga la forma correcta. Hoy construimos la <strong>puerta de entrada</strong> que sabe decir que no.</li>
+</ul>
+<hr />
+<h3>Lo que vamos a lograr hoy</h3>
+<p>Al final de la clase, la API va a:</p>
+<ul>
+<li><strong>Rechazar</strong> datos inválidos con un mensaje claro (precio negativo, nombre vacío).</li>
+<li>Tener <strong>CRUD completo</strong> en Producto, Categoría y Usuario: crear, leer, <strong>actualizar</strong> y <strong>eliminar</strong>.</li>
+<li>Responder con <strong>códigos HTTP correctos</strong>: <code>404</code> si no existe, <code>409</code> si se repite algo único, <code>400</code> si los datos son inválidos.</li>
+<li>Crear pedidos con <strong>lógica de negocio real</strong>: descontar stock, calcular el total en el backend, todo como <strong>una sola operación indivisible</strong>.</li>
+</ul>
+<hr />
+<h3>El estado en el que quedamos (repaso de la Clase 2)</h3>
+<p><strong>Técnica:</strong> ya tenemos las tres capas del backend hablando con la base de datos:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-text">Petición HTTP → Controlador → Servicio → Prisma → PostgreSQL → Disco</code></pre>
+</div>
+<p><strong>Lo que YA funciona:</strong></p>
+<ul>
+<li><code>POST /productos</code> y <code>GET /productos</code> → crean y listan, con la categoría anidada.</li>
+<li><code>POST /categorias</code> y <code>GET /categorias</code>.</li>
+<li>Los datos <strong>persisten</strong>: sobreviven al reinicio.</li>
+</ul>
+<p><strong>Lo que NO existe todavía:</strong></p>
+<ul>
+<li>Actualizar y eliminar (el CRUD está a la mitad: solo <strong>C</strong>reate y <strong>R</strong>ead).</li>
+<li>Cualquier validación.</li>
+<li>Usuarios y Pedidos como código (las <strong>tablas</strong> existen en la base, pero no hay módulos de Nest que las manejen).</li>
+</ul>
+<hr />
+<h3>Qué significa CRUD (por si quedó suelto)</h3>
+<p><strong>Técnica:</strong> las cuatro operaciones básicas sobre cualquier dato persistente.</p>
+<table>
+<thead>
+<tr>
+  <th>Letra</th>
+  <th>Operación</th>
+  <th>Verbo HTTP</th>
+  <th>En la tienda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>C</strong></td>
+  <td>Create (crear)</td>
+  <td><code>POST</code></td>
+  <td>Registrar un producto nuevo</td>
+</tr>
+<tr>
+  <td><strong>R</strong></td>
+  <td>Read (leer)</td>
+  <td><code>GET</code></td>
+  <td>Ver el catálogo</td>
+</tr>
+<tr>
+  <td><strong>U</strong></td>
+  <td>Update (actualizar)</td>
+  <td><code>PATCH</code></td>
+  <td>Corregir el precio</td>
+</tr>
+<tr>
+  <td><strong>D</strong></td>
+  <td>Delete (eliminar)</td>
+  <td><code>DELETE</code></td>
+  <td>Quitar un producto descontinuado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Analogía:</strong> es el <strong>inventario de una bodega</strong>. Metes cajas (crear), revisas qué hay (leer), corriges una etiqueta mal puesta (actualizar), sacas lo que ya no sirve (eliminar). Todo sistema de datos del mundo hace estas cuatro cosas.</p>
+<p><strong>¿Por qué <code>PATCH</code> y no <code>PUT</code> para actualizar?</strong></p>
+<ul>
+<li><code>PUT</code> reemplaza el registro <strong>entero</strong>: tienes que mandar todos los campos otra vez.</li>
+<li><code>PATCH</code> actualiza <strong>solo lo que mandas</strong>: si solo cambió el precio, mandas el precio.</li>
+<li>Para editar un producto, <code>PATCH</code> es casi siempre lo que quieres. Es la opción cómoda y la más usada en la práctica.</li>
+</ul>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-2">
+          <div class="seccion-meta"><span>02</span><span>VALIDACIÓN</span></div>
+          <h2>🛡️ DTOs</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;En la Clase 2 escribimos esto para decir qué campos tiene un producto que entra:&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">type CrearProductoBody = {
+  nombre: string;
+  precio: number;
+};</code></pre>
+</div>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Si un <code>type</code> de TypeScript ya dice que <code>precio</code> es un número... ¿por qué entró el <code>-5000</code>? ¿No lo estaba validando ese <code>type</code>?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>El <code>type</code> no existe cuando el programa corre.</strong> TypeScript es la receta (lo vimos en Módulo 1: <code>.ts</code> es la receta, <code>.js</code> el plato cocinado). Cuando el código se compila a JavaScript, <strong>todos los <code>type</code> desaparecen</strong>. En tiempo de ejecución no hay nadie revisando nada. El <code>type</code> ayuda <strong>a ti mientras escribes</strong>; no protege <strong>a la API cuando corre</strong>. Necesitamos algo que <strong>sí exista en ejecución</strong>: un DTO como <strong>clase</strong>, con reglas.</li>
+</ul>
+<hr />
+<h3>Definición de DTO</h3>
+<p><strong>Técnica:</strong> un <strong>DTO</strong> (Data Transfer Object, objeto de transferencia de datos) es una <strong>clase</strong> que define la forma exacta que deben tener los datos que <strong>entran o salen</strong> de la API. A diferencia de un <code>type</code>, un DTO <strong>es una clase real</strong>: existe en tiempo de ejecución, y por eso podemos colgarle reglas de validación.</p>
+<p><strong>Analogía:</strong> el DTO es el <strong>formulario oficial de la entrada del edificio</strong>. No cualquier papel entra: tiene que ser <em>ese</em> formulario, con <em>esas</em> casillas llenas correctamente. El vigilante (la validación) revisa el formulario antes de dejar pasar a nadie. Un <code>type</code> era como decir &quot;trae un papel&quot;; el DTO dice &quot;trae ESTE formulario, lleno así&quot;.</p>
+<p><strong>La diferencia con la Clase 2, en una frase:</strong> el <code>type</code> describía la forma <strong>para el editor</strong>; el DTO la impone <strong>para la API en ejecución</strong>.</p>
+<hr />
+<h3>Las dos librerías que hacen la magia</h3>
+<p><strong>Explicación:</strong> NestJS no valida solo. Se apoya en dos librerías que trabajan juntas:</p>
+<ul>
+<li><strong><code>class-validator</code></strong> → aporta los <strong>decoradores</strong> de validación (<code>@IsString()</code>, <code>@Min()</code>, etc.). Es el que dice las reglas.</li>
+<li><strong><code>class-transformer</code></strong> → convierte el JSON que llega en una <strong>instancia real</strong> de la clase DTO, para que las reglas puedan aplicarse.</li>
+</ul>
+<p><strong>Dónde:</strong> en la terminal, en la raíz del proyecto.</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">npm install class-validator class-transformer</code></pre>
+</div>
+<p><strong>¿Por qué dos librerías y no una?</strong></p>
+<ul>
+<li>Hacen trabajos distintos: una <strong>transforma</strong> el JSON plano en un objeto de la clase; la otra <strong>valida</strong> ese objeto contra las reglas. Nest las orquesta a las dos con el <code>ValidationPipe</code> que activaremos en el Bloque 2.</li>
+<li><strong>Analogía:</strong> una recepcionista convierte tu solicitud verbal en el formulario oficial (<code>class-transformer</code>); el vigilante revisa que el formulario esté bien lleno (<code>class-validator</code>).</li>
+</ul>
+<hr />
+<h3>Nuestro primer DTO: crear producto</h3>
+<p><strong>Explicación:</strong> Vamos a crear una carpeta <code>dto</code> dentro de <code>productos</code> y ahí el primer DTO. Fíjense en la estructura: <strong>una clase, un campo por línea, y encima de cada campo su regla</strong>.</p>
+<p><strong>Archivo NUEVO:</strong> <code>src/productos/dto/crear-producto.dto.ts</code></p>
+<p><strong>Cómo crearlo:</strong> dentro de <code>src/productos/</code>, crea una carpeta llamada <code>dto</code>, y dentro un archivo <code>crear-producto.dto.ts</code>. En VS Code: clic derecho sobre la carpeta <code>productos</code> → New Folder → <code>dto</code> → clic derecho → New File.</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { IsString, IsNotEmpty, IsNumber, Min, IsInt, IsOptional } from &#x27;class-validator&#x27;;
+
+export class CrearProductoDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre: string;
+
+  @IsOptional()
+  @IsString()
+  descripcion?: string;
+
+  @IsNumber()
+  @Min(0)
+  precio: number;
+
+  @IsInt()
+  @Min(0)
+  stock: number;
+
+  @IsInt()
+  categoriaId: number;
+}</code></pre>
+</div>
+<hr />
+<h3>Qué dice cada decorador</h3>
+<p><strong>Se leen de arriba hacia abajo, como reglas apiladas sobre el campo:</strong></p>
+<ul>
+<li><code>@IsString()</code> → tiene que ser texto.</li>
+<li><code>@IsNotEmpty()</code> → no puede venir vacío (<code>&quot;&quot;</code> se rechaza).</li>
+<li><code>@IsNumber()</code> → tiene que ser número.</li>
+<li><code>@Min(0)</code> → <strong>aquí muere el <code>-5000</code></strong>. Mínimo cero.</li>
+<li><code>@IsInt()</code> → número <strong>entero</strong> (no tiene sentido <code>stock: 3.5</code>).</li>
+<li><code>@IsOptional()</code> → el campo <strong>puede no venir</strong>. Combina con el <code>?</code> del schema: <code>descripcion</code> era opcional en la base, es opcional aquí.</li>
+</ul>
+<p><strong>La conexión con el schema (Clase 2):</strong> el DTO y el schema <strong>se dan la mano</strong>. En el schema, <code>descripcion String?</code> era opcional → aquí <code>@IsOptional()</code>. En el schema, <code>precio Decimal</code> no puede ser cualquier cosa → aquí <code>@Min(0)</code> le pone la regla de negocio.</p>
+<p><strong>¿El <code>@Min(0)</code> no debería estar en el schema de Prisma?</strong></p>
+<ul>
+<li>Prisma <strong>no valida rangos de negocio</strong>. Sabe de tipos (<code>Int</code>, <code>Decimal</code>), no de &quot;positivo o negativo&quot;. Por eso el <code>-5000</code> pasó en la Clase 2.</li>
+<li>La regla de negocio (&quot;el precio es positivo&quot;) vive en el <strong>DTO</strong>, en la puerta de entrada. Cada capa hace su trabajo: el schema define la <strong>estructura</strong>, el DTO define las <strong>reglas de quién puede entrar</strong>.</li>
+<li><strong>Analogía:</strong> el molde de la caja define su forma (schema); el vigilante define qué se permite meter en ella (DTO).</li>
+</ul>
+<p><strong>¿Por qué <code>precio</code> es <code>@IsNumber</code> pero <code>stock</code> es <code>@IsInt</code>?</strong></p>
+<ul>
+<li>El precio puede tener decimales (<code>120000.50</code>). El stock no: no existen &quot;media unidad&quot; de teclado. <code>@IsInt</code> es más estricto a propósito.</li>
+<li>Es criterio de negocio traducido a código. Cada decorador es una <strong>decisión</strong>, no un adorno.</li>
+</ul>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-3">
+          <div class="seccion-meta"><span>03</span><span>VALIDACIÓN</span></div>
+          <h2>🚪 ValidationPipe</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Ya tenemos el formulario oficial (el DTO) con sus reglas. Si ahora mando el <code>precio: -5000</code>... ¿ya lo rechaza?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>Todavía no.</strong> Escribir las reglas no basta: falta <strong>activar</strong> quien las haga cumplir. Es como tener el reglamento pegado en la pared pero sin vigilante que lo aplique. Ese vigilante es el <code>ValidationPipe</code>, y se activa <strong>una vez, globalmente</strong>, para toda la app.</li>
+</ul>
+<hr />
+<h3>Definición de Pipe</h3>
+<p><strong>Técnica:</strong> un <strong>pipe</strong> en NestJS es una pieza que <strong>transforma o valida</strong> los datos que entran <strong>antes</strong> de que lleguen a tu controlador. Si los datos no cumplen, el pipe los <strong>rechaza</strong> ahí mismo — tu código de negocio ni se entera.</p>
+<p><strong>Analogía:</strong> es el <strong>filtro de agua</strong> antes del grifo. El agua pasa por el filtro antes de llegar a tu vaso. Si viene sucia, el filtro la detiene; tú nunca la ves. Ya conocen uno: en la Clase 2 usamos <code>ParseIntPipe</code>, que convertía el <code>&quot;1&quot;</code> de la URL en el número <code>1</code>. Ese era un pipe de transformación. El <code>ValidationPipe</code> es de validación.</p>
+<hr />
+<h3>Activar el ValidationPipe global</h3>
+<p><strong>Explicación:</strong> Lo activamos en <code>main.ts</code>, el archivo que arranca la aplicación. Una sola vez, y aplica a <strong>todos</strong> los endpoints de toda la API.</p>
+<p><strong>Archivo:</strong> <code>src/main.ts</code> — <strong>agregar el import y el <code>useGlobalPipes</code></strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { NestFactory } from &#x27;@nestjs/core&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common&#x27;;
+import { AppModule } from &#x27;./app.module&#x27;;
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  await app.listen(3000);
+}
+bootstrap();</code></pre>
+</div>
+<hr />
+<h3>Las tres opciones, una por una</h3>
+<p><strong><code>whitelist: true</code></strong></p>
+<ul>
+<li><strong>Qué hace:</strong> borra automáticamente cualquier campo que <strong>no</strong> esté en el DTO. Si mandan <code>{ nombre, precio, hacker: true }</code>, el <code>hacker</code> se elimina antes de tocar tu código.</li>
+<li><strong>Por qué importa:</strong> impide que inyecten campos que tú no esperabas.</li>
+</ul>
+<p><strong><code>forbidNonWhitelisted: true</code></strong></p>
+<ul>
+<li><strong>Qué hace:</strong> en vez de <strong>borrar</strong> el campo intruso en silencio, <strong>rechaza</strong> toda la petición con un error <code>400</code> que dice &quot;propiedad no permitida&quot;.</li>
+<li><strong>La diferencia con el anterior:</strong> <code>whitelist</code> limpia callado; <code>forbidNonWhitelisted</code> grita. Juntos: rechaza lo que no debería venir y te avisa.</li>
+</ul>
+<p><strong><code>transform: true</code></strong></p>
+<ul>
+<li><strong>Qué hace:</strong> convierte el JSON plano en una <strong>instancia real</strong> de tu clase DTO. Sin esto, las reglas no se aplican correctamente. También convierte tipos automáticamente cuando puede.</li>
+</ul>
+<p><strong>¿<code>whitelist</code> y <code>forbidNonWhitelisted</code> no hacen lo mismo?</strong></p>
+<ul>
+<li>Casi. <code>whitelist</code> <strong>elimina</strong> los campos extra; <code>forbidNonWhitelisted</code> <strong>rechaza la petición entera</strong> por traerlos. Se usan juntos: el primero define qué se permite, el segundo castiga al que se sale.</li>
+<li><strong>Analogía:</strong> <code>whitelist</code> es el vigilante que te quita la botella en la puerta y te deja entrar; <code>forbidNonWhitelisted</code> es el que directamente no te deja entrar con ella. Activando los dos: no entra la botella <strong>y</strong> te devuelven en la puerta.</li>
+</ul>
+<hr />
+<h3>El momento de la verdad: probar que el vigilante funciona</h3>
+<p><strong>Prueba en Postman — el producto malicioso del arranque:</strong></p>
+<p><code>POST http://localhost:3000/productos</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-json">{
+  &quot;nombre&quot;: &quot;&quot;,
+  &quot;precio&quot;: -5000,
+  &quot;stock&quot;: -999,
+  &quot;categoriaId&quot;: 1
+}</code></pre>
+</div>
+<p><strong>Qué debe pasar ahora:</strong> la API responde <code>400 Bad Request</code> con un mensaje que lista <strong>exactamente</strong> qué reglas se rompieron: nombre vacío, precio menor que 0, stock menor que 0.</p>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-4">
+          <div class="seccion-meta"><span>04</span><span>IMPLEMENTACIÓN</span></div>
+          <h2>🔄 CRUD Producto</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Para actualizar un producto, ¿necesito obligar al cliente a mandarme TODOS los campos otra vez, aunque solo quiera corregir el precio?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> No. Sería incómodo y propenso a errores: si para cambiar el precio tienes que reenviar nombre, stock y categoría, cualquier olvido corrompe el registro. Lo correcto es permitir <strong>actualización parcial</strong>: mandas solo lo que cambia. Para eso existe un DTO donde <strong>todos los campos son opcionales</strong>.</li>
+</ul>
+<hr />
+<h3>El DTO de actualizar: todo opcional</h3>
+<p><strong>Explicación:</strong> Crear pedía campos obligatorios. Actualizar es distinto: cualquier campo <strong>puede o no</strong> venir. La forma limpia y profesional de expresar esto es reutilizar el DTO de crear y volver <strong>todos</strong> sus campos opcionales, sin reescribirlos.</p>
+<p><strong>NestJS trae una herramienta exacta para esto: <code>PartialType</code>.</strong></p>
+<p><strong>Primero instalamos el paquete que la trae</strong> (en la terminal):</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">npm install @nestjs/mapped-types</code></pre>
+</div>
+<p><strong>Archivo NUEVO:</strong> <code>src/productos/dto/actualizar-producto.dto.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { PartialType } from &#x27;@nestjs/mapped-types&#x27;;
+import { CrearProductoDto } from &#x27;./crear-producto.dto&#x27;;
+
+export class ActualizarProductoDto extends PartialType(CrearProductoDto) {}</code></pre>
+</div>
+<p><strong>¿Qué hace <code>PartialType</code>?</strong></p>
+<ul>
+<li>Toma un DTO existente y genera una copia donde <strong>todos los campos son opcionales</strong>, conservando sus validaciones. Si <code>precio</code> viene, sigue teniendo que ser <code>@Min(0)</code>; pero puede no venir.</li>
+<li><strong>Sin <code>PartialType</code></strong> tendrías que copiar los cinco campos otra vez con <code>@IsOptional()</code>. Duplicación pura. <code>PartialType</code> lo hace en una línea.</li>
+<li><strong>Analogía:</strong> es la fotocopia del formulario de entrada pero con todas las casillas marcadas como &quot;opcional&quot;. Mismo formulario, misma tinta de reglas, solo que ya nada es obligatorio.</li>
+</ul>
+<hr />
+<h3>El service completo de Producto</h3>
+<p><strong>Explicación:</strong> Ahora ampliamos <code>productos.service.ts</code>. A los tres métodos de la Clase 2 (<code>crear</code>, <code>obtenerTodos</code>, <code>obtenerPorId</code>) les sumamos <code>actualizar</code> y <code>eliminar</code>. Y cambiamos el <code>type CrearProductoInput</code> por el DTO real.</p>
+<p><strong>Lo nuevo respecto a la Clase 2:</strong></p>
+<ul>
+<li>Los <code>type</code> locales desaparecen: ahora usamos los DTOs.</li>
+<li><code>update()</code> → el método de Prisma para actualizar.</li>
+<li><code>delete()</code> → el método de Prisma para eliminar.</li>
+</ul>
+<p><strong>Archivo:</strong> <code>src/productos/productos.service.ts</code> — <strong>reemplazar TODO</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">REEMPLAZAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearProductoDto } from &#x27;./dto/crear-producto.dto&#x27;;
+import { ActualizarProductoDto } from &#x27;./dto/actualizar-producto.dto&#x27;;
+
+@Injectable()
+export class ProductosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(datos: CrearProductoDto) {
+    return this.prisma.producto.create({
+      data: datos,
+      include: { categoria: true },
+    });
+  }
+
+  obtenerTodos() {
+    return this.prisma.producto.findMany({
+      include: { categoria: true },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerPorId(id: number) {
+    return this.prisma.producto.findUniqueOrThrow({
+      where: { id },
+      include: { categoria: true },
+    });
+  }
+
+  actualizar(id: number, datos: ActualizarProductoDto) {
+    return this.prisma.producto.update({
+      where: { id },
+      data: datos,
+      include: { categoria: true },
+    });
+  }
+
+  eliminar(id: number) {
+    return this.prisma.producto.delete({
+      where: { id },
+    });
+  }
+}</code></pre>
+</div>
+<p><strong>¿Por qué cambió <code>findUnique</code> por <code>findUniqueOrThrow</code>?</strong></p>
+<ul>
+<li>En la Clase 2 usábamos <code>findUnique</code>: si el producto no existía, devolvía <code>null</code> <strong>silenciosamente</strong> — y la API respondía <code>200 OK</code> con un cuerpo vacío. Eso es mentira: dice &quot;todo bien&quot; cuando el producto no existe.</li>
+<li><code>findUniqueOrThrow</code> <strong>lanza un error</strong> (código <code>P2025</code>) si no encuentra nada. Ese error lo vamos a convertir en un <code>404</code> limpio en el Bloque 4. Es la base de &quot;decir la verdad con códigos HTTP&quot;.</li>
+<li><strong>La misma idea aplica a <code>update</code> y <code>delete</code>:</strong> si el <code>id</code> no existe, Prisma lanza <code>P2025</code> automáticamente. No tenemos que revisar a mano si existe antes de borrar.</li>
+</ul>
+<hr />
+<h3>El controller completo de Producto</h3>
+<p><strong>Explicación:</strong> El controller expone los cinco endpoints. Fíjense en los decoradores de ruta: <code>@Patch(':id')</code> y <code>@Delete(':id')</code> son nuevos. Y el <code>@Body()</code> ahora está <strong>tipado con el DTO</strong>, que es lo que dispara la validación.</p>
+<p><strong>Archivo:</strong> <code>src/productos/productos.controller.ts</code> — <strong>reemplazar TODO</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">REEMPLAZAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from &#x27;@nestjs/common&#x27;;
+import { ProductosService } from &#x27;./productos.service&#x27;;
+import { CrearProductoDto } from &#x27;./dto/crear-producto.dto&#x27;;
+import { ActualizarProductoDto } from &#x27;./dto/actualizar-producto.dto&#x27;;
+
+@Controller(&#x27;productos&#x27;)
+export class ProductosController {
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Post()
+  crear(@Body() datos: CrearProductoDto) {
+    return this.productosService.crear(datos);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.productosService.obtenerTodos();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerPorId(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.productosService.obtenerPorId(id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() datos: ActualizarProductoDto,
+  ) {
+    return this.productosService.actualizar(id, datos);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.productosService.eliminar(id);
+  }
+}</code></pre>
+</div>
+<p><strong>¿Dónde exactamente se dispara la validación?</strong></p>
+<ul>
+<li>En el <code>@Body() datos: CrearProductoDto</code>. Cuando el <code>ValidationPipe</code> está activo (Bloque 2) y ve que el body está <strong>tipado con una clase DTO</strong>, corre sus reglas antes de entrar al método.</li>
+<li>Por eso el <code>type</code> de la Clase 2 no servía: no era una clase, el pipe no tenía dónde agarrarse. La <strong>clase</strong> DTO es el gancho.</li>
+</ul>
+<p><strong>¿Por qué el controller sigue tan delgado?</strong></p>
+<ul>
+<li>Porque el controller <strong>solo recibe y delega</strong>. Toda la lógica vive en el service. Es la separación de responsabilidades de la Clase 1: el mesero (controller) toma el pedido; el cocinero (service) lo prepara.</li>
+<li>Esto no es casualidad ni estética: un controller delgado es <strong>fácil de leer, fácil de probar, fácil de cambiar</strong>. Es arquitectura limpia en la práctica.</li>
+</ul>
+<hr />
+<h3>Probar el CRUD completo en Postman</h3>
+<p><strong>El ciclo entero, en orden:</strong></p>
+<ol>
+<li><strong>Crear</strong> → <code>POST /productos</code> con un body válido → guarda el producto, devuelve <code>201</code>.</li>
+<li><strong>Leer</strong> → <code>GET /productos/1</code> → lo trae con su categoría.</li>
+<li><strong>Actualizar</strong> → <code>PATCH /productos/1</code> con solo <code>{ &quot;precio&quot;: 99000 }</code> → cambia solo el precio.</li>
+<li><strong>Eliminar</strong> → <code>DELETE /productos/1</code> → lo borra.</li>
+<li><strong>Verificar</strong> → <code>GET /productos/1</code> otra vez → ahora debe dar error (no existe).</li>
+</ol>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-5">
+          <div class="seccion-meta"><span>05</span><span>ARQUITECTURA</span></div>
+          <h2>🌐 Errores HTTP</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Cuando borré el producto inexistente, salió un error <code>500</code> con un montón de texto de Prisma. Si yo fuera la app de un cliente consumiendo esta API... ¿qué entiendo de ese <code>500</code>?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>Nada útil, y peor: me confunde.</strong> Un <code>500</code> significa &quot;error interno del servidor&quot; — le echa la culpa al servidor. Pero el problema no fue del servidor: fue que <strong>pedí algo que no existe</strong>. Eso es un <code>404 Not Found</code>. Los códigos HTTP son un <strong>idioma</strong>: <code>404</code> dice &quot;no existe&quot;, <code>409</code> dice &quot;conflicto, ya existe&quot;, <code>400</code> dice &quot;tu petición está mal&quot;. Hablar ese idioma es lo que hace profesional a una API.</li>
+</ul>
+<hr />
+<h3>Los códigos HTTP que nos importan hoy</h3>
+<p><strong>Técnica:</strong> el código de estado HTTP es un número que resume <strong>qué pasó</strong> con la petición. Categorías:</p>
+<table>
+<thead>
+<tr>
+  <th>Rango</th>
+  <th>Significa</th>
+  <th>Ejemplo de hoy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>2xx</code></td>
+  <td>Todo bien</td>
+  <td><code>200</code> leído, <code>201</code> creado</td>
+</tr>
+<tr>
+  <td><code>4xx</code></td>
+  <td><strong>El cliente</strong> se equivocó</td>
+  <td><code>400</code> datos inválidos, <code>404</code> no existe, <code>409</code> conflicto</td>
+</tr>
+<tr>
+  <td><code>5xx</code></td>
+  <td><strong>El servidor</strong> se equivocó</td>
+  <td><code>500</code> bug real nuestro</td>
+</tr>
+</tbody>
+</table>
+<p><strong>La regla de oro:</strong> si el cliente mandó algo mal, es <code>4xx</code> — <strong>no</strong> <code>5xx</code>. Un <code>500</code> debe significar &quot;de verdad se nos rompió algo&quot;. Devolver <code>500</code> cuando el cliente pidió un id inexistente es echarle la culpa al que no la tiene.</p>
+<p><strong>Analogía:</strong> en un restaurante, si pides un plato que no está en la carta, el mesero no dice &quot;se incendió la cocina&quot; (<code>500</code>). Dice &quot;ese plato no lo tenemos&quot; (<code>404</code>). Cada problema, su respuesta honesta.</p>
+<hr />
+<h3>Dos caminos para manejar errores</h3>
+<p><strong>Camino 1 — a mano, en cada método.</strong> Revisas si existe, y si no, lanzas la excepción tú:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">const producto = await this.prisma.producto.findUnique({ where: { id } });
+if (!producto) {
+  throw new NotFoundException(`No existe el producto ${id}`);
+}</code></pre>
+</div>
+<p>Funciona, pero <strong>se repite</strong> en cada método de cada entidad: productos, categorías, usuarios, pedidos... el mismo <code>if</code> copiado veinte veces.</p>
+<p><strong>Camino 2 — un filtro global.</strong> Escribes <strong>una sola vez</strong> una pieza que atrapa <strong>todos</strong> los errores de Prisma en toda la app y los traduce al código HTTP correcto. Se escribe una vez, sirve para siempre.</p>
+<p><strong>Hoy hacemos el Camino 2.</strong> Es el profesional y el que menos código repite.</p>
+<p><strong>¿Por qué no el Camino 1 si es más simple de ver?</strong></p>
+<ul>
+<li>Porque <strong>no escala</strong>. Con 4 entidades y 5 métodos cada una, el Camino 1 son 20 bloques de <code>if</code> idénticos. El día que quieras cambiar el mensaje de error, lo cambias en 20 lugares.</li>
+<li>El Camino 2 centraliza esa lógica en <strong>un archivo</strong>. Es el principio de &quot;una sola fuente de verdad&quot;. Cambias el comportamiento en un lugar, aplica a toda la app.</li>
+<li><strong>Analogía:</strong> el Camino 1 es poner un extintor en cada escritorio y recargarlos uno por uno. El Camino 2 es un sistema central de rociadores: lo instalas una vez, protege todo el edificio.</li>
+</ul>
+<hr />
+<h3>Definición de Exception Filter</h3>
+<p><strong>Técnica:</strong> un <strong>filtro de excepciones</strong> es una pieza de NestJS que <strong>intercepta los errores</strong> antes de que salgan al cliente, y decide <strong>qué respuesta HTTP</strong> enviar en su lugar. Es el traductor entre &quot;el error técnico que ocurrió adentro&quot; y &quot;el mensaje HTTP honesto que sale afuera&quot;.</p>
+<p><strong>Analogía:</strong> es el <strong>vocero de prensa</strong> de la empresa. Adentro pasó un lío técnico (un <code>P2025</code> de Prisma). El vocero no repite el lío crudo: lo traduce a un comunicado claro para el público (&quot;el recurso no existe: 404&quot;). Filtra el ruido interno y comunica con claridad.</p>
+<hr />
+<h3>Los códigos de error de Prisma que traducimos</h3>
+<p><strong>Prisma no lanza errores HTTP</strong> (no sabe de HTTP, solo de base de datos). Lanza errores con <strong>códigos propios</strong>. Los tres de hoy:</p>
+<table>
+<thead>
+<tr>
+  <th>Código Prisma</th>
+  <th>Qué pasó</th>
+  <th>Código HTTP correcto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>P2025</code></td>
+  <td>El registro no existe (update/delete/find de algo ausente)</td>
+  <td><code>404 Not Found</code></td>
+</tr>
+<tr>
+  <td><code>P2002</code></td>
+  <td>Violación de restricción única (crear categoría repetida)</td>
+  <td><code>409 Conflict</code></td>
+</tr>
+<tr>
+  <td><code>P2003</code></td>
+  <td>Violación de clave foránea (categoría inexistente)</td>
+  <td><code>400 Bad Request</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Los tres ya los &quot;provocamos&quot; sin querer en la Clase 2:</strong> el <code>P2002</code> era el error de crear &quot;Periféricos&quot; dos veces; el <code>P2003</code> era el <code>categoriaId: 999</code>. Hoy los volvemos respuestas amables.</p>
+<hr />
+<h3>Crear el filtro</h3>
+<p><strong>Explicación:</strong> Generamos el filtro con el CLI de Nest, igual que generamos módulos y servicios.</p>
+<p><strong>En la terminal:</strong></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">nest generate filter prisma-exception --flat --no-spec</code></pre>
+</div>
+<p>Esto crea <code>src/prisma-exception.filter.ts</code>.</p>
+<p><strong>Archivo:</strong> <code>src/prisma-exception.filter.ts</code> — <strong>reemplazar TODO</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">REEMPLAZAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { ArgumentsHost, Catch, HttpStatus } from &#x27;@nestjs/common&#x27;;
+import { BaseExceptionFilter } from &#x27;@nestjs/core&#x27;;
+import { Prisma } from &#x27;./generated/prisma/client&#x27;;
+import { Response } from &#x27;express&#x27;;
+
+@Catch(Prisma.PrismaClientKnownRequestError)
+export class PrismaExceptionFilter extends BaseExceptionFilter {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const contexto = host.switchToHttp();
+    const respuesta = contexto.getResponse&lt;Response&gt;();
+
+    switch (exception.code) {
+      case &#x27;P2025&#x27;: {
+        respuesta.status(HttpStatus.NOT_FOUND).json({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: &#x27;El recurso solicitado no existe.&#x27;,
+        });
+        break;
+      }
+      case &#x27;P2002&#x27;: {
+        respuesta.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
+          message: &#x27;Ya existe un registro con ese valor único.&#x27;,
+        });
+        break;
+      }
+      case &#x27;P2003&#x27;: {
+        respuesta.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: &#x27;La referencia indicada no existe (relación inválida).&#x27;,
+        });
+        break;
+      }
+      default:
+        super.catch(exception, host);
+        break;
+    }
+  }
+}</code></pre>
+</div>
+<hr />
+<h3>Leyendo el filtro por partes</h3>
+<ul>
+<li><code>@Catch(Prisma.PrismaClientKnownRequestError)</code> → &quot;solo me interesan los errores conocidos de Prisma&quot;. Los demás errores no los toca este filtro.</li>
+<li><code>extends BaseExceptionFilter</code> → hereda el comportamiento por defecto de Nest, para poder decir &quot;en los casos que no manejo yo, hazte cargo tú&quot; (el <code>super.catch</code> del <code>default</code>).</li>
+<li>El <code>switch</code> → mira el <code>.code</code> del error y elige la respuesta HTTP.</li>
+<li>El <code>default</code> → si es un error de Prisma que <strong>no</strong> listamos, deja que Nest responda su <code>500</code> normal. <strong>No ocultamos errores de verdad.</strong></li>
+</ul>
+<p><strong>¿Por qué el <code>default</code> deja pasar el <code>500</code>?</strong></p>
+<ul>
+<li>Porque un error que <strong>no</strong> anticipamos <strong>sí es</strong> un problema del servidor y merece un <code>500</code> honesto. El filtro traduce lo que <strong>sabemos</strong> interpretar; lo que no, lo deja como está. Ocultar errores desconocidos es peor que mostrarlos.</li>
+</ul>
+<hr />
+<h3>Activar el filtro globalmente</h3>
+<p><strong>Explicación:</strong> Igual que el <code>ValidationPipe</code>, el filtro se registra una vez en <code>main.ts</code> y aplica a toda la app.</p>
+<p><strong>Archivo:</strong> <code>src/main.ts</code> — <strong>agregar el filtro</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { NestFactory, HttpAdapterHost } from &#x27;@nestjs/core&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common&#x27;;
+import { AppModule } from &#x27;./app.module&#x27;;
+import { PrismaExceptionFilter } from &#x27;./prisma-exception.filter&#x27;;
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));
+
+  await app.listen(3000);
+}
+bootstrap();</code></pre>
+</div>
+<p><strong>¿Qué es ese <code>httpAdapter</code>?</strong></p>
+<ul>
+<li>Es la pieza interna que le permite al filtro escribir la respuesta HTTP sin importar si por debajo NestJS usa Express o Fastify. Es plomería: se pasa y se olvida. La documentación oficial lo pide así.</li>
+</ul>
+<hr />
+<h3>Probar los errores traducidos</h3>
+<p><strong>Prueba 1 — <code>404</code>:</strong> <code>DELETE /productos/99999</code> (id inexistente) → antes salía <code>500</code> feo. <strong>Ahora sale <code>404</code></strong> con &quot;El recurso solicitado no existe.&quot;</p>
+<p><strong>Prueba 2 — <code>409</code>:</strong> <code>POST /categorias</code> con <code>{ &quot;nombre&quot;: &quot;Periféricos&quot; }</code> <strong>dos veces</strong> → la segunda da <strong><code>409</code></strong>: &quot;Ya existe un registro con ese valor único.&quot; (Es el <code>@unique</code> del schema protegiendo la regla.)</p>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-6">
+          <div class="seccion-meta"><span>06</span><span>IA COMO COPILOTO</span></div>
+          <h2>🤖 Replicar patrón</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Ya construimos Producto completo: DTO, controller, service, CRUD, validaciones. Ahora necesito lo mismo para Usuario. ¿Escribo todo otra vez desde cero?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> No desde cero. <strong>Es el mismo molde.</strong> Cambian los nombres (<code>producto</code>→<code>usuario</code>) y los campos (<code>nombre</code>, <code>email</code> en vez de <code>nombre</code>, <code>precio</code>, <code>stock</code>). La <strong>estructura es idéntica</strong>. Y como ya la entendemos, aquí Cursor nos ahorra el tecleo — pero <strong>nosotros verificamos</strong>, porque sabemos exactamente cómo debe quedar.</li>
+</ul>
+<hr />
+<h3>El molde que vamos a replicar</h3>
+<p><strong>Recordemos el patrón de Producto (está en el tablero):</strong></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-text">1. DTO crear    → clase con validaciones
+2. DTO actualizar → PartialType del anterior
+3. Service      → crear, obtenerTodos, obtenerPorId, actualizar, eliminar
+4. Controller   → POST, GET, GET/:id, PATCH/:id, DELETE/:id
+5. Módulo       → registrado por el CLI</code></pre>
+</div>
+<p><strong>Para Usuario cambia solo esto:</strong></p>
+<ul>
+<li>Campos del DTO: <code>nombre</code> (string) y <code>email</code> (string, con <code>@IsEmail()</code>).</li>
+<li>El modelo Prisma: <code>this.prisma.usuario</code> en vez de <code>this.prisma.producto</code>.</li>
+<li>El <code>include</code>: <code>{ pedidos: true }</code> en vez de <code>{ categoria: true }</code>.</li>
+</ul>
+<hr />
+<h3>Generar la estructura de Usuario</h3>
+<p><strong>En la terminal:</strong></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">nest generate module usuarios
+nest generate controller usuarios --no-spec
+nest generate service usuarios --no-spec</code></pre>
+</div>
+<p>Y creamos la carpeta <code>dto</code> dentro de <code>src/usuarios/</code>.</p>
+<hr />
+<h3>El prompt correcto para Cursor</h3>
+<p><strong>Prompt para Cursor (mostrar en vivo):</strong></p>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><em>&quot;Usa el módulo <code>productos</code> de este proyecto como plantilla. Crea el CRUD completo de <code>usuarios</code> siguiendo exactamente el mismo patrón: un CrearUsuarioDto con nombre (string, no vacío) y email (string, formato email); un ActualizarUsuarioDto con PartialType; el service con crear, obtenerTodos, obtenerPorId (con findUniqueOrThrow), actualizar y eliminar, usando this.prisma.usuario e include pedidos; y el controller con los cinco endpoints. No cambies nada del módulo productos.&quot;</em></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<p><strong>Qué debe producir Cursor</strong> (y lo verificamos contra Producto):</p>
+<p><strong>Archivo:</strong> <code>src/usuarios/dto/crear-usuario.dto.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { IsString, IsNotEmpty, IsEmail } from &#x27;class-validator&#x27;;
+
+export class CrearUsuarioDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre: string;
+
+  @IsEmail()
+  email: string;
+}</code></pre>
+</div>
+<p><strong>Archivo:</strong> <code>src/usuarios/dto/actualizar-usuario.dto.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { PartialType } from &#x27;@nestjs/mapped-types&#x27;;
+import { CrearUsuarioDto } from &#x27;./crear-usuario.dto&#x27;;
+
+export class ActualizarUsuarioDto extends PartialType(CrearUsuarioDto) {}</code></pre>
+</div>
+<p><strong>Archivo:</strong> <code>src/usuarios/usuarios.service.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearUsuarioDto } from &#x27;./dto/crear-usuario.dto&#x27;;
+import { ActualizarUsuarioDto } from &#x27;./dto/actualizar-usuario.dto&#x27;;
+
+@Injectable()
+export class UsuariosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(datos: CrearUsuarioDto) {
+    return this.prisma.usuario.create({ data: datos });
+  }
+
+  obtenerTodos() {
+    return this.prisma.usuario.findMany({
+      include: { pedidos: true },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerPorId(id: number) {
+    return this.prisma.usuario.findUniqueOrThrow({
+      where: { id },
+      include: { pedidos: true },
+    });
+  }
+
+  actualizar(id: number, datos: ActualizarUsuarioDto) {
+    return this.prisma.usuario.update({
+      where: { id },
+      data: datos,
+    });
+  }
+
+  eliminar(id: number) {
+    return this.prisma.usuario.delete({ where: { id } });
+  }
+}</code></pre>
+</div>
+<p><strong>Archivo:</strong> <code>src/usuarios/usuarios.controller.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from &#x27;@nestjs/common&#x27;;
+import { UsuariosService } from &#x27;./usuarios.service&#x27;;
+import { CrearUsuarioDto } from &#x27;./dto/crear-usuario.dto&#x27;;
+import { ActualizarUsuarioDto } from &#x27;./dto/actualizar-usuario.dto&#x27;;
+
+@Controller(&#x27;usuarios&#x27;)
+export class UsuariosController {
+  constructor(private readonly usuariosService: UsuariosService) {}
+
+  @Post()
+  crear(@Body() datos: CrearUsuarioDto) {
+    return this.usuariosService.crear(datos);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.usuariosService.obtenerTodos();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerPorId(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.usuariosService.obtenerPorId(id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() datos: ActualizarUsuarioDto,
+  ) {
+    return this.usuariosService.actualizar(id, datos);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.usuariosService.eliminar(id);
+  }
+}</code></pre>
+</div>
+<hr />
+<h3>La verificación: lo que NO se delega</h3>
+<p><strong>La checklist de verificación (hazla en voz alta, señalando):</strong></p>
+<ul>
+<li>[ ] ¿El <code>import</code> de <code>PrismaService</code> apunta a <code>../prisma/prisma.service</code>?</li>
+<li>[ ] ¿Usa <code>findUniqueOrThrow</code> (no <code>findUnique</code>) en <code>obtenerPorId</code>?</li>
+<li>[ ] ¿El <code>@Body()</code> está tipado con el DTO (no con un <code>type</code> ni con <code>any</code>)?</li>
+<li>[ ] ¿El <code>include</code> es <code>pedidos</code> (no <code>categoria</code>, que era de Producto)?</li>
+<li>[ ] ¿El controller es delgado, solo delega?</li>
+</ul>
+<p><strong>La regla:</strong> si algo no coincide con el molde de Producto, <strong>es un error de Cursor</strong>, no una variación válida. El molde manda.</p>
+<p><strong>¿Y si Cursor genera algo distinto a esto?</strong></p>
+<ul>
+<li>Puede pasar: quizás use <code>findUnique</code>, o importe mal, o agregue un <code>try/catch</code> que no necesitamos (ya tenemos el filtro global). <strong>Eso es exactamente lo que tienen que cazar.</strong></li>
+<li>El valor de dominar el patrón primero es <strong>poder detectar cuándo la IA se desvía</strong>. Sin el molde en la cabeza, aceptarían el error. Con él, lo corrigen.</li>
+</ul>
+<hr />
+<h3>Categoría: el CRUD que ya estaba a medias</h3>
+<p><strong>Explicación:</strong> Categoría ya tiene <code>crear</code> y <code>obtenerTodas</code> de la Clase 2. Le falta <code>obtenerPorId</code>, <code>actualizar</code> y <code>eliminar</code> para completar el CRUD. Mismo patrón, mismo prompt de Cursor. El DTO de categoría es el más simple: solo <code>nombre</code>.</p>
+<p><strong>Archivo NUEVO:</strong> <code>src/categorias/dto/crear-categoria.dto.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { IsString, IsNotEmpty } from &#x27;class-validator&#x27;;
+
+export class CrearCategoriaDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre: string;
+}</code></pre>
+</div>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-7">
+          <div class="seccion-meta"><span>07</span><span>LÓGICA DE NEGOCIO</span></div>
+          <h2>🧾 Pedidos</h2>
+          <h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Un pedido ya pagado, ¿se edita como un producto? Si un cliente compró 3 teclados ayer, ¿le cambio el pedido a 5 hoy?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>No.</strong> Un pedido es un <strong>hecho histórico</strong>, como una factura. No se edita: quedó registrado como ocurrió. Y no se <strong>borra</strong>: se <strong>cancela</strong> (cambia de estado a <code>CANCELADO</code>). Borrar un pedido pagado es <strong>fraude contable</strong> — es la misma lógica del precio histórico de la Clase 2. Por eso Pedido <strong>rompe el molde</strong>: su &quot;update&quot; es una transición de estado, y no tiene &quot;delete&quot;.</li>
+</ul>
+<hr />
+<h3>Por qué Pedido es distinto</h3>
+<table>
+<thead>
+<tr>
+  <th>Producto (molde normal)</th>
+  <th>Pedido (lógica de negocio)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Se crea con datos directos</td>
+  <td>Se crea calculando total y descontando stock</td>
+</tr>
+<tr>
+  <td>Se edita cualquier campo</td>
+  <td><strong>No se edita</strong>: es histórico</td>
+</tr>
+<tr>
+  <td>Se elimina</td>
+  <td><strong>No se elimina</strong>: se <strong>cancela</strong> (estado)</td>
+</tr>
+<tr>
+  <td>Una operación simple</td>
+  <td><strong>Varias operaciones que deben pasar juntas o ninguna</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>El problema nuevo: dos cosas que deben pasar juntas</h3>
+<p><strong>Explicación:</strong> Cuando alguien compra, ocurren <strong>dos cosas</strong>:</p>
+<ol>
+<li>Se <strong>crea el pedido</strong> (con sus detalles).</li>
+<li>Se <strong>descuenta el stock</strong> de cada producto.</li>
+</ol>
+<p><strong>La pregunta peligrosa:</strong> ¿qué pasa si la primera funciona y la segunda falla? Quedaría un pedido registrado <strong>sin haber descontado stock</strong>. Vendiste algo que sigue figurando como disponible. Inventario corrupto.</p>
+<h3>Antes de continuar</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Si creo el pedido y JUSTO ahí se cae el servidor antes de descontar el stock... ¿qué queda en la base?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> Queda <strong>un pedido a medias</strong>: registrado, pero con el stock intacto. Vendiste 3 teclados y la base sigue diciendo que tienes 15. Eso es <strong>inconsistencia de datos</strong>, y es de los peores bugs de un backend: silencioso y acumulativo. La solución se llama <strong>transacción</strong>.</li>
+</ul>
+<hr />
+<h3>Definición de transacción</h3>
+<p><strong>Técnica:</strong> una <strong>transacción</strong> agrupa varias operaciones de base de datos en <strong>una sola unidad indivisible</strong>: o se completan <strong>todas</strong>, o no se aplica <strong>ninguna</strong>. Si algo falla a mitad de camino, la base <strong>deshace</strong> todo lo hecho hasta ahí (rollback), como si nada hubiera pasado.</p>
+<p><strong>Analogía:</strong> una <strong>transferencia bancaria</strong>. Restar de tu cuenta y sumar a la otra son dos pasos, pero <strong>tienen que pasar juntos</strong>. Imagina que resta de tu cuenta y falla antes de sumar a la otra: tu dinero desaparece. El banco lo hace como transacción: o los dos pasos, o ninguno. Nunca a medias.</p>
+<p><strong>En nuestro caso:</strong> crear el pedido <strong>y</strong> descontar el stock son una sola transacción. Si el descuento falla (stock insuficiente), el pedido <strong>no se crea</strong>. Todo o nada.</p>
+<hr />
+<h3>El body que recibimos (repaso de la Clase 2)</h3>
+<p><strong>Recordatorio de la regla de oro:</strong> el cliente <strong>no</strong> manda precios ni total. Solo qué quiere y cuánto:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">MODIFICAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-json">{
+  &quot;usuarioId&quot;: 1,
+  &quot;items&quot;: [
+    { &quot;productoId&quot;: 1, &quot;cantidad&quot;: 2 },
+    { &quot;productoId&quot;: 2, &quot;cantidad&quot;: 1 }
+  ]
+}</code></pre>
+</div>
+<p>El backend consulta los precios reales, calcula el total, y descuenta stock. <strong>Nunca confía en el cliente</strong> para datos sensibles.</p>
+<hr />
+<h3>El DTO del pedido (con validación anidada)</h3>
+<p><strong>Explicación:</strong> El pedido tiene un reto nuevo: su body contiene una <strong>lista de objetos</strong> (<code>items</code>). Validar una lista de objetos anidados necesita dos decoradores especiales.</p>
+<p><strong>Archivo NUEVO:</strong> <code>src/pedidos/dto/crear-pedido.dto.ts</code></p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">CREAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { Type } from &#x27;class-transformer&#x27;;
+import {
+  IsInt,
+  IsArray,
+  ValidateNested,
+  ArrayNotEmpty,
+  Min,
+} from &#x27;class-validator&#x27;;
+
+export class ItemPedidoDto {
+  @IsInt()
+  productoId: number;
+
+  @IsInt()
+  @Min(1)
+  cantidad: number;
+}
+
+export class CrearPedidoDto {
+  @IsInt()
+  usuarioId: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() =&gt; ItemPedidoDto)
+  items: ItemPedidoDto[];
+}</code></pre>
+</div>
+<p><strong>¿Qué hacen <code>@ValidateNested</code> y <code>@Type</code>?</strong></p>
+<ul>
+<li>Por defecto, la validación <strong>no entra</strong> en los objetos de una lista: vería <code>items</code> como &quot;un arreglo&quot; y no revisaría cada <code>item</code> adentro.</li>
+<li><code>@ValidateNested({ each: true })</code> le dice: &quot;valida <strong>cada</strong> objeto de la lista con sus propias reglas&quot;.</li>
+<li><code>@Type(() =&gt; ItemPedidoDto)</code> le dice <strong>con qué clase</strong> validar cada uno. Sin esto, no sabe que cada item es un <code>ItemPedidoDto</code>.</li>
+<li><strong>Juntos:</strong> garantizan que ningún item traiga <code>cantidad: 0</code> o <code>cantidad: -3</code>. El <code>@Min(1)</code> de adentro sí se aplica.</li>
+</ul>
+<p><strong>¿Por qué <code>@ArrayNotEmpty</code>?</strong></p>
+<ul>
+<li>Un pedido <strong>sin productos</strong> no tiene sentido: sería una compra vacía. <code>@ArrayNotEmpty</code> rechaza <code>items: []</code>. Es una regla de negocio: no existen pedidos fantasma.</li>
+</ul>
+<hr />
+<h3>El service de Pedido: la transacción en acción</h3>
+<p><strong>Explicación:</strong> Aquí está todo junto. Léelo despacio, en cuatro momentos: (1) consultar productos reales, (2) verificar stock, (3) armar detalles con precio histórico, (4) crear pedido y descontar stock <strong>en una transacción</strong>.</p>
+<p><strong>Archivo:</strong> <code>src/pedidos/pedidos.service.ts</code> — <strong>reemplazar TODO</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">REEMPLAZAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import { Injectable, BadRequestException } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearPedidoDto } from &#x27;./dto/crear-pedido.dto&#x27;;
+
+@Injectable()
+export class PedidosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async crear(datos: CrearPedidoDto) {
+    const idsProductos = datos.items.map((item) =&gt; item.productoId);
+
+    const productos = await this.prisma.producto.findMany({
+      where: { id: { in: idsProductos } },
+    });
+
+    const detalles = datos.items.map((item) =&gt; {
+      const producto = productos.find((p) =&gt; p.id === item.productoId);
+
+      if (!producto) {
+        throw new BadRequestException(
+          `No existe el producto con id ${item.productoId}.`,
+        );
+      }
+
+      if (producto.stock &lt; item.cantidad) {
+        throw new BadRequestException(
+          `Stock insuficiente de &quot;${producto.nombre}&quot;: ` +
+            `quedan ${producto.stock}, se pidieron ${item.cantidad}.`,
+        );
+      }
+
+      return {
+        productoId: producto.id,
+        cantidad: item.cantidad,
+        precioUnitario: producto.precio,
+      };
+    });
+
+    const total = detalles.reduce(
+      (suma, d) =&gt; suma + Number(d.precioUnitario) * d.cantidad,
+      0,
+    );
+
+    return this.prisma.$transaction(async (tx) =&gt; {
+      const pedido = await tx.pedido.create({
+        data: {
+          usuarioId: datos.usuarioId,
+          total,
+          detalles: { create: detalles },
+        },
+        include: {
+          usuario: true,
+          detalles: { include: { producto: true } },
+        },
+      });
+
+      for (const detalle of detalles) {
+        await tx.producto.update({
+          where: { id: detalle.productoId },
+          data: { stock: { decrement: detalle.cantidad } },
+        });
+      }
+
+      return pedido;
+    });
+  }
+
+  obtenerTodos() {
+    return this.prisma.pedido.findMany({
+      include: {
+        usuario: true,
+        detalles: { include: { producto: true } },
+      },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerPorId(id: number) {
+    return this.prisma.pedido.findUniqueOrThrow({
+      where: { id },
+      include: {
+        usuario: true,
+        detalles: { include: { producto: true } },
+      },
+    });
+  }
+
+  cancelar(id: number) {
+    return this.prisma.pedido.update({
+      where: { id },
+      data: { estado: &#x27;CANCELADO&#x27; },
+    });
+  }
+}</code></pre>
+</div>
+<hr />
+<h3>Leyendo la transacción</h3>
+<ul>
+<li><code>this.prisma.$transaction(async (tx) =&gt; { ... })</code> → abre la transacción. Todo lo que pase con <code>tx</code> adentro es <strong>una sola unidad</strong>.</li>
+<li><strong>Ojo:</strong> dentro de la transacción usamos <code>tx.pedido</code>, <code>tx.producto</code> — <strong>no</strong> <code>this.prisma</code>. Ese <code>tx</code> es la mano de la transacción.</li>
+<li>El <code>for</code> recorre los detalles y <strong>descuenta el stock</strong> de cada producto con <code>decrement</code>.</li>
+<li>Si <strong>cualquier</strong> paso falla, Prisma <strong>deshace todo</strong>: ni pedido, ni descuento. Todo o nada.</li>
+</ul>
+<p><strong>¿Qué es <code>decrement</code>?</strong></p>
+<ul>
+<li>Es la forma de Prisma de decir &quot;réstale esta cantidad al valor actual&quot;. <code>stock: { decrement: 2 }</code> = &quot;quítale 2 al stock que haya&quot;.</li>
+<li><strong>Por qué no leer el stock, restar en JavaScript, y guardar:</strong> porque entre leer y guardar, otra compra podría cambiarlo. <code>decrement</code> lo hace en un solo paso, en la base, sin ese hueco. Es más seguro.</li>
+</ul>
+<p><strong>¿Por qué la verificación de stock está ANTES de la transacción?</strong></p>
+<ul>
+<li>Para fallar rápido: si no hay stock, ni empezamos. Pero fíjense que el <code>decrement</code> real ocurre <strong>dentro</strong> de la transacción, protegido. La verificación previa es cortesía; la transacción es la garantía.</li>
+</ul>
+<hr />
+<h3>El controller de Pedido: nota qué NO tiene</h3>
+<p><strong>Explicación:</strong> Fíjense en lo ausente: <strong>no hay <code>@Patch</code> de edición general ni <code>@Delete</code>.</strong> En su lugar, un <code>@Patch(':id/cancelar')</code>. El diseño del controller <strong>refleja la regla de negocio</strong>.</p>
+<p><strong>Archivo:</strong> <code>src/pedidos/pedidos.controller.ts</code> — <strong>reemplazar TODO</strong>:</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">REEMPLAZAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from &#x27;@nestjs/common&#x27;;
+import { PedidosService } from &#x27;./pedidos.service&#x27;;
+import { CrearPedidoDto } from &#x27;./dto/crear-pedido.dto&#x27;;
+
+@Controller(&#x27;pedidos&#x27;)
+export class PedidosController {
+  constructor(private readonly pedidosService: PedidosService) {}
+
+  @Post()
+  crear(@Body() datos: CrearPedidoDto) {
+    return this.pedidosService.crear(datos);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.pedidosService.obtenerTodos();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerPorId(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.pedidosService.obtenerPorId(id);
+  }
+
+  @Patch(&#x27;:id/cancelar&#x27;)
+  cancelar(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.pedidosService.cancelar(id);
+  }
+}</code></pre>
+</div>
+<p><strong>¿Por qué <code>/pedidos/1/cancelar</code> y no <code>DELETE /pedidos/1</code>?</strong></p>
+<ul>
+<li>Porque la URL <strong>cuenta lo que de verdad pasa</strong>. <code>DELETE</code> diría &quot;esto desaparece&quot;; <code>cancelar</code> dice &quot;esto cambia de estado y se conserva&quot;. La ruta honesta comunica la intención real.</li>
+<li>Es diseño de API con criterio: el endpoint refleja el negocio, no una plantilla genérica.</li>
+</ul>
+<hr />
+<h3>Registrar el módulo de Pedidos</h3>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">nest generate module pedidos
+nest generate controller pedidos --no-spec
+nest generate service pedidos --no-spec</code></pre>
+</div>
+<hr />
+<h3>Probar el pedido completo en Postman</h3>
+<ol>
+<li><strong>Asegurar datos:</strong> que exista un usuario (<code>POST /usuarios</code>) y productos con stock.</li>
+<li><strong>Ver stock inicial:</strong> <code>GET /productos/1</code> → anota el stock (ej. 15).</li>
+<li><strong>Crear pedido:</strong> <code>POST /pedidos</code> con 2 unidades del producto 1.</li>
+<li><strong>Verificar descuento:</strong> <code>GET /productos/1</code> → el stock <strong>bajó a 13</strong>. 🎉</li>
+<li><strong>Probar el tope:</strong> pedir más unidades de las que hay → <strong><code>400</code></strong> con &quot;Stock insuficiente&quot;.</li>
+<li><strong>Cancelar:</strong> <code>PATCH /pedidos/1/cancelar</code> → estado pasa a <code>CANCELADO</code>.</li>
+</ol>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-8">
+          <div class="seccion-meta"><span>08</span><span>VERIFICACIÓN</span></div>
+          <h2>✅ Cierre</h2>
+          <h3>La API completa: repaso de lo logrado</h3>
+<p><strong>Lo que hoy quedó funcionando:</strong></p>
+<ul>
+<li>✅ <strong>CRUD completo</strong> en Producto, Usuario, Categoría.</li>
+<li>✅ <strong>Validaciones</strong> que rechazan basura con <code>400</code> y mensaje claro.</li>
+<li>✅ <strong>Errores traducidos</strong>: <code>404</code>, <code>409</code>, <code>400</code> en vez de <code>500</code> feos.</li>
+<li>✅ <strong>Pedido con lógica de negocio</strong>: total calculado en backend, stock descontado, transacción todo-o-nada, cancelación por estado.</li>
+</ul>
+<p><strong>Es una API REST real y funcional.</strong> No un ejercicio: un backend que un frontend podría consumir hoy.</p>
+<hr />
+<h3>Subir a GitHub</h3>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">git status</code></pre>
+</div>
+<p>⚠️ <strong>Verifica en voz alta que <code>.env</code> NO aparece</strong> (la lección de seguridad de la Clase 2 sigue vigente).</p>
+
+<div class="antes-codigo">
+  <p class="componente-label">Qué vamos a hacer</p>
+  <p>Aplicaremos el siguiente paso en <em>Terminal / Postman</em>.</p>
+  <p class="componente-label">Por qué lo hacemos</p>
+  <p>Este cambio conecta el modelo mental de la sección con el comportamiento real de la API.</p>
+  <p class="componente-label">Qué aprenderás</p>
+  <p>Cómo implementar la decisión técnica, verificarla y reconocer su efecto.</p>
+</div>
+<div class="code-block">
+  <div class="code-head">
+    <div>
+      <span class="code-context">EJECUTAR</span>
+      <span class="code-file">Terminal / Postman</span>
+    </div>
+    <button class="copy-btn" type="button">Copiar código</button>
+  </div>
+  <pre class="line-numbers"><code class="language-bash">git add .
+git commit -m &quot;Clase 3 Modulo 2: CRUD completo, validaciones, manejo de errores y transacciones&quot;</code></pre>
+</div>
+<hr />
+<h3>Puente a la siguiente clase</h3>
+<div class="reflexion"><p class="reflexion-label">Antes de continuar</p><div class="reflexion-pregunta"><strong>&quot;Nuestra API ya funciona completa. Pero: ahora mismo, CUALQUIER persona que sepa la dirección puede crear, editar y borrar productos, y ver todos los usuarios con sus correos. ¿Eso está bien para una tienda real?&quot;</strong></div><button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button><div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Contrasta tu respuesta con la explicación técnica que sigue en esta sección.</div></div></div>
+<ul>
+<li><strong>Respuesta correcta:</strong> <strong>No, está gravísimo.</strong> No hay <strong>nadie</strong> que verifique quién hace cada cosa. Un desconocido podría borrar todo el catálogo o robarse la lista de clientes. Falta lo más importante de un backend profesional: <strong>saber quién eres y qué te está permitido hacer</strong>. Eso es <strong>autenticación</strong> (quién eres) y <strong>autorización</strong> (qué puedes hacer). La próxima clase le ponemos <strong>cerradura y llaves</strong> a la API: login, contraseñas seguras y control de acceso. Y de ahí, integración final, Docker y despliegue.</li>
+</ul>
+<hr />
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-9">
+          <div class="seccion-meta"><span>09</span><span>DIAGNÓSTICO</span></div>
+          <h2>🧰 Errores comunes</h2>
+          <p><strong>1. Las validaciones no corren (el <code>-5000</code> sigue entrando)</strong></p>
+<ul>
+<li><strong>Causa:</strong> falta activar el <code>ValidationPipe</code> global en <code>main.ts</code>, o el <code>@Body()</code> no está tipado con la clase DTO.</li>
+<li><strong>Solución:</strong> revisar el Bloque 2. Es el olvido #1 del día.</li>
+</ul>
+<p><strong>2. <code>Cannot read properties of undefined</code> / decorador no es función</strong></p>
+<ul>
+<li><strong>Cómo se lee:</strong> menciona un decorador de validación.</li>
+<li><strong>Causa:</strong> falta <code>npm i class-validator class-transformer</code>.</li>
+</ul>
+<p><strong>3. El filtro de errores no compila / no encuentra <code>Prisma</code></strong></p>
+<ul>
+<li><strong>Causa:</strong> importaron <code>Prisma</code> desde <code>@prisma/client</code> en vez de <code>./generated/prisma/client</code>.</li>
+<li><strong>Solución:</strong> el import correcto para ESTE proyecto es el <code>output</code> custom de la Clase 2. <strong>El error que van a copiar de internet.</strong></li>
+</ul>
+<p><strong>4. <code>PartialType</code> no existe</strong></p>
+<ul>
+<li><strong>Causa:</strong> falta <code>npm i @nestjs/mapped-types</code>.</li>
+</ul>
+<p><strong>5. La transacción no descuenta stock</strong></p>
+<ul>
+<li><strong>Causa:</strong> usaron <code>this.prisma.producto.update</code> en vez de <code>tx.producto.update</code> dentro de la transacción.</li>
+<li><strong>Cómo se lee:</strong> el descuento ocurre &quot;por fuera&quot; y rompe la garantía todo-o-nada.</li>
+</ul>
+<p><strong>6. <code>400 Bad Request</code> inesperado con &quot;property should not exist&quot;</strong></p>
+<ul>
+<li><strong>Cómo se lee:</strong> es <code>forbidNonWhitelisted</code> funcionando. Mandaron un campo que el DTO no declara.</li>
+<li><strong>Solución:</strong> es correcto — están mandando basura. Revisar el body.</li>
+</ul>
+<hr />
+
+        </section>
+
+        <section class="seccion" id="sec-10">
+          <div class="seccion-meta"><span>10</span><span>CIERRE</span></div>
+          <h2>📌 Checklist final</h2>
+          <h1>✅ Checklist de cierre — con qué se va el estudiante</h1>
+<ul>
+<li>[ ] Entiende que un <code>type</code> de TypeScript <strong>no valida en ejecución</strong> y por qué se necesita un <strong>DTO como clase</strong>.</li>
+<li>[ ] Sabe qué es <code>class-validator</code> y para qué sirven <code>@IsString</code>, <code>@Min</code>, <code>@IsEmail</code>, etc.</li>
+<li>[ ] Activó el <strong><code>ValidationPipe</code> global</strong> y entiende <code>whitelist</code>, <code>forbidNonWhitelisted</code> y <code>transform</code>.</li>
+<li>[ ] Vio el <code>precio: -5000</code> <strong>rechazado</strong> con un <code>400</code> claro.</li>
+<li>[ ] Completó el <strong>CRUD</strong> (create, read, <strong>update, delete</strong>) de Producto.</li>
+<li>[ ] Entiende <code>PATCH</code> vs <code>PUT</code> y usa <strong><code>PartialType</code></strong> para no repetir el DTO.</li>
+<li>[ ] Sabe por qué <code>findUniqueOrThrow</code> es mejor que <code>findUnique</code> para responder <code>404</code>.</li>
+<li>[ ] Distingue los códigos HTTP <code>2xx</code>, <code>4xx</code>, <code>5xx</code> y sabe que &quot;el cliente se equivocó&quot; es <code>4xx</code>, no <code>5xx</code>.</li>
+<li>[ ] Entiende qué es un <strong>Exception Filter</strong> y por qué un filtro global es mejor que <code>if</code> repetidos.</li>
+<li>[ ] Tradujo los errores de Prisma <strong><code>P2025</code>→404, <code>P2002</code>→409, <code>P2003</code>→400</strong>.</li>
+<li>[ ] Sabe que en este proyecto <code>Prisma</code> se importa de <strong><code>generated/prisma/client</code></strong>, no de <code>@prisma/client</code>.</li>
+<li>[ ] <strong>Replicó el patrón</strong> de Producto a Usuario <strong>verificando</strong> lo que Cursor generó (copiloto, no piloto).</li>
+<li>[ ] Sabe <strong>auditar</strong> código generado por IA con una checklist contra el molde conocido.</li>
+<li>[ ] Entiende que un <strong>pedido no se edita ni se borra</strong>: se <strong>cancela</strong> (dato histórico).</li>
+<li>[ ] Sabe qué es una <strong>transacción</strong> y la analogía de la transferencia bancaria (todo o nada).</li>
+<li>[ ] Vio el <strong>stock descontarse solo</strong> al crear un pedido, dentro de una transacción.</li>
+<li>[ ] Entiende que el backend <strong>calcula el total</strong>, nunca confía en el cliente (regla de la Clase 2).</li>
+<li>[ ] Diseñó un endpoint (<code>/pedidos/:id/cancelar</code>) que <strong>refleja la regla de negocio</strong>.</li>
+<li>[ ] Tiene una <strong>API REST completa y funcional</strong> subida a GitHub.</li>
+<li>[ ] Entiende que <strong>nadie protege la API todavía</strong>, y qué resuelve eso (Clase 4).</li>
+</ul>
+<hr />
+
+        </section>
+
+        <!-- FIN HUECO 4 -->
+
+        <footer class="footer">
+          © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack
+        </footer>
+      </article>
+    </main>
+  </div>
+
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <div class="slide-status" id="slideStatus" aria-live="polite"></div>
+  <div class="slide-hint">← → navegar · Esc salir · espacio avanzar</div>
+
+  <!-- Prism.js · resaltado de sintaxis y números de línea -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+  <script src="ana-clase.js"></script>
+</body>
+</html>
