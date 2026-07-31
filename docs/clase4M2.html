@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+  © 2026 Ana Alvarado — Todos los derechos reservados.
+  Educadora Tech & Desarrolladora Full Stack.
+  Material de autoría exclusiva. Prohibida su reproducción, redistribución,
+  modificación o uso fuera del contexto de clase sin autorización escrita.
+  linkedin.com/in/ana-alvarado-instructora-full-stack
+============================================================================
+  ARCHIVOS QUE ACOMPAÑAN A ESTE HTML (deben estar en la misma carpeta):
+    · ana-estilos.css → identidad visual y acento por empresa
+    · ana-clase.js    → navegación, tema, presentación y código
+============================================================================
+-->
+<html lang="es" data-empresa="dev-senior">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>Clase 4 · Backend profesional · Ana Alvarado</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ana-estilos.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <div class="controls" aria-label="Controles de lectura">
+    <button class="ctrl-btn" id="temaBtn" type="button" aria-label="Activar tema claro" title="Cambiar tema">
+      <span aria-hidden="true">☀</span>
+    </button>
+    <button class="ctrl-btn" id="presentBtn" type="button" aria-label="Iniciar modo presentación" title="Presentación (P)">
+      <span aria-hidden="true">▣</span>
+    </button>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sidebar-eyebrow">Libro de clase</div>
+      <div class="sidebar-brand">JavaScript AI Backend Developer</div>
+      <div class="sidebar-sub">Clase 04 · Módulo 02</div>
+      <div class="sidebar-rule"></div>
+
+      <nav id="nav">
+        <a class="nav-item active" href="#sec-1"><span class="nav-index">01</span><span class="nav-label">La API ingenua</span></a>
+        <a class="nav-item" href="#sec-2"><span class="nav-index">02</span><span class="nav-label">Validación real</span></a>
+        <a class="nav-item" href="#sec-3"><span class="nav-index">03</span><span class="nav-label">CRUD completo</span></a>
+        <a class="nav-item" href="#sec-4"><span class="nav-index">04</span><span class="nav-label">Replicar con IA</span></a>
+        <a class="nav-item" href="#sec-5"><span class="nav-index">05</span><span class="nav-label">Usuario</span></a>
+        <a class="nav-item" href="#sec-6"><span class="nav-index">06</span><span class="nav-label">Errores HTTP</span></a>
+        <a class="nav-item" href="#sec-7"><span class="nav-index">07</span><span class="nav-label">Swagger</span></a>
+        <a class="nav-item" href="#sec-8"><span class="nav-index">08</span><span class="nav-label">Verificación</span></a>
+        <a class="nav-item" href="#sec-9"><span class="nav-index">09</span><span class="nav-label">Siguiente nivel</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>ANA ALVARADO</span>
+        <span>DEV SENIOR</span>
+      </div>
+    </aside>
+
+    <main class="content-area" id="contenido">
+      <article class="content-column">
+        <header class="clase-header">
+          <div class="clase-kicker">Dev Senior · Módulo 2 · Clase 4</div>
+          <h1 class="clase-titulo">De CRUD básico a backend profesional</h1>
+          <p class="clase-bajada">Completa una API de catálogo con validaciones que sí se ejecutan, actualizaciones parciales, errores HTTP comprensibles y documentación interactiva.</p>
+        </header>
+
+        <div class="aviso-copyright" role="note">
+          <div class="aviso-titulo">Material exclusivo de clase</div>
+          <p>Este recurso es de <strong>autoría de Ana Alvarado</strong> y está destinado a estudiantes de la cohorte. No se autoriza su reproducción o redistribución fuera del contexto formativo.</p>
+        </div>
+
+        <section class="seccion slide-activa" id="sec-1">
+          <div class="seccion-meta"><span>01</span><span>PUNTO DE PARTIDA</span></div>
+          <h2>Una API funcional todavía puede ser una API ingenua</h2>
+
+          <div class="apertura">
+            <p class="apertura-label">Problema de negocio</p>
+            <p class="apertura-pregunta">Si una tienda acepta un producto con precio de −$5.000, ¿falló la persona que escribió el dato o el sistema que decidió guardarlo?</p>
+          </div>
+
+          <p>El backend es la última frontera antes de la base de datos. No puede confiar en que un formulario, otra aplicación o una persona siempre enviarán información correcta. Debe verificar cada entrada y responder de manera predecible cuando algo no cumple las reglas.</p>
+
+          <div class="caso-negocio">
+            <p class="componente-label">Catálogo de tienda</p>
+            <h3>El salto profesional</h3>
+            <p>Producto y Categoría ya crean y consultan registros. El siguiente paso es completar el ciclo CRUD, impedir datos inválidos, traducir errores técnicos y publicar un manual navegable de la API.</p>
+          </div>
+
+          <div class="modelo-mental">
+            <p class="componente-label">El recorrido de una petición</p>
+            <p><strong>Cliente → Controller y DTO → Service → Prisma → Base de datos.</strong> El controller protege la entrada; el service coordina el caso de uso; Prisma ejecuta la persistencia. Cada capa tiene una responsabilidad distinta.</p>
+          </div>
+
+          <div class="definicion">
+            <div class="definicion-bloque">
+              <p class="componente-label">Punto actual</p>
+              <p class="tecnica"><code>POST</code> y <code>GET</code> funcionan en Producto y Categoría. El <code>ValidationPipe</code> ya está activo.</p>
+            </div>
+            <div class="definicion-bloque">
+              <p class="componente-label">Problema visible</p>
+              <p class="sencilla">El precio negativo sigue entrando porque el DTO existe, pero el controller no lo está usando como clase.</p>
+            </div>
+            <div class="definicion-bloque">
+              <p class="componente-label">Resultado esperado</p>
+              <p class="real">Producto, Categoría y Usuario con CRUD; errores 400, 404 y 409; documentación disponible en <code>/docs</code>.</p>
+            </div>
+          </div>
+
+          <div class="tip">
+            <p class="componente-label">Antes de modificar</p>
+            <p>Confirma que <code>npm run start:dev</code>, <code>GET /productos</code> y <code>GET /categorias</code> funcionan. Si falta el cliente generado de Prisma, ejecuta <code>npx prisma generate</code>.</p>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-2">
+          <div class="seccion-meta"><span>02</span><span>VALIDACIÓN EN EJECUCIÓN</span></div>
+          <h2>El DTO debe existir cuando la aplicación está corriendo</h2>
+
+          <div class="definicion">
+            <div class="definicion-bloque">
+              <p class="componente-label">Definición técnica</p>
+              <p class="tecnica">Los <code>type</code> e <code>interface</code> de TypeScript se eliminan al compilar. Una clase permanece en JavaScript y puede conservar metadatos de decoradores para <code>class-validator</code>.</p>
+            </div>
+            <div class="definicion-bloque">
+              <p class="componente-label">En palabras sencillas</p>
+              <p class="sencilla">Un <code>type</code> ayuda al editor, pero no puede detener una petición. Una clase DTO sí puede convertirse en la puerta de control del backend.</p>
+            </div>
+            <div class="definicion-bloque">
+              <p class="componente-label">Analogía</p>
+              <p class="real">Decir “el paquete debe pesar menos de 5 kg” no controla nada. Poner una balanza en la entrada permite verificarlo y rechazarlo.</p>
+            </div>
+          </div>
+
+          <div class="reflexion">
+            <p class="reflexion-label">Predice el comportamiento</p>
+            <div class="reflexion-pregunta">Si el DTO tiene <code>@Min(0)</code>, pero <code>@Body()</code> usa un <code>type</code>, ¿por qué no aparece el error?</div>
+            <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+            <div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Porque el <code>type</code> ya no existe en tiempo de ejecución. El pipe no recibe una clase con metadatos de validación y no encuentra reglas que aplicar.</div></div>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p>
+            <p>Conectaremos <code>CrearProductoDto</code> directamente con el cuerpo del endpoint.</p>
+            <p class="componente-label">Por qué lo hacemos</p>
+            <p>El <code>ValidationPipe</code> necesita una clase real para descubrir y ejecutar sus decoradores.</p>
+            <p class="componente-label">Qué aprenderás</p>
+            <p>A distinguir el tipado de desarrollo de la validación que ocurre en ejecución.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">REEMPLAZAR</span><span class="code-file">src/productos/productos.controller.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
+import { ProductosService } from './productos.service';
+import { CrearProductoDto } from './dto/crear-producto.dto';
+
+@Controller('productos')
+export class ProductosController {
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Post()
+  crear(@Body() body: CrearProductoDto) {
+    return this.productosService.crear(body);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.productosService.obtenerTodos();
+  }
+
+  @Get(':id')
+  obtenerPorId(@Param('id', ParseIntPipe) id: number) {
+    return this.productosService.obtenerPorId(id);
+  }
+}</code></pre>
+          </div>
+
+          <p>La línea decisiva es <code>@Body() body: CrearProductoDto</code>. El controller recibe la clase; los decoradores se ejecutan; solo después el service recibe datos validados.</p>
+
+          <div class="modelo-mental">
+            <p class="componente-label">Configuración global ya activa</p>
+            <p><code>whitelist</code> limita el cuerpo a propiedades declaradas; <code>forbidNonWhitelisted</code> rechaza campos adicionales; <code>transform</code> transforma valores cuando existe información suficiente sobre el tipo esperado.</p>
+          </div>
+
+          <ol class="pasos">
+            <li><span>01</span><p>Envía un producto válido: debe responder <strong>201</strong>.</p></li>
+            <li><span>02</span><p>Envía <code>{"precio": -5000}</code>: debe responder <strong>400</strong> y señalar la regla <code>@Min(0)</code>.</p></li>
+            <li><span>03</span><p>Agrega <code>"hackeo": true</code>: debe responder <strong>400</strong> porque esa propiedad no pertenece al contrato.</p></li>
+          </ol>
+
+          <div class="tip">
+            <p class="componente-label">Responsabilidad de capa</p>
+            <p>El service puede usar un <code>type</code> para autocompletado porque no es la puerta de entrada. La validación externa pertenece al DTO que usa el controller.</p>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-3">
+          <div class="seccion-meta"><span>03</span><span>CRUD DE PRODUCTO</span></div>
+          <h2>Actualizar lo necesario y eliminar por identidad</h2>
+
+          <div class="definicion">
+            <div class="definicion-bloque"><p class="componente-label">Create</p><p class="tecnica"><code>POST</code> crea un recurso.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Read</p><p class="sencilla"><code>GET</code> consulta uno o varios recursos.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Update</p><p class="real"><code>PATCH</code> modifica solo los campos enviados.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Delete</p><p class="real"><code>DELETE</code> elimina el recurso identificado en la URL.</p></div>
+          </div>
+
+          <div class="modelo-mental">
+            <p class="componente-label">PUT frente a PATCH</p>
+            <p><strong>PUT reemplaza la representación completa.</strong> <strong>PATCH aplica un cambio parcial.</strong> Si solo cambia el precio, PATCH evita reenviar nombre, descripción, stock y categoría.</p>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Crearemos un DTO de actualización basado en el DTO de creación.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>Las reglas deben mantenerse en un solo lugar; solo cambia que los campos serán opcionales.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A reutilizar contratos con <code>PartialType</code> sin duplicar validaciones.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal · raíz de catalogo-api</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-bash">npm install @nestjs/mapped-types</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/productos/dto/actualizar-producto.dto.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { PartialType } from '@nestjs/mapped-types';
+import { CrearProductoDto } from './crear-producto.dto';
+
+export class ActualizarProductoDto extends PartialType(CrearProductoDto) {}</code></pre>
+          </div>
+
+          <p><code>PartialType</code> conserva los decoradores originales. Un precio enviado sigue obligado a ser mayor o igual a cero, pero es válido omitirlo si se actualiza otro campo.</p>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Añadiremos las operaciones de actualización y eliminación en la capa que conversa con Prisma.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>El controller expone HTTP; el service concentra las operaciones del dominio y la persistencia.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A traducir PATCH y DELETE en operaciones <code>update</code> y <code>delete</code> de Prisma.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR ARRIBA</span><span class="code-file">src/productos/productos.service.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">type ActualizarProductoInput = {
+  nombre?: string;
+  descripcion?: string;
+  precio?: number;
+  stock?: number;
+  categoriaId?: number;
+};</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR EN LA CLASE</span><span class="code-file">src/productos/productos.service.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">actualizar(id: number, datos: ActualizarProductoInput) {
+  return this.prisma.producto.update({
+    where: { id },
+    data: datos,
+    include: { categoria: true },
+  });
+}
+
+eliminar(id: number) {
+  return this.prisma.producto.delete({
+    where: { id },
+  });
+}</code></pre>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Expondremos las dos operaciones mediante rutas con un identificador numérico.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>La URL identifica el recurso; el cuerpo describe el cambio parcial.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A combinar decoradores HTTP, parámetros, pipes y DTO.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">REEMPLAZAR</span><span class="code-file">src/productos/productos.controller.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ProductosService } from './productos.service';
+import { CrearProductoDto } from './dto/crear-producto.dto';
+import { ActualizarProductoDto } from './dto/actualizar-producto.dto';
+
+@Controller('productos')
+export class ProductosController {
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Post()
+  crear(@Body() body: CrearProductoDto) {
+    return this.productosService.crear(body);
+  }
+
+  @Get()
+  obtenerTodos() {
+    return this.productosService.obtenerTodos();
+  }
+
+  @Get(':id')
+  obtenerPorId(@Param('id', ParseIntPipe) id: number) {
+    return this.productosService.obtenerPorId(id);
+  }
+
+  @Patch(':id')
+  actualizar(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: ActualizarProductoDto,
+  ) {
+    return this.productosService.actualizar(id, body);
+  }
+
+  @Delete(':id')
+  eliminar(@Param('id', ParseIntPipe) id: number) {
+    return this.productosService.eliminar(id);
+  }
+}</code></pre>
+          </div>
+
+          <div class="advertencia">
+            <p class="componente-label">Error frecuente</p>
+            <p><strong>Qué aparece:</strong> <code>Cannot find module '@nestjs/mapped-types'</code>.</p>
+            <p><strong>Cómo leerlo:</strong> el nombre entre comillas es el paquete que TypeScript no puede resolver.</p>
+            <p><strong>Cómo resolverlo:</strong> ejecuta <code>npm install @nestjs/mapped-types</code> desde la raíz del proyecto.</p>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-4">
+          <div class="seccion-meta"><span>04</span><span>IA CON CRITERIO</span></div>
+          <h2>Replicar un patrón después de comprenderlo</h2>
+
+          <div class="apertura">
+            <p class="apertura-label">Decisión profesional</p>
+            <p class="apertura-pregunta">Producto ya tiene el patrón correcto. ¿Qué parte debe acelerar la IA y qué parte sigue siendo responsabilidad del desarrollador?</p>
+          </div>
+
+          <div class="modelo-mental">
+            <p class="componente-label">Copiloto, no piloto</p>
+            <p>La IA puede trasladar una estructura conocida a otra entidad. Tú defines el patrón, aportas las restricciones del dominio y verificas que el resultado conserve DTO, rutas, inyección de dependencias y operaciones Prisma correctas.</p>
+          </div>
+
+          <div class="caso-negocio">
+            <p class="componente-label">Categoría</p>
+            <h3>Mismo ciclo, contrato más pequeño</h3>
+            <p>Categoría necesita crear, consultar, actualizar y eliminar, pero solo expone <code>nombre</code>. El patrón de Producto se reutiliza; las reglas del dominio cambian.</p>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Crearemos los contratos que la IA debe respetar antes de pedirle el CRUD restante.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>Un prompt es más verificable cuando parte de archivos y restricciones explícitas.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A separar las decisiones humanas del trabajo mecánico que puede acelerar una herramienta.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/categorias/dto/crear-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { IsNotEmpty, IsString } from 'class-validator';
+
+export class CrearCategoriaDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre!: string;
+}</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/categorias/dto/actualizar-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { PartialType } from '@nestjs/mapped-types';
+import { CrearCategoriaDto } from './crear-categoria.dto';
+
+export class ActualizarCategoriaDto extends PartialType(CrearCategoriaDto) {}</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">PROMPT PARA IA</span><span class="code-file">Chat de IA en VS Code</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-markdown">Toma como referencia el patrón CRUD completo de `productos`:
+controller, service y DTOs con class-validator y PartialType.
+
+Replica ese patrón para `categorias`.
+Categoría solo tiene el campo `nombre`: string obligatorio.
+
+Crea el DTO de creación con validación, el DTO de actualización
+con PartialType y agrega obtenerPorId, actualizar y eliminar en
+el service y el controller.
+
+Antes de aplicar cambios, enumera los archivos que modificarás.</code></pre>
+          </div>
+
+          <div class="practica">
+            <p class="componente-label">Revisión obligatoria</p>
+            <h3>No aceptes la respuesta por apariencia</h3>
+            <ol class="pasos">
+              <li><span>01</span><p>Comprueba que <code>@Body()</code> use las clases <code>CrearCategoriaDto</code> y <code>ActualizarCategoriaDto</code>, nunca un <code>type</code>.</p></li>
+              <li><span>02</span><p>Verifica <code>@IsString()</code>, <code>@IsNotEmpty()</code>, <code>PartialType</code> y <code>ParseIntPipe</code>.</p></li>
+              <li><span>03</span><p>Confirma que el service use <code>this.prisma.categoria</code> y que cada ruta llame al método correspondiente.</p></li>
+              <li><span>04</span><p>Prueba datos válidos, nombre vacío, identificador inexistente y el ciclo CRUD completo.</p></li>
+            </ol>
+          </div>
+
+          <div class="advertencia">
+            <p class="componente-label">Límite de la IA</p>
+            <p>La herramienta puede replicar una forma incorrecta, olvidar un import o usar un modelo Prisma distinto. La compilación y las pruebas son evidencia; una respuesta convincente no lo es.</p>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-5">
+          <div class="seccion-meta"><span>05</span><span>NUEVA ENTIDAD</span></div>
+          <h2>Construir Usuario con el mismo lenguaje arquitectónico</h2>
+
+          <p>Usuario todavía no tiene módulo. El modelo incorpora <code>nombre</code>, <code>email</code> único, fecha de creación y relación con pedidos. Primero se genera la estructura NestJS; después se aplican contratos y patrón CRUD.</p>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Generaremos módulo, controller y service con el CLI de NestJS.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>El CLI crea la estructura esperada y registra el módulo sin trabajo manual repetitivo.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A iniciar una entidad nueva dentro de una arquitectura ya establecida.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal · raíz de catalogo-api</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-bash">nest generate module usuarios
+nest generate controller usuarios --no-spec
+nest generate service usuarios --no-spec</code></pre>
+          </div>
+
+          <div class="tip">
+            <p class="componente-label">Si el comando no existe</p>
+            <p>Usa <code>npx nest generate ...</code>. Si todavía falla, verifica que <code>@nestjs/cli</code> esté disponible en el proyecto.</p>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Definiremos los cuerpos válidos para crear y actualizar usuarios.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>El correo necesita validación de formato antes de llegar a Prisma; su unicidad se protege además en la base de datos.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A combinar validación de entrada con restricciones persistentes.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/usuarios/dto/crear-usuario.dto.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+
+export class CrearUsuarioDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre!: string;
+
+  @IsEmail()
+  email!: string;
+}</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/usuarios/dto/actualizar-usuario.dto.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { PartialType } from '@nestjs/mapped-types';
+import { CrearUsuarioDto } from './crear-usuario.dto';
+
+export class ActualizarUsuarioDto extends PartialType(CrearUsuarioDto) {}</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">PROMPT PARA IA</span><span class="code-file">Chat de IA en VS Code</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-markdown">Replica el patrón CRUD completo de `productos` para `usuarios`.
+
+Usa los DTOs `CrearUsuarioDto` y `ActualizarUsuarioDto` existentes.
+El service debe inyectar `PrismaService` desde
+`../prisma/prisma.service` y usar `this.prisma.usuario`.
+
+Implementa crear, obtenerTodos, obtenerPorId, actualizar y eliminar.
+Usa las clases DTO en @Body() y ParseIntPipe para los ids.
+Antes de aplicar cambios, explica cómo verificaste cada archivo.</code></pre>
+          </div>
+
+          <div class="reflexion">
+            <p class="reflexion-label">Dos controles diferentes</p>
+            <div class="reflexion-pregunta">¿Qué diferencia existe entre <code>@IsEmail()</code> y <code>@unique</code>?</div>
+            <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+            <div class="explicacion" aria-hidden="true"><div class="explicacion-inner"><code>@IsEmail()</code> valida la forma del dato recibido. <code>@unique</code> protege la regla de que no existan dos registros con el mismo correo. Un email puede tener formato válido y aun así estar repetido.</div></div>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-6">
+          <div class="seccion-meta"><span>06</span><span>MANEJO PROFESIONAL DE ERRORES</span></div>
+          <h2>Traducir errores de Prisma al lenguaje de HTTP</h2>
+
+          <div class="definicion">
+            <div class="definicion-bloque"><p class="componente-label">2xx</p><p class="tecnica">La operación se completó: <code>200 OK</code>, <code>201 Created</code>.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">4xx</p><p class="sencilla">La petición no puede atenderse así: <code>400</code>, <code>404</code>, <code>409</code>.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">5xx</p><p class="real">El servidor falló de forma inesperada: <code>500 Internal Server Error</code>.</p></div>
+          </div>
+
+          <div class="caso-negocio">
+            <p class="componente-label">Traducción necesaria</p>
+            <h3>Prisma conoce la causa; HTTP comunica el resultado</h3>
+            <p><code>P2025</code> indica un registro inexistente, <code>P2002</code> una restricción única violada y <code>P2003</code> una referencia inválida. Un filtro global convierte esos detalles de persistencia en respuestas útiles para cualquier cliente.</p>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Crearemos un Exception Filter que intercepte errores conocidos de Prisma.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>La API debe responder con semántica HTTP coherente sin repetir <code>try/catch</code> en cada service.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A resolver una preocupación transversal en un único punto global.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/prisma/prisma-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { Prisma } from '../generated/prisma/client';
+
+@Catch(Prisma.PrismaClientKnownRequestError)
+export class PrismaExceptionFilter implements ExceptionFilter {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse&lt;Response&gt;();
+
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let mensaje = 'Error interno del servidor';
+
+    if (exception.code === 'P2025') {
+      status = HttpStatus.NOT_FOUND;
+      mensaje = 'El registro solicitado no existe';
+    }
+
+    if (exception.code === 'P2002') {
+      status = HttpStatus.CONFLICT;
+      mensaje = 'Ya existe un registro con ese valor único';
+    }
+
+    if (exception.code === 'P2003') {
+      status = HttpStatus.BAD_REQUEST;
+      mensaje = 'La referencia indicada no existe';
+    }
+
+    response.status(status).json({ statusCode: status, message: mensaje });
+  }
+}</code></pre>
+          </div>
+
+          <p>El import de <code>Prisma</code> usa <code>../generated/prisma/client</code> porque este proyecto configuró una salida personalizada para el cliente. Copiar un import genérico desde internet rompería la compilación.</p>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Registraremos el filtro una vez para toda la aplicación.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>Producto, Categoría, Usuario y futuros módulos deben compartir el mismo contrato de errores.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A activar infraestructura transversal durante el arranque de NestJS.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR IMPORT</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR EN BOOTSTRAP</span><span class="code-file">src/main.ts · después de useGlobalPipes</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">app.useGlobalFilters(new PrismaExceptionFilter());</code></pre>
+          </div>
+
+          <ol class="pasos">
+            <li><span>P2025</span><p>Registro inexistente → <strong>404 Not Found</strong>.</p></li>
+            <li><span>P2002</span><p>Valor único repetido → <strong>409 Conflict</strong>.</p></li>
+            <li><span>P2003</span><p>Referencia inexistente → <strong>400 Bad Request</strong>.</p></li>
+          </ol>
+        </section>
+
+        <section class="seccion" id="sec-7">
+          <div class="seccion-meta"><span>07</span><span>DOCUMENTACIÓN VIVA</span></div>
+          <h2>Una API profesional se explica sola</h2>
+
+          <div class="definicion">
+            <div class="definicion-bloque"><p class="componente-label">OpenAPI</p><p class="tecnica">Especificación estándar para describir endpoints, parámetros, cuerpos y respuestas de una API HTTP.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Swagger UI</p><p class="sencilla">Interfaz web que representa esa especificación y permite ejecutar peticiones desde el navegador.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Valor real</p><p class="real">Frontend, QA y otros equipos pueden descubrir y probar la API sin adivinar rutas ni cuerpos.</p></div>
+          </div>
+
+          <div class="antes-codigo">
+            <p class="componente-label">Qué vamos a hacer</p><p>Instalaremos el módulo oficial de NestJS para generar documentación OpenAPI.</p>
+            <p class="componente-label">Por qué lo hacemos</p><p>La documentación debe evolucionar con las rutas y poder probarse desde una interfaz común.</p>
+            <p class="componente-label">Qué aprenderás</p><p>A publicar un contrato navegable en <code>/docs</code>.</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal · raíz de catalogo-api</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-bash">npm install @nestjs/swagger</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR IMPORT</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-head"><div><span class="code-context">AGREGAR ANTES DE APP.LISTEN</span><span class="code-file">src/main.ts · función bootstrap</span></div><button class="copy-btn" type="button">Copiar código</button></div>
+            <pre class="line-numbers"><code class="language-typescript">const config = new DocumentBuilder()
+  .setTitle('Catálogo API')
+  .setDescription('API de la tienda: productos, categorías y usuarios')
+  .setVersion('1.0')
+  .build();
+
+const documento = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('docs', app, documento);</code></pre>
+          </div>
+
+          <div class="caso-negocio">
+            <p class="componente-label">Prueba en navegador</p>
+            <h3>http://localhost:3000/docs</h3>
+            <p>Expande una ruta, selecciona “Try it out”, completa los datos y ejecuta la petición. La interfaz muestra URL, cuerpo, código de estado y respuesta.</p>
+          </div>
+
+          <div class="advertencia">
+            <p class="componente-label">Si /docs responde 404</p>
+            <p><strong>Cómo leerlo:</strong> NestJS no registró esa ruta durante el arranque.</p>
+            <p><strong>Qué revisar:</strong> que <code>@nestjs/swagger</code> esté instalado y <code>SwaggerModule.setup</code> se ejecute antes de <code>app.listen</code>.</p>
+          </div>
+
+          <div class="tip">
+            <p class="componente-label">Mejora posterior</p>
+            <p>Usa <code>@ApiProperty()</code> en los DTO para enriquecer ejemplos y esquemas. La documentación aporta valor cuando refleja el contrato real, no cuando solo enumera rutas.</p>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-8">
+          <div class="seccion-meta"><span>08</span><span>EVIDENCIA DE FUNCIONAMIENTO</span></div>
+          <h2>Probar el sistema completo, no archivos aislados</h2>
+
+          <div class="modelo-mental">
+            <p class="componente-label">Estrategia</p>
+            <p>Una compilación correcta demuestra que el código tiene forma válida. Las peticiones demuestran comportamiento. Recorre caminos felices, datos inválidos y conflictos de base de datos.</p>
+          </div>
+
+          <div class="practica">
+            <p class="componente-label">Producto</p>
+            <h3>Ciclo CRUD y validación heredada</h3>
+            <ol class="pasos">
+              <li><span>01</span><p><code>POST /productos</code> crea un producto válido y responde 201.</p></li>
+              <li><span>02</span><p><code>GET /productos</code> confirma que fue persistido.</p></li>
+              <li><span>03</span><p><code>PATCH /productos/1</code> con <code>{"precio": 999}</code> conserva los demás campos.</p></li>
+              <li><span>04</span><p>El mismo PATCH con <code>{"precio": -50}</code> responde 400.</p></li>
+              <li><span>05</span><p><code>DELETE /productos/1</code> elimina el registro.</p></li>
+            </ol>
+          </div>
+
+          <div class="practica">
+            <p class="componente-label">Errores traducidos</p>
+            <h3>La respuesta debe explicar el caso</h3>
+            <ol class="pasos">
+              <li><span>404</span><p><code>PATCH /productos/999</code> y <code>DELETE /productos/999</code> indican que el registro no existe.</p></li>
+              <li><span>409</span><p>Crear dos usuarios con el mismo email produce conflicto en el segundo intento.</p></li>
+              <li><span>400</span><p>Crear un producto con una <code>categoriaId</code> inexistente comunica referencia inválida.</p></li>
+            </ol>
+          </div>
+
+          <div class="practica">
+            <p class="componente-label">Documentación</p>
+            <h3>Un tercero debe poder descubrir la API</h3>
+            <ol class="pasos">
+              <li><span>01</span><p>Abre <code>http://localhost:3000/docs</code>.</p></li>
+              <li><span>02</span><p>Confirma que aparecen productos, categorías y usuarios con sus verbos.</p></li>
+              <li><span>03</span><p>Ejecuta al menos un POST y un PATCH desde Swagger UI.</p></li>
+            </ol>
+          </div>
+
+          <div class="reflexion">
+            <p class="reflexion-label">Criterio técnico</p>
+            <div class="reflexion-pregunta">¿La API está lista si Swagger carga, pero todavía acepta un precio negativo?</div>
+            <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+            <div class="explicacion" aria-hidden="true"><div class="explicacion-inner">No. Swagger mejora descubrimiento y pruebas, pero no sustituye las reglas del dominio. La calidad depende de que contrato, validación, persistencia, errores y documentación sean coherentes entre sí.</div></div>
+          </div>
+        </section>
+
+        <section class="seccion" id="sec-9">
+          <div class="seccion-meta"><span>09</span><span>SIGUIENTE NIVEL</span></div>
+          <h2>De CRUD a lógica de negocio</h2>
+
+          <div class="apertura">
+            <p class="apertura-label">Nueva frontera</p>
+            <p class="apertura-pregunta">Crear un pedido implica guardar datos, calcular el total y descontar stock. ¿Qué ocurre si una de esas operaciones falla a mitad del proceso?</p>
+          </div>
+
+          <div class="definicion">
+            <div class="definicion-bloque"><p class="componente-label">Transacción</p><p class="tecnica">Grupo de operaciones de base de datos que se confirma completo o se revierte completo.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">En Prisma</p><p class="sencilla"><code>prisma.$transaction</code> permite coordinar el bloque todo-o-nada.</p></div>
+            <div class="definicion-bloque"><p class="componente-label">Analogía</p><p class="real">En una transferencia, restar de una cuenta y sumar en otra deben suceder juntas. Un resultado a medias corrompe el negocio.</p></div>
+          </div>
+
+          <div class="practica">
+            <p class="componente-label">Reto guiado</p>
+            <h3>Pedido con stock consistente</h3>
+            <p>Construye un módulo <code>pedidos</code> que haga visible una regla que no puede resolverse con CRUD genérico.</p>
+            <ol class="pasos">
+              <li><span>01</span><p>Crea <code>POST /pedidos</code> para recibir usuario, productos y cantidades. El cliente no envía un total confiable.</p></li>
+              <li><span>02</span><p>Dentro de una transacción, consulta precios, calcula el total, crea pedido y detalles, y descuenta stock.</p></li>
+              <li><span>03</span><p>Si no existe stock suficiente, responde 400 y comprueba que no quedó ningún cambio parcial.</p></li>
+              <li><span>04</span><p>Crea <code>PATCH /pedidos/:id/cancelar</code> para cambiar el estado a <code>CANCELADO</code> en lugar de borrar historia.</p></li>
+            </ol>
+          </div>
+
+          <div class="caso-negocio">
+            <p class="componente-label">Lo que viene</p>
+            <h3>Desplegar y proteger</h3>
+            <p>La API aún vive localmente y no distingue quién hace cada operación. Los siguientes retos son despliegue, autenticación y autorización: publicarla, reconocer identidades y limitar permisos.</p>
+          </div>
+
+          <div class="modelo-mental">
+            <p class="componente-label">Docker en una idea</p>
+            <p>Docker empaqueta aplicación y entorno en un contenedor reproducible. Resuelve diferencias entre máquinas y gana importancia al desplegar sistemas con infraestructura más compleja. No reemplaza el diseño de la aplicación ni siempre es obligatorio para publicar.</p>
+          </div>
+
+          <div class="reflexion">
+            <p class="reflexion-label">Cierre</p>
+            <div class="reflexion-pregunta">¿Qué hizo que este catálogo pasara de “funciona” a “se puede integrar profesionalmente”?</div>
+            <button class="ver-explicacion" type="button" aria-expanded="false">Mostrar explicación</button>
+            <div class="explicacion" aria-hidden="true"><div class="explicacion-inner">Un contrato de entrada ejecutable, operaciones CRUD coherentes, errores con semántica HTTP, documentación navegable y pruebas que demuestran cada comportamiento.</div></div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          © 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack
+        </footer>
+      </article>
+    </main>
+  </div>
+
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <div class="slide-status" id="slideStatus" aria-live="polite"></div>
+  <div class="slide-hint">← → navegar · Esc salir · espacio avanzar</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="ana-clase.js"></script>
+</body>
+</html>
