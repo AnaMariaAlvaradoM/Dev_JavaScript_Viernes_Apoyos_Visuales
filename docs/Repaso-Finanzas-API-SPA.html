@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es" data-empresa="dev-senior" data-formato="spa" data-modo="build" data-direccion="workshop" data-tema-base="claro">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado"><meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>Repaso · Finanzas API · Dev Senior</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ana-estilos-v4.css">
+</head>
+<body data-formato="spa">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a><div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles"><button class="ctrl-btn" id="temaBtn" type="button" aria-label="Cambiar tema">☾</button><button class="ctrl-btn" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button></div>
+  <div class="spa-shell">
+    <aside class="spa-sidebar" aria-label="Navegación de la clase">
+      <div class="spa-brand-row"><span class="brand-mark">A</span><div class="spa-brand"><h2>JavaScript AI Backend</h2><p>Módulo 2 · Repaso integral</p></div></div>
+      <nav class="spa-nav" aria-label="Secciones">
+        <a class="nav-item active" href="#sec-1"><span class="nav-index">01</span><span class="nav-label">Misión</span></a>
+        <a class="nav-item" href="#sec-2"><span class="nav-index">02</span><span class="nav-label">Arquitectura</span></a>
+        <a class="nav-item" href="#sec-3"><span class="nav-index">03</span><span class="nav-label">Setup + Prisma</span></a>
+        <a class="nav-item" href="#sec-4"><span class="nav-index">04</span><span class="nav-label">Categorías</span></a>
+        <a class="nav-item" href="#sec-5"><span class="nav-index">05</span><span class="nav-label">Validación</span></a>
+        <a class="nav-item" href="#sec-6"><span class="nav-index">06</span><span class="nav-label">Postman</span></a>
+        <a class="nav-item" href="#sec-7"><span class="nav-index">07</span><span class="nav-label">Transacciones</span></a>
+        <a class="nav-item" href="#sec-8"><span class="nav-index">08</span><span class="nav-label">Errores + Swagger</span></a>
+        <a class="nav-item" href="#sec-9"><span class="nav-index">09</span><span class="nav-label">Cierre</span></a>
+      </nav>
+      <p class="footer">© 2026 Ana Alvarado<br>Educadora Tech &amp; Desarrolladora Full Stack</p>
+    </aside>
+    <main class="spa-main" id="contenido">
+      <header class="spa-hero"><div class="spa-hero-inner">
+        <div class="spa-hero-copy"><span class="eyebrow">Dev Senior · Módulo 2 · Consolidación</span><h1 class="spa-title">Finanzas API<br>de cero a producción</h1><p class="spa-subtitle">Reconstruye un backend profesional con NestJS, PostgreSQL y Prisma; valida sus reglas, prueba cada contrato y déjalo documentado.</p><div class="spa-meta"><span class="meta-pill">SPA · Build</span><span class="meta-pill">Workshop</span><span class="meta-pill">NestJS + Prisma 7</span></div></div>
+        <div class="spa-hero-visual"><div class="visual-panel" aria-label="Recorrido visual de una transacción desde la petición hasta la base de datos"><svg viewBox="0 0 760 520" role="img" aria-labelledby="finanzas-hero-title finanzas-hero-desc"><title id="finanzas-hero-title">El recorrido de una transacción financiera</title><desc id="finanzas-hero-desc">Una petición entra por la API, atraviesa las reglas de negocio, Prisma la traduce y PostgreSQL conserva la transacción como evidencia.</desc><defs><linearGradient id="finanzas-route" x1="0" y1="1" x2="1" y2="0"><stop stop-color="var(--brand)"/><stop offset="1" stop-color="var(--brand-bright)"/></linearGradient></defs><path d="M92 384 C192 384 190 142 330 142 S480 376 664 190" fill="none" stroke="url(#finanzas-route)" stroke-width="18" stroke-linecap="round" opacity=".18"/><path d="M92 384 C192 384 190 142 330 142 S480 376 664 190" fill="none" stroke="url(#finanzas-route)" stroke-width="5" stroke-linecap="round"/><circle cx="92" cy="384" r="58" fill="var(--canvas)" stroke="var(--line-strong)" stroke-width="3"/><rect x="258" y="82" width="144" height="120" rx="30" fill="var(--brand-soft)" stroke="var(--brand-bright)" stroke-width="4"/><circle cx="498" cy="318" r="68" fill="var(--canvas)" stroke="var(--line-strong)" stroke-width="3"/><path d="M610 144 h108 v116 c0 30-108 30-108 0z" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3"/><ellipse cx="664" cy="144" rx="54" ry="19" fill="var(--canvas)" stroke="var(--line-strong)" stroke-width="3"/><text x="92" y="377" text-anchor="middle" fill="var(--ink)" font-size="22" font-weight="700">Cliente</text><text x="92" y="404" text-anchor="middle" fill="var(--ink-soft)" font-size="16">HTTP</text><text x="330" y="132" text-anchor="middle" fill="var(--ink)" font-size="22" font-weight="700">NestJS</text><text x="330" y="161" text-anchor="middle" fill="var(--ink-soft)" font-size="16">contrato + reglas</text><text x="498" y="311" text-anchor="middle" fill="var(--ink)" font-size="22" font-weight="700">Prisma</text><text x="498" y="340" text-anchor="middle" fill="var(--ink-soft)" font-size="16">traducción</text><text x="664" y="205" text-anchor="middle" fill="var(--ink)" font-size="21" font-weight="700">PostgreSQL</text><text x="664" y="232" text-anchor="middle" fill="var(--ink-soft)" font-size="15">persistencia</text><circle cx="216" cy="244" r="13" fill="var(--brand-bright)"/><circle cx="432" cy="227" r="13" fill="var(--brand-bright)"/><circle cx="586" cy="263" r="13" fill="var(--brand-bright)"/></svg></div></div>
+      </div></header>
+      <article class="spa-content">
+        <section class="spa-section" id="sec-1"><header class="section-head"><span class="section-number">01</span><div><span class="section-kicker">Misión de negocio</span><h2 class="section-title">¿Por qué una app financiera necesita backend?</h2><p class="section-summary">Porque los datos requieren una única fuente de verdad que los centralice, valide y proteja.</p></div></header><div class="section-body">
+          <div class="bento-grid"><div class="question-card bento-7"><span class="component-label">Decisión inicial</span><p class="question">¿Basta con guardar ingresos y gastos en el celular?</p></div><div class="metric-card bento-5"><span class="metric-label">Resultado final</span><div class="metric-value">2 CRUD</div><p class="metric-note">Categorías y transacciones conectadas por una relación 1—N.</p></div>
+          <div class="business-case bento-5"><span class="component-label">El riesgo</span><h3>Datos sin control</h3><p>Sin backend, cada dispositivo conserva una copia aislada, no existen reglas consistentes y la información puede perderse o corromperse.</p></div><div class="visual-panel bento-7"><div class="flow"><div class="flow-step"><strong>Centraliza</strong><p>Una fuente de verdad.</p></div><div class="flow-step"><strong>Valida</strong><p>Contratos y reglas.</p></div><div class="flow-step"><strong>Protege</strong><p>Acceso y errores.</p></div></div></div></div>
+          <div class="timeline"><div class="timeline-item"><strong>Setup</strong><p>NestJS</p></div><div class="timeline-item"><strong>Persistencia</strong><p>Prisma + PostgreSQL</p></div><div class="timeline-item"><strong>Negocio</strong><p>CRUD y DTOs</p></div><div class="timeline-item"><strong>Evidencia</strong><p>Postman + Swagger</p></div></div>
+        </div></section>
+
+        <section class="spa-section" id="sec-2"><header class="section-head"><span class="section-number">02</span><div><span class="section-kicker">Modelo mental</span><h2 class="section-title">El controller no piensa; el service sí</h2><p class="section-summary">NestJS convierte la libertad de Node.js en una arquitectura legible, modular y testeable.</p></div></header><div class="section-body">
+          <div class="definition-grid"><article class="info-card"><span class="component-label">Controller</span><h3>El mesero</h3><p>Recibe HTTP, extrae datos y delega. No contiene lógica de negocio.</p></article><article class="info-card"><span class="component-label">Service</span><h3>La cocina</h3><p>Aplica reglas, coordina operaciones y habla con Prisma.</p></article><article class="info-card"><span class="component-label">Module</span><h3>El organigrama</h3><p>Agrupa providers y controllers para que Nest pueda conectarlos.</p></article></div>
+          <div class="visual-panel"><div class="architecture-map"><div class="architecture-layer"><strong>Entrada HTTP</strong><div class="architecture-items"><span>POST /categorias</span><span>Body JSON</span><span>ValidationPipe</span></div></div><div class="architecture-layer"><strong>Aplicación</strong><div class="architecture-items"><span>Controller recibe</span><span>DTO establece contrato</span><span>Service decide</span></div></div><div class="architecture-layer"><strong>Persistencia</strong><div class="architecture-items"><span>Prisma traduce</span><span>PostgreSQL conserva</span><span>JSON responde</span></div></div></div></div>
+          <div class="callout" data-tone="info"><span class="component-label">Inyección de dependencias</span><h3>Nest entrega las piezas que cada clase necesita</h3><p>El service declara <code>PrismaService</code> en el constructor; no crea la instancia con <code>new</code>. Esto reduce acoplamiento y facilita las pruebas.</p></div>
+        </div></section>
+
+        <section class="spa-section" id="sec-3"><header class="section-head"><span class="section-number">03</span><div><span class="section-kicker">Checkpoint 01</span><h2 class="section-title">Proyecto, persistencia y conexión</h2><p class="section-summary">Primero levantamos el esqueleto; después convertimos el modelo en tablas reales.</p></div></header><div class="section-body">
+          <div class="panel prose"><span class="component-label">Terminal · crear</span><p><strong>Qué haremos:</strong> crear y ejecutar <code>finanzas-api</code>. <strong>Por qué:</strong> validar la infraestructura mínima antes de añadir negocio. <strong>Aprenderás:</strong> a reconocer el flujo base generado por Nest.</p></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal · carpeta de proyectos</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">npm i -g @nestjs/cli
+nest new finanzas-api
+cd finanzas-api
+npm run start:dev</code></pre></div>
+          <div class="checkpoint"><span class="component-label">Evidencia</span><h3><code>http://localhost:3000</code> responde “Hello World!”</h3><p>Si responde, controller, service y module ya trabajan juntos.</p></div>
+          <div class="callout" data-tone="warning"><span class="component-label">Prisma 7 · no negociable</span><h3>Tres decisiones que evitan romper el proyecto</h3><ul><li>Importa el cliente desde <code>../generated/prisma/client</code>, nunca desde <code>@prisma/client</code>.</li><li>No pongas <code>url = env("DATABASE_URL")</code> en <code>schema.prisma</code>.</li><li>Replica <code>prisma.config.ts</code> del setup ya verificado en Clase 2.</li></ul></div>
+          <div class="panel prose"><span class="component-label">CREAR · prisma/schema.prisma</span><p><strong>Qué haremos:</strong> modelar categorías y transacciones. <strong>Por qué:</strong> el schema es el plano que Prisma convierte en tablas. <strong>Aprenderás:</strong> a representar una relación 1—N y dinero exacto.</p></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-prisma">generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+datasource db { provider = "postgresql" }
+
+enum TipoTransaccion { INGRESO GASTO }
+
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  transacciones Transaccion[]
+}
+
+model Transaccion {
+  id          Int             @id @default(autoincrement())
+  descripcion String
+  monto       Decimal
+  tipo        TipoTransaccion
+  fecha       DateTime        @default(now())
+  categoriaId Int
+  categoria   Categoria       @relation(fields: [categoriaId], references: [id])
+}</code></pre></div>
+          <div class="compare"><article class="compare-card" data-positive="true"><h3>Decimal</h3><ul><li>Precisión exacta para dinero</li><li>Evita errores acumulativos</li><li>Puede serializarse como texto</li></ul></article><article class="compare-card" data-negative="true"><h3>Float</h3><ul><li>Aproximación binaria</li><li><code>0.1 + 0.2</code> no es exactamente <code>0.3</code></li><li>No es apropiado para montos</li></ul></article></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">CREAR / EJECUTAR</span><span class="code-file">.env · Terminal</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">DATABASE_URL="postgresql://postgres:postgres@localhost:5432/finanzas?schema=public"
+npx prisma migrate dev --name init</code></pre></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/prisma/prisma.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '../generated/prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() { await this.$connect(); }
+}</code></pre></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/prisma/prisma.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { Global, Module } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Global()
+@Module({ providers: [PrismaService], exports: [PrismaService] })
+export class PrismaModule {}</code></pre></div>
+          <ul class="checklist"><li>PostgreSQL está corriendo.</li><li>La migración creó <code>prisma/migrations</code>.</li><li><code>PrismaModule</code> está importado en <code>AppModule</code>.</li></ul>
+        </div></section>
+
+        <section class="spa-section" id="sec-4"><header class="section-head"><span class="section-number">04</span><div><span class="section-kicker">Checkpoint 02 · Patrón maestro</span><h2 class="section-title">Construir Categoría a mano</h2><p class="section-summary">Domina una vez el patrón DTO → Controller → Service → Prisma; después podrás replicarlo con criterio.</p></div></header><div class="section-body">
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal · finanzas-api</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">nest g resource categorias
+# Elegir REST API y Yes para generar CRUD</code></pre></div>
+          <div class="panel prose"><span class="component-label">EDITAR · DTOs</span><p><strong>Qué haremos:</strong> definir el contrato de entrada. <strong>Por qué:</strong> ningún cliente debe enviar datos arbitrarios. <strong>Aprenderás:</strong> a reutilizar reglas mediante <code>PartialType</code>.</p></div>
+          <div class="slide-layout-split" data-ratio="equal"><div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/categorias/dto/create-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { IsNotEmpty, IsString } from 'class-validator';
+
+export class CreateCategoriaDto {
+  @IsString()
+  @IsNotEmpty()
+  nombre!: string;
+}</code></pre></div><div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/categorias/dto/update-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { PartialType } from '@nestjs/mapped-types';
+import { CreateCategoriaDto } from './create-categoria.dto';
+
+export class UpdateCategoriaDto
+  extends PartialType(CreateCategoriaDto) {}</code></pre></div></div>
+          <div class="panel prose"><span class="component-label">EDITAR · Service</span><p><strong>Qué haremos:</strong> concentrar las operaciones y el 404. <strong>Por qué:</strong> la lógica pertenece a la capa de negocio. <strong>Aprenderás:</strong> a desacoplar HTTP de persistencia.</p></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/categorias/categorias.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">@Injectable()
+export class CategoriasService {
+  constructor(private readonly prisma: PrismaService) {}
+  create(dto: CreateCategoriaDto) { return this.prisma.categoria.create({ data: dto }); }
+  findAll() { return this.prisma.categoria.findMany(); }
+  async findOne(id: number) {
+    const categoria = await this.prisma.categoria.findUnique({ where: { id } });
+    if (!categoria) throw new NotFoundException(`La categoría ${id} no existe`);
+    return categoria;
+  }
+  update(id: number, dto: UpdateCategoriaDto) {
+    return this.prisma.categoria.update({ where: { id }, data: dto });
+  }
+  remove(id: number) { return this.prisma.categoria.delete({ where: { id } }); }
+}</code></pre></div>
+          <div class="panel prose"><span class="component-label">EDITAR · Controller</span><p><strong>Qué haremos:</strong> exponer el CRUD por HTTP. <strong>Por qué:</strong> el controller traduce la petición y delega. <strong>Aprenderás:</strong> a usar decoradores y <code>ParseIntPipe</code>.</p></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/categorias/categorias.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">@Controller('categorias')
+export class CategoriasController {
+  constructor(private readonly service: CategoriasService) {}
+  @Post() create(@Body() dto: CreateCategoriaDto) { return this.service.create(dto); }
+  @Get() findAll() { return this.service.findAll(); }
+  @Get(':id') findOne(@Param('id', ParseIntPipe) id: number) { return this.service.findOne(id); }
+  @Patch(':id') update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCategoriaDto) {
+    return this.service.update(id, dto);
+  }
+  @Delete(':id') remove(@Param('id', ParseIntPipe) id: number) { return this.service.remove(id); }
+}</code></pre></div>
+          <div class="callout" data-tone="info"><span class="component-label">Lectura del patrón</span><h3>El controller es delgado por diseño</h3><p>Cada ruta extrae datos y llama al service. Si aparece lógica de negocio aquí, muévela al service.</p></div>
+        </div></section>
+
+        <section class="spa-section" id="sec-5"><header class="section-head"><span class="section-number">05</span><div><span class="section-kicker">Checkpoint 03</span><h2 class="section-title">Los decoradores no validan solos</h2><p class="section-summary">Las reglas viven en los DTOs, pero el <code>ValidationPipe</code> es quien realmente las ejecuta.</p></div></header><div class="section-body">
+          <div class="question-card"><span class="component-label">Predicción</span><p class="question">Si ya usamos <code>@IsNotEmpty()</code>, ¿la API rechazará automáticamente un nombre vacío?</p></div>
+          <div class="compare"><article class="compare-card" data-negative="true"><h3>Solo decoradores</h3><ul><li>Describen las reglas</li><li>No se ejecutan por sí solos</li><li>El body inválido puede pasar</li></ul></article><article class="compare-card" data-positive="true"><h3>DTO + ValidationPipe</h3><ul><li><code>whitelist</code> elimina extras</li><li><code>transform</code> convierte tipos</li><li>Datos inválidos reciben 400</li></ul></article></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">npm i class-validator class-transformer</code></pre></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import 'dotenv/config';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  await app.listen(3000);
+}
+bootstrap();</code></pre></div>
+          <div class="callout" data-tone="danger"><span class="component-label">Error silencioso</span><h3>Un <code>type</code> desaparece al compilar</h3><p><code>class-validator</code> necesita una clase DTO disponible en tiempo de ejecución. Si el body se tipa con un <code>type</code>, las validaciones dejan de ejecutarse sin mostrar un error evidente.</p></div>
+        </div></section>
+
+        <section class="spa-section" id="sec-6"><header class="section-head"><span class="section-number">06</span><div><span class="section-kicker">Checkpoint 04 · Evidencia</span><h2 class="section-title">Probar el contrato, no “mirar si funciona”</h2><p class="section-summary">Cada prueba debe confirmar ruta, entrada, estado HTTP y forma de la respuesta.</p></div></header><div class="section-body">
+          <div class="timeline"><div class="timeline-item"><strong>POST</strong><p>/categorias · 201</p></div><div class="timeline-item"><strong>GET</strong><p>/categorias · 200</p></div><div class="timeline-item"><strong>PATCH</strong><p>/categorias/1 · 200</p></div><div class="timeline-item"><strong>DELETE</strong><p>/categorias/3 · 200</p></div></div>
+          <div class="bento-grid"><article class="info-card bento-6"><span class="component-label">Caso feliz</span><h3>POST /categorias</h3><div class="code-block"><div class="code-head"><div><span class="code-context">JSON</span><span class="code-file">Body</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-json">{ "nombre": "Comida" }</code></pre></div><p>Esperado: <strong>201</strong> con <code>id</code>.</p></article><article class="info-card bento-6"><span class="component-label">Caso inválido</span><h3>POST /categorias</h3><div class="code-block"><div class="code-head"><div><span class="code-context">JSON</span><span class="code-file">Body</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-json">{ "nombre": "" }</code></pre></div><p>Esperado: <strong>400 Bad Request</strong>.</p></article></div>
+          <ul class="checklist"><li><code>GET /categorias</code> devuelve un arreglo.</li><li><code>GET /categorias/1</code> devuelve un registro.</li><li><code>GET /categorias/9999</code> devuelve 404 controlado.</li><li><code>PATCH /categorias/1</code> cambia el nombre a “Alimentación”.</li><li><code>DELETE /categorias/3</code> elimina y el siguiente GET lo demuestra.</li></ul>
+        </div></section>
+
+        <section class="spa-section" id="sec-7"><header class="section-head"><span class="section-number">07</span><div><span class="section-kicker">Checkpoint 05 · Reutilizar con criterio</span><h2 class="section-title">Transacción añade enum, dinero y relación</h2><p class="section-summary">El patrón se repite; las decisiones nuevas están en el contrato y en cómo consultamos la relación.</p></div></header><div class="section-body">
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">nest g resource transacciones
+# Elegir REST API y Yes para generar CRUD</code></pre></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/transacciones/dto/create-transaccion.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { TipoTransaccion } from '../../generated/prisma/client';
+
+export class CreateTransaccionDto {
+  @IsString() @IsNotEmpty() descripcion!: string;
+  @IsNumber() @IsPositive() monto!: number;
+  @IsEnum(TipoTransaccion) tipo!: TipoTransaccion;
+  @IsInt() categoriaId!: number;
+}</code></pre></div>
+          <div class="visual-panel"><div class="diagram"><div class="diagram-row"><div class="diagram-node" data-emphasis="true">Categoría · 1</div><div class="diagram-arrow">→</div><div class="diagram-node">Transacciones · N</div></div><div class="diagram-arrow">↓</div><div class="diagram-row"><div class="diagram-node">categoriaId</div><div class="diagram-arrow">+</div><div class="diagram-node">include: categoria</div></div></div></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EDITAR</span><span class="code-file">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">@Injectable()
+export class TransaccionesService {
+  constructor(private readonly prisma: PrismaService) {}
+  create(dto: CreateTransaccionDto) { return this.prisma.transaccion.create({ data: dto }); }
+  findAll() { return this.prisma.transaccion.findMany({ include: { categoria: true } }); }
+  async findOne(id: number) {
+    const item = await this.prisma.transaccion.findUnique({
+      where: { id }, include: { categoria: true },
+    });
+    if (!item) throw new NotFoundException(`La transacción ${id} no existe`);
+    return item;
+  }
+  update(id: number, dto: UpdateTransaccionDto) {
+    return this.prisma.transaccion.update({ where: { id }, data: dto });
+  }
+  remove(id: number) { return this.prisma.transaccion.delete({ where: { id } }); }
+}</code></pre></div>
+          <div class="bento-grid"><div class="business-case bento-7"><span class="component-label">POST /transacciones</span><div class="code-block"><div class="code-head"><div><span class="code-context">JSON</span><span class="code-file">Body</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-json">{
+  "descripcion": "Mercado del mes",
+  "monto": 250000,
+  "tipo": "GASTO",
+  "categoriaId": 1
+}</code></pre></div></div><div class="metric-card bento-5"><span class="metric-label">Validación del enum</span><div class="metric-value">400</div><p class="metric-note"><code>"tipo": "REGALO"</code> debe rechazarse.</p></div></div>
+          <ul class="checklist"><li><code>UpdateTransaccionDto</code> extiende <code>PartialType</code>.</li><li>El controller conserva el mismo patrón de Categoría.</li><li><code>TransaccionesModule</code> aparece en <code>AppModule</code>.</li><li>GET incluye el objeto <code>categoria</code>, no solo su id.</li></ul>
+        </div></section>
+
+        <section class="spa-section" id="sec-8"><header class="section-head"><span class="section-number">08</span><div><span class="section-kicker">Checkpoint 06 · Backend profesional</span><h2 class="section-title">Traducir errores y publicar contratos</h2><p class="section-summary">Un fallo conocido no debe convertirse en un 500 genérico; una API terminada tampoco debe depender de explicaciones verbales.</p></div></header><div class="section-body">
+          <div class="definition-grid"><article class="info-card"><span class="component-label">P2025</span><h3>404</h3><p>El registro solicitado no existe.</p></article><article class="info-card"><span class="component-label">P2002</span><h3>409</h3><p>Conflicto por un valor único duplicado.</p></article><article class="info-card"><span class="component-label">P2003</span><h3>400</h3><p>La llave foránea enviada es inválida.</p></article></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">CREAR</span><span class="code-file">src/common/filters/prisma-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">@Catch(Prisma.PrismaClientKnownRequestError)
+export class PrismaExceptionFilter implements ExceptionFilter {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse&lt;Response&gt;();
+    const codigos: Record&lt;string, number&gt; = {
+      P2025: HttpStatus.NOT_FOUND,
+      P2002: HttpStatus.CONFLICT,
+      P2003: HttpStatus.BAD_REQUEST,
+    };
+    const status = codigos[exception.code] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    response.status(status).json({
+      statusCode: status, codigoPrisma: exception.code,
+      mensaje: 'Error al procesar la operación en base de datos',
+    });
+  }
+}</code></pre></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">EJECUTAR</span><span class="code-file">Terminal</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">npm i @nestjs/swagger</code></pre></div>
+          <div class="panel prose"><span class="component-label">EDITAR · src/main.ts</span><p><strong>Qué haremos:</strong> activar pipe, filtro y Swagger globalmente. <strong>Por qué:</strong> queremos contratos consistentes y documentación viva. <strong>Aprenderás:</strong> a componer el arranque final de la API.</p></div>
+          <div class="code-block"><div class="code-head"><div><span class="code-context">VERSIÓN FINAL</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import 'dotenv/config';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalFilters(new PrismaExceptionFilter());
+  const config = new DocumentBuilder()
+    .setTitle('Finanzas API')
+    .setDescription('Repaso Módulos 1 y 2 — Dev Senior')
+    .setVersion('1.0').build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+  await app.listen(3000);
+}
+bootstrap();</code></pre></div>
+          <div class="compare"><article class="compare-card" data-positive="true"><h3>Evidencia 1</h3><ul><li><code>categoriaId: 9999</code></li><li>Respuesta 400</li><li>Código Prisma P2003</li></ul></article><article class="compare-card" data-positive="true"><h3>Evidencia 2</h3><ul><li>Abrir <code>/docs</code></li><li>Ver ambos recursos</li><li>Probar endpoints desde Swagger</li></ul></article></div>
+        </div></section>
+
+        <section class="spa-section" id="sec-9"><header class="section-head"><span class="section-number">09</span><div><span class="section-kicker">Cierre y puente</span><h2 class="section-title">La API funciona. Todavía no es segura.</h2><p class="section-summary">Arquitectura, persistencia, CRUD, validación, errores y documentación ya están conectados. Falta identidad.</p></div></header><div class="section-body">
+          <div class="summary-board"><div class="summary-item"><strong>Arquitectura</strong><p>Module conecta, controller recibe y service decide.</p></div><div class="summary-item"><strong>Persistencia</strong><p>Prisma traduce el modelo y PostgreSQL conserva los datos.</p></div><div class="summary-item"><strong>Contrato</strong><p>Los DTOs validan antes de permitir que el dato avance.</p></div><div class="summary-item"><strong>Evidencia</strong><p>Postman comprueba el comportamiento y Swagger publica la API.</p></div></div>
+          <div class="question-card"><span class="component-label">La grieta del sistema</span><p class="question">¿Quién impide que cualquier persona vea o borre las finanzas de otra?</p></div>
+          <div class="visual-panel"><div class="flow"><div class="flow-step"><strong>Usuario</strong><p>Se identifica.</p></div><div class="flow-step"><strong>Login</strong><p>Valida credenciales.</p></div><div class="flow-step"><strong>JWT</strong><p>Representa la sesión.</p></div><div class="flow-step"><strong>Guard</strong><p>Protege la ruta.</p></div><div class="flow-step"><strong>Datos propios</strong><p>Filtra por usuario.</p></div></div></div>
+          <div class="checkpoint"><span class="component-label">Siguiente módulo</span><h3>Autenticación y autorización con JWT</h3><p>La entidad Usuario permitirá saber quién solicita cada operación y restringir cada transacción a su propietario.</p></div>
+          <div class="callout" data-tone="info"><span class="component-label">Reto opcional</span><h3>Extender sin romper la arquitectura</h3><p>Agrega filtro mensual a <code>GET /transacciones</code> y un endpoint <code>GET /categorias/:id/balance</code>. La suma de ingresos menos gastos debe vivir en el service.</p></div>
+        </div></section>
+        <footer class="footer">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</footer>
+      </article>
+    </main>
+  </div>
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script><script src="ana-clase-v4.js"></script>
+</body>
+</html>
