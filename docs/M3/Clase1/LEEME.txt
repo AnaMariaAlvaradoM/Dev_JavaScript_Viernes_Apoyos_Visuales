@@ -1,0 +1,5 @@
+M3C1 · Autenticación + registro + JWT
+
+Abre M3C1-autenticacion-registro-jwt.html en un navegador.
+Mantén ana-estilos.css, m3c1-ajustes.css y ana-clase.js en la misma carpeta.
+Se requiere conexión a Internet únicamente para cargar las fuentes y el resaltado Prism.

@@ -1,0 +1,26 @@
+/* Ajustes responsivos específicos del recurso M3C1. */
+.spa-section,
+.section-body,
+.section-body > *,
+.visual-panel,
+.erd-diagram,
+.code-block,
+.code-head,
+.code-head > div,
+.panel,
+.checkpoint,
+.callout {
+  min-width: 0;
+}
+
+:not(pre) > code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: break-word;
+}
+
+@media (max-width: 780px) {
+  .erd-diagram {
+    width: 100%;
+  }
+}

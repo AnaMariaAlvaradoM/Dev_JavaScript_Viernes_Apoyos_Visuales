@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="es" data-empresa="dev-senior" data-formato="spa" data-modo="build" data-direccion="signal" data-tema-base="claro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>M3C1 · Autenticación, registro y JWT · Ana Alvarado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Spline+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ana-estilos.css?v=5.0-signal-m3c1">
+  <link rel="stylesheet" href="m3c1-ajustes.css?v=1">
+</head>
+<body data-formato="spa">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles"><button class="ctrl-btn" id="temaBtn" type="button" aria-label="Cambiar tema">☾</button><button class="ctrl-btn" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button></div>
+  <div class="spa-shell">
+    <aside class="spa-sidebar" aria-label="Navegación de la clase">
+      <div class="spa-brand-row"><span class="brand-mark">A</span><div class="spa-brand"><h2>JavaScript AI Backend Developer</h2><p>Módulo 3 · Clase 1</p></div></div>
+      <nav class="spa-nav" aria-label="Secciones"><a class="nav-item active" href="#problema"><span class="nav-index">01</span><span class="nav-label">Problema real</span></a>
+<a class="nav-item" href="#base"><span class="nav-index">02</span><span class="nav-label">Punto de partida</span></a>
+<a class="nav-item" href="#conceptos"><span class="nav-index">03</span><span class="nav-label">Autenticar y autorizar</span></a>
+<a class="nav-item" href="#modelo"><span class="nav-index">04</span><span class="nav-label">Modelo de usuario</span></a>
+<a class="nav-item" href="#piezas"><span class="nav-index">05</span><span class="nav-label">Dependencias y secreto</span></a>
+<a class="nav-item" href="#registro"><span class="nav-index">06</span><span class="nav-label">Registro seguro</span></a>
+<a class="nav-item" href="#jwt"><span class="nav-index">07</span><span class="nav-label">Login y JWT</span></a>
+<a class="nav-item" href="#passport"><span class="nav-index">08</span><span class="nav-label">Passport y guard</span></a>
+<a class="nav-item" href="#propiedad"><span class="nav-index">09</span><span class="nav-label">Proteger lo propio</span></a>
+<a class="nav-item" href="#pruebas"><span class="nav-index">10</span><span class="nav-label">Pruebas de fuego</span></a>
+<a class="nav-item" href="#diagnostico"><span class="nav-index">11</span><span class="nav-label">Errores y archivos</span></a>
+<a class="nav-item" href="#cierre"><span class="nav-index">12</span><span class="nav-label">Cierre y siguiente paso</span></a></nav>
+    </aside>
+    <main class="spa-main" id="contenido">
+      <header class="spa-hero" data-hero="centered" data-texture="dots">
+        <div class="spa-hero-inner"><span class="eyebrow" data-boxed>Dev Senior · finanzas-api</span><h1 class="spa-title">¿Cómo sabe la API qué transacciones son <em>tuyas</em>?</h1><p class="spa-subtitle">Construye registro seguro, login con JWT y autorización por propiedad para que cada usuario vea y modifique únicamente sus propios datos.</p><div class="spa-meta"><span class="meta-pill" data-hot>NestJS 11</span><span class="meta-pill">Prisma 7</span><span class="meta-pill">PostgreSQL</span><span class="meta-pill">bcrypt</span><span class="meta-pill">Passport.js</span></div></div>
+      </header>
+      <div class="spa-content"><section class="spa-section" id="problema">
+  <header class="section-head"><span class="section-number">01 · Apertura</span><h2 class="section-title">Una API que no sabe de quién son los datos</h2><p class="section-summary">La privacidad no aparece por tener endpoints: nace cuando la API identifica a cada persona y aplica esa identidad en sus consultas.</p></header>
+  <div class="section-body"><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Nuestra API de finanzas ya guarda transacciones y sobreviven al reinicio. Ahora imaginen que esto es una app real, publicada, con mil usuarios. Yo, desde Postman, hago <code>GET /transacciones</code>. ¿Qué me devuelve? ¿Las mías... o las de los mil usuarios?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Las tuyas&quot;, &quot;las de tu cuenta&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p><strong>Las de los mil.</strong> Ahora mismo <code>GET /transacciones</code> devuelve <strong>absolutamente todas</strong> las transacciones de la base, sin distinguir de quién son. No existe el concepto de &quot;usuario&quot; todavía. Cualquiera que conozca la URL ve las finanzas de todo el mundo, y puede crear, editar y borrar lo de cualquiera. Es un desastre de privacidad y seguridad. <strong>Hoy resolvemos eso.</strong></p></div></div>
+<h3>El problema real</h3>
+<div class="panel prose"><p>Nuestra API tiene <strong>dos huecos graves</strong>:</p></div>
+<div class="panel prose"><ol><li><strong>No sabe quién eres.</strong> No hay forma de identificar quién hace cada petición.</li><li><strong>No protege nada.</strong> Todos los endpoints están abiertos a cualquiera.</li></ol></div>
+<div class="panel prose"><p>Una app de finanzas sin esto es inservible: los datos privados de una persona son visibles y editables por cualquier otra.</p></div>
+<h3>Conexión con el mapa del curso</h3>
+<div class="panel prose"><ul><li><strong>Módulo 2 (lo anterior):</strong> construimos una API que guarda datos y valida su forma.</li><li><strong>Hoy:</strong> le enseñamos a <strong>saber quién eres</strong> y a <strong>proteger lo que es tuyo</strong>.</li><li><strong>Próxima clase:</strong> roles y permisos (que un administrador pueda hacer cosas que un usuario normal no).</li></ul></div></div>
+</section>
+<section class="spa-section" id="base">
+  <header class="section-head"><span class="section-number">02 · Proyecto base</span><h2 class="section-title">Finanzas API funcionando antes de protegerla</h2><p class="section-summary">Construye o recupera el CRUD completo del módulo anterior y confirma que el servidor está sano.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Relación inicial entre categorías y transacciones"><svg class="erd-diagram" width="240" viewBox="0 0 900 250" role="img" aria-labelledby="erdBaseTitulo erdBaseDesc"><title id="erdBaseTitulo">Modelo inicial de finanzas API</title><desc id="erdBaseDesc">Una categoría se relaciona con muchas transacciones.</desc><rect class="erd-box" x="20" y="35" width="240" height="170" rx="14"></rect><text class="erd-title" x="42" y="65">Categoria</text><line class="erd-divider" x1="32" y1="78" x2="248" y2="78"></line><text class="erd-field" x="42" y="104">id : Int</text><text class="erd-field" x="42" y="126">nombre : String</text><rect class="erd-box" data-emphasis="true" x="640" y="35" width="240" height="170" rx="14"></rect><text class="erd-title" x="662" y="65">Transaccion</text><line class="erd-divider" x1="652" y1="78" x2="868" y2="78"></line><text class="erd-field" x="662" y="104">id : Int</text><text class="erd-field" x="662" y="126">categoriaId : Int</text><line class="erd-line" x1="260" y1="120" x2="640" y2="120"></line><text class="erd-label" x="272" y="110">1</text><text class="erd-label" x="622" y="110">N</text></svg></div><h3>Qué es este proyecto</h3>
+<div class="panel prose"><p><code>finanzas-api</code> es una API REST de finanzas personales con dos entidades:</p></div>
+<div class="panel prose"><ul><li><strong>Categoria</strong> — la clasificación del dinero (Comida, Salario, Arriendo).</li><li><strong>Transaccion</strong> — cada movimiento de dinero, de tipo INGRESO o GASTO, que pertenece a una categoría.</li></ul></div>
+<div class="panel prose"><p>Relación: una <strong>Categoría</strong> tiene muchas <strong>Transacciones</strong> (1 a N). Tiene CRUD completo en las dos, validaciones con DTOs, manejo de errores de Prisma y documentación Swagger.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.1 — Crear el proyecto (solo si no existe)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Si ya tienes <code>finanzas-api</code> de la clase pasada, <strong>sáltate este paso</strong>. Solo quien empiece de cero lo corre.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Al finalizar tendrás la base estricta de NestJS sobre la que se construyen todos los checkpoints siguientes.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">carpeta de proyectos</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">nest new finanzas-api --skip-git --strict</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Al finalizar tendrás la base estricta de NestJS sobre la que se construyen todos los checkpoints siguientes.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.2 — Instalar dependencias del Módulo 2</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Estas son las dependencias que ya usábamos. Van en tres grupos según su rol.</p></div>
+<div class="panel prose"><p><strong>Runtime (las usa la app al correr):</strong></p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm install @prisma/client @prisma/adapter-pg pg @nestjs/config</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+<div class="panel prose"><p><strong>Desarrollo (solo para construir):</strong></p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm install --save-dev prisma dotenv</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+<div class="panel prose"><p><strong>Validación y documentación:</strong></p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm install class-validator class-transformer @nestjs/swagger</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.3 — Inicializar Prisma</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Esto crea el <code>schema.prisma</code>, el <code>prisma.config.ts</code> y el <code>.env</code>. El <code>--output</code> deja el cliente generado <strong>dentro de <code>src</code></strong>, tal como quedó en la Clase 2.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. El proyecto queda preparado para definir el esquema y generar un cliente Prisma dentro de src.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma init --datasource-provider postgresql --output ../src/generated/prisma</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>El proyecto queda preparado para definir el esquema y generar un cliente Prisma dentro de src.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.4 — El <code>.env</code></h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Guarda la conexión a la base de datos, fuera del código. Ajusta la contraseña a la tuya.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>.env</code>. Centraliza la configuración sensible fuera del código fuente para que cada entorno pueda usar valores distintos.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">.env</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-properties">DATABASE_URL=&quot;postgresql://postgres:postgres@localhost:5432/finanzas_db?schema=public&quot;</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Centraliza la configuración sensible fuera del código fuente para que cada entorno pueda usar valores distintos.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.5 — El schema (estado inicial, sin usuario todavía)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Este es el modelo de la clase pasada. Dos modelos y un enum. Fíjate en <code>moduleFormat = &quot;cjs&quot;</code> en el generador: es obligatorio para que Prisma 7 funcione con NestJS.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>prisma/schema.prisma</code>. Define la estructura persistente y las relaciones que Prisma traducirá a PostgreSQL.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}
+
+enum TipoTransaccion {
+  INGRESO
+  GASTO
+}
+
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;categorias&quot;)
+}
+
+model Transaccion {
+  id          Int             @id @default(autoincrement())
+  descripcion String
+  monto       Decimal         @db.Decimal(12, 2)
+  tipo        TipoTransaccion
+  fecha       DateTime        @default(now())
+  categoriaId Int
+  categoria   Categoria       @relation(fields: [categoriaId], references: [id])
+
+  @@index([categoriaId])
+  @@map(&quot;transacciones&quot;)
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Define la estructura persistente y las relaciones que Prisma traducirá a PostgreSQL.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.6 — Migrar y generar</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> La migración crea las tablas reales en PostgreSQL. En Prisma 7, <code>generate</code> es un paso aparte que hay que correr explícitamente.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. La base de datos recibe el cambio del esquema; no avances hasta confirmar que la migración terminó correctamente.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma migrate dev --name init</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>La base de datos recibe el cambio del esquema; no avances hasta confirmar que la migración terminó correctamente.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>un mensaje de que la migración se aplicó y las tablas <code>categorias</code> y <code>transacciones</code> se crearon.</p></div></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. El cliente TypeScript se actualiza para reconocer los modelos y campos actuales del schema.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma generate</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>El cliente TypeScript se actualiza para reconocer los modelos y campos actuales del schema.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>confirmación de que el cliente se generó en <code>src/generated/prisma</code>.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.7 — La capa Prisma (dos archivos)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> <code>PrismaService</code> envuelve al cliente de Prisma y lo hace inyectable. <code>PrismaModule</code> lo marca <code>@Global()</code> para usarlo en toda la app sin re-importarlo. Ojo al import: sale de <code>../generated/prisma/client</code>, <strong>no</strong> de <code>@prisma/client</code>.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/prisma/prisma.service.ts</code>. Crea una única puerta de acceso a Prisma, administra la conexión y permite inyectarla en los servicios.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/prisma/prisma.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/prisma/client';
+
+@Injectable()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  constructor() {
+    const connectionString = process.env.DATABASE_URL;
+
+    if (!connectionString) {
+      throw new Error('DATABASE_URL no está definida. Revisa el archivo .env.');
+    }
+
+    const adapter = new PrismaPg({ connectionString });
+    super({ adapter });
+  }
+
+  async onModuleInit(): Promise&lt;void&gt; {
+    await this.$connect();
+  }
+
+  async onModuleDestroy(): Promise&lt;void&gt; {
+    await this.$disconnect();
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Crea una única puerta de acceso a Prisma, administra la conexión y permite inyectarla en los servicios.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/prisma/prisma.module.ts</code>. Expone PrismaService de forma global para evitar importaciones repetidas en cada módulo.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/prisma/prisma.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Global, Module } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Global()
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService],
+})
+export class PrismaModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Expone PrismaService de forma global para evitar importaciones repetidas en cada módulo.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.8 — CRUD de Categorías (cinco archivos)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Los dos DTO validan la entrada; el service habla con Prisma; el controller expone las rutas; el module ensambla. CRUD completo.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/categorias/dto/crear-categoria.dto.ts</code>. Valida la forma mínima que debe tener una categoría antes de llegar a la lógica del negocio.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/categorias/dto/crear-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { IsString, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class CrearCategoriaDto {
+  @ApiProperty({ example: 'Comida' })
+  @IsString()
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  nombre!: string;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Valida la forma mínima que debe tener una categoría antes de llegar a la lógica del negocio.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/categorias/dto/actualizar-categoria.dto.ts</code>. Permite actualizaciones parciales sin perder la validación del nombre.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/categorias/dto/actualizar-categoria.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { IsOptional, IsString, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class ActualizarCategoriaDto {
+  @ApiProperty({ example: 'Alimentación', required: false })
+  @IsOptional()
+  @IsString()
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  nombre?: string;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Permite actualizaciones parciales sin perder la validación del nombre.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/categorias/categorias.service.ts</code>. Concentra las operaciones de persistencia del recurso Categoria.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/categorias/categorias.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearCategoriaDto } from './dto/crear-categoria.dto';
+import { ActualizarCategoriaDto } from './dto/actualizar-categoria.dto';
+
+@Injectable()
+export class CategoriasService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearCategoriaDto) {
+    return this.prisma.categoria.create({ data: dto });
+  }
+
+  obtenerTodas() {
+    return this.prisma.categoria.findMany({ orderBy: { id: 'asc' } });
+  }
+
+  obtenerUna(id: number) {
+    return this.prisma.categoria.findUniqueOrThrow({ where: { id } });
+  }
+
+  actualizar(id: number, dto: ActualizarCategoriaDto) {
+    return this.prisma.categoria.update({ where: { id }, data: dto });
+  }
+
+  eliminar(id: number) {
+    return this.prisma.categoria.delete({ where: { id } });
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Concentra las operaciones de persistencia del recurso Categoria.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/categorias/categorias.controller.ts</code>. Publica las rutas HTTP de categorías y delega la lógica al servicio.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/categorias/categorias.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { CategoriasService } from './categorias.service';
+import { CrearCategoriaDto } from './dto/crear-categoria.dto';
+import { ActualizarCategoriaDto } from './dto/actualizar-categoria.dto';
+
+@ApiTags('categorias')
+@Controller('categorias')
+export class CategoriasController {
+  constructor(private readonly categoriasService: CategoriasService) {}
+
+  @Post()
+  crear(@Body() dto: CrearCategoriaDto) {
+    return this.categoriasService.crear(dto);
+  }
+
+  @Get()
+  obtenerTodas() {
+    return this.categoriasService.obtenerTodas();
+  }
+
+  @Get(':id')
+  obtenerUna(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriasService.obtenerUna(id);
+  }
+
+  @Patch(':id')
+  actualizar(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ActualizarCategoriaDto,
+  ) {
+    return this.categoriasService.actualizar(id, dto);
+  }
+
+  @Delete(':id')
+  eliminar(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriasService.eliminar(id);
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Publica las rutas HTTP de categorías y delega la lógica al servicio.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/categorias/categorias.module.ts</code>. Ensambla el controlador y el servicio de categorías dentro de NestJS.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/categorias/categorias.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { CategoriasService } from './categorias.service';
+import { CategoriasController } from './categorias.controller';
+
+@Module({
+  controllers: [CategoriasController],
+  providers: [CategoriasService],
+})
+export class CategoriasModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Ensambla el controlador y el servicio de categorías dentro de NestJS.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.9 — CRUD de Transacciones (cinco archivos)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Mismo patrón que categorías, pero con validaciones de negocio más ricas: el monto debe ser positivo y el tipo solo puede ser INGRESO o GASTO.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/transacciones/dto/crear-transaccion.dto.ts</code>. Protege la entrada de transacciones con reglas de tipo, monto positivo y categoría válida.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/transacciones/dto/crear-transaccion.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsPositive,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export enum TipoTransaccionDto {
+  INGRESO = 'INGRESO',
+  GASTO = 'GASTO',
+}
+
+export class CrearTransaccionDto {
+  @ApiProperty({ example: 'Mercado de la semana' })
+  @IsString()
+  @MinLength(2, { message: 'La descripción debe tener al menos 2 caracteres' })
+  descripcion!: string;
+
+  @ApiProperty({ example: 50000 })
+  @IsNumber({}, { message: 'El monto debe ser un número' })
+  @IsPositive({ message: 'El monto debe ser positivo' })
+  monto!: number;
+
+  @ApiProperty({ enum: TipoTransaccionDto, example: 'GASTO' })
+  @IsEnum(TipoTransaccionDto, { message: 'El tipo debe ser INGRESO o GASTO' })
+  tipo!: TipoTransaccionDto;
+
+  @ApiProperty({ example: 1 })
+  @IsInt({ message: 'La categoría debe ser un número entero' })
+  categoriaId!: number;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Protege la entrada de transacciones con reglas de tipo, monto positivo y categoría válida.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/transacciones/dto/actualizar-transaccion.dto.ts</code>. Valida cambios parciales en una transacción sin exigir todos sus campos.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/transacciones/dto/actualizar-transaccion.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { TipoTransaccionDto } from './crear-transaccion.dto';
+
+export class ActualizarTransaccionDto {
+  @ApiProperty({ example: 'Mercado quincenal', required: false })
+  @IsOptional()
+  @IsString()
+  @MinLength(2, { message: 'La descripción debe tener al menos 2 caracteres' })
+  descripcion?: string;
+
+  @ApiProperty({ example: 75000, required: false })
+  @IsOptional()
+  @IsNumber({}, { message: 'El monto debe ser un número' })
+  @IsPositive({ message: 'El monto debe ser positivo' })
+  monto?: number;
+
+  @ApiProperty({ enum: TipoTransaccionDto, required: false })
+  @IsOptional()
+  @IsEnum(TipoTransaccionDto, { message: 'El tipo debe ser INGRESO o GASTO' })
+  tipo?: TipoTransaccionDto;
+
+  @ApiProperty({ example: 2, required: false })
+  @IsOptional()
+  @IsInt({ message: 'La categoría debe ser un número entero' })
+  categoriaId?: number;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Valida cambios parciales en una transacción sin exigir todos sus campos.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/transacciones/transacciones.service.ts</code>. Concentra la persistencia de transacciones; en su versión protegida también aplica la propiedad del usuario.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearTransaccionDto } from './dto/crear-transaccion.dto';
+import { ActualizarTransaccionDto } from './dto/actualizar-transaccion.dto';
+
+@Injectable()
+export class TransaccionesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearTransaccionDto) {
+    return this.prisma.transaccion.create({
+      data: dto,
+      include: { categoria: true },
+    });
+  }
+
+  obtenerTodas() {
+    return this.prisma.transaccion.findMany({
+      include: { categoria: true },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  obtenerUna(id: number) {
+    return this.prisma.transaccion.findUniqueOrThrow({
+      where: { id },
+      include: { categoria: true },
+    });
+  }
+
+  actualizar(id: number, dto: ActualizarTransaccionDto) {
+    return this.prisma.transaccion.update({
+      where: { id },
+      data: dto,
+      include: { categoria: true },
+    });
+  }
+
+  eliminar(id: number) {
+    return this.prisma.transaccion.delete({ where: { id } });
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Concentra la persistencia de transacciones; en su versión protegida también aplica la propiedad del usuario.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/transacciones/transacciones.controller.ts</code>. Expone las rutas de transacciones y, en la versión protegida, transmite la identidad autenticada.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { TransaccionesService } from './transacciones.service';
+import { CrearTransaccionDto } from './dto/crear-transaccion.dto';
+import { ActualizarTransaccionDto } from './dto/actualizar-transaccion.dto';
+
+@ApiTags('transacciones')
+@Controller('transacciones')
+export class TransaccionesController {
+  constructor(private readonly transaccionesService: TransaccionesService) {}
+
+  @Post()
+  crear(@Body() dto: CrearTransaccionDto) {
+    return this.transaccionesService.crear(dto);
+  }
+
+  @Get()
+  obtenerTodas() {
+    return this.transaccionesService.obtenerTodas();
+  }
+
+  @Get(':id')
+  obtenerUna(@Param('id', ParseIntPipe) id: number) {
+    return this.transaccionesService.obtenerUna(id);
+  }
+
+  @Patch(':id')
+  actualizar(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ActualizarTransaccionDto,
+  ) {
+    return this.transaccionesService.actualizar(id, dto);
+  }
+
+  @Delete(':id')
+  eliminar(@Param('id', ParseIntPipe) id: number) {
+    return this.transaccionesService.eliminar(id);
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Expone las rutas de transacciones y, en la versión protegida, transmite la identidad autenticada.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/transacciones/transacciones.module.ts</code>. Registra las piezas que conforman el recurso Transaccion.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/transacciones/transacciones.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { TransaccionesService } from './transacciones.service';
+import { TransaccionesController } from './transacciones.controller';
+
+@Module({
+  controllers: [TransaccionesController],
+  providers: [TransaccionesService],
+})
+export class TransaccionesModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Registra las piezas que conforman el recurso Transaccion.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.10 — El filtro de errores de Prisma</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Traduce los errores técnicos de Prisma a respuestas HTTP claras: recurso inexistente → 404, valor duplicado → 409, relación inválida → 400. El import del namespace <code>Prisma</code> sale del cliente generado.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/common/filters/prisma-exception.filter.ts</code>. Traduce códigos técnicos de Prisma a respuestas HTTP comprensibles para el cliente.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/common/filters/prisma-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { Prisma } from '../../generated/prisma/client';
+
+@Catch(Prisma.PrismaClientKnownRequestError)
+export class PrismaExceptionFilter implements ExceptionFilter {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse&lt;Response&gt;();
+
+    switch (exception.code) {
+      case 'P2025':
+        return response.status(HttpStatus.NOT_FOUND).json({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: 'El recurso solicitado no existe',
+        });
+      case 'P2002':
+        return response.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
+          message: 'Ya existe un registro con ese valor único',
+        });
+      case 'P2003':
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'La relación referenciada no existe',
+        });
+      default:
+        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'Error interno de base de datos',
+        });
+    }
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Traduce códigos técnicos de Prisma a respuestas HTTP comprensibles para el cliente.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.11 — <code>app.module.ts</code> y <code>main.ts</code></h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> <code>app.module.ts</code> ensambla los módulos. <code>main.ts</code> enciende la app con el <code>ValidationPipe</code> (para que los DTO validen), el filtro global de Prisma y Swagger en <code>/docs</code>. La primera línea de <code>main.ts</code> <strong>debe</strong> ser <code>import 'dotenv/config'</code>.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/app.module.ts</code>. Declara qué módulos existen para la aplicación; un módulo no importado no publica sus rutas.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/app.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma/prisma.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { TransaccionesModule } from './transacciones/transacciones.module';
+
+@Module({
+  imports: [PrismaModule, CategoriasModule, TransaccionesModule],
+})
+export class AppModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Declara qué módulos existen para la aplicación; un módulo no importado no publica sus rutas.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/main.ts</code>. Configura validación, manejo global de errores, documentación Swagger y arranque del servidor.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import 'dotenv/config';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true }),
+  );
+
+  app.useGlobalFilters(new PrismaExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle('Finanzas API')
+    .setDescription('API de finanzas personales · Dev Senior')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(3000);
+}
+bootstrap();</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Configura validación, manejo global de errores, documentación Swagger y arranque del servidor.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 0.12 — Encender y confirmar que funciona</h3></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. El servidor debe mantenerse activo mientras pruebas las rutas y observas los cambios automáticos.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm run start:dev</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>El servidor debe mantenerse activo mientras pruebas las rutas y observas los cambios automáticos.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>al final del arranque, la línea <code>Nest application successfully started</code>. Si sale, el punto de partida está sano y <strong>todos arrancamos parejos</strong>.</p></div></div></div>
+</section>
+<section class="spa-section" id="conceptos">
+  <header class="section-head"><span class="section-number">03 · Modelo mental</span><h2 class="section-title">Identidad y permiso son decisiones distintas</h2><p class="section-summary">Primero demostramos quién hace la petición; después decidimos qué datos puede consultar o modificar.</p></header>
+  <div class="section-body"><div class="compare"><div class="compare-card" data-side="positive"><h3>Autenticación</h3><ul><li>Responde quién hace la petición.</li><li>Se demuestra con login y JWT.</li></ul></div><div class="compare-card" data-side="negative"><h3>Autorización</h3><ul><li>Responde qué puede hacer esa identidad.</li><li>Se aplica verificando la propiedad.</li></ul></div></div><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;¿Es lo mismo 'demostrar quién soy' que 'tener permiso para hacer algo'? Piensen en un edificio de oficinas.&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Sí, es parecido&quot;, &quot;si entras es porque tienes permiso&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p><strong>No es lo mismo.</strong> Mostrar la cédula en la entrada (demostrar quién eres) es una cosa; que tu tarjeta abra el piso 5 (tener permiso) es otra. Puedes estar identificado y aun así no tener permiso para entrar a cierta oficina. Son dos preguntas distintas.</p></div></div>
+<div class="checkpoint"><span class="component-label">Concepto esencial</span><h3>Definición — Autenticación</h3></div>
+<div class="panel prose"><p><strong>Técnica:</strong> proceso de <strong>verificar la identidad</strong> de quien hace una petición. Responde a la pregunta <em>&quot;¿quién eres?&quot;</em>.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> es demostrar que eres tú, normalmente con un correo y una contraseña.</p></div>
+<div class="panel prose"><p><strong>Vida real:</strong> mostrar tu cédula en la recepción de un edificio. El guardia confirma que eres quien dices ser.</p></div>
+<div class="checkpoint"><span class="component-label">Concepto esencial</span><h3>Definición — Autorización</h3></div>
+<div class="panel prose"><p><strong>Técnica:</strong> proceso de <strong>verificar los permisos</strong> de alguien ya identificado. Responde a la pregunta <em>&quot;¿qué puedes hacer?&quot;</em>.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> una vez sé quién eres, decido a qué te dejo entrar.</p></div>
+<div class="panel prose"><p><strong>Vida real:</strong> tu tarjeta de empleado abre tu piso, pero no la bóveda ni la oficina del gerente. Ya saben quién eres; ahora deciden qué puedes tocar.</p></div>
+<h3>El orden importa</h3>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Modelo de referencia este bloque en <code>referencia de la clase</code>. Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Modelo de referencia</span><span class="code-file">referencia de la clase</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-plaintext">1. Autenticación → ¿quién eres?   (login: correo + contraseña)
+2. Autorización  → ¿qué puedes?   (¿esta transacción es tuya?)</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+<div class="panel prose"><p>Primero te identificas, después el sistema decide qué te deja hacer. <strong>Hoy hacemos las dos:</strong> autenticación con login + JWT, y una autorización básica (que cada quien solo toque sus propias transacciones). Los <strong>roles</strong> (autorización avanzada) son la próxima clase.</p></div></div>
+</section>
+<section class="spa-section" id="modelo">
+  <header class="section-head"><span class="section-number">04 · Datos</span><h2 class="section-title">La propiedad vive en el modelo de datos</h2><p class="section-summary">usuarioId convierte cada transacción en un recurso con dueño y permite aplicar autorización por propiedad.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Usuario y categoría se relacionan con transacciones"><svg class="erd-diagram" width="240" viewBox="0 0 900 250" role="img" aria-labelledby="erdAuthTitulo erdAuthDesc"><title id="erdAuthTitulo">Modelo de propiedad de las transacciones</title><desc id="erdAuthDesc">Cada transacción pertenece a una categoría y a un usuario.</desc><rect class="erd-box" data-emphasis="true" x="20" y="35" width="240" height="170" rx="14"></rect><text class="erd-title" x="42" y="65">Usuario</text><line class="erd-divider" x1="32" y1="78" x2="248" y2="78"></line><text class="erd-field" x="42" y="104">id : Int</text><text class="erd-field" x="42" y="126">email : String @unique</text><text class="erd-field" x="42" y="148">password : String (hash)</text><rect class="erd-box" x="330" y="35" width="240" height="170" rx="14"></rect><text class="erd-title" x="352" y="65">Transaccion</text><line class="erd-divider" x1="342" y1="78" x2="558" y2="78"></line><text class="erd-field" x="352" y="104">usuarioId : Int</text><text class="erd-field" x="352" y="126">categoriaId : Int</text><rect class="erd-box" x="640" y="35" width="240" height="170" rx="14"></rect><text class="erd-title" x="662" y="65">Categoria</text><line class="erd-divider" x1="652" y1="78" x2="868" y2="78"></line><text class="erd-field" x="662" y="104">id : Int</text><text class="erd-field" x="662" y="126">nombre : String</text><line class="erd-line" x1="260" y1="120" x2="330" y2="120"></line><text class="erd-label" x="272" y="110">1</text><text class="erd-label" x="312" y="110">N</text><line class="erd-line" x1="570" y1="120" x2="640" y2="120"></line><text class="erd-label" x="582" y="110">N</text><text class="erd-label" x="622" y="110">1</text></svg></div><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Para que la API sepa que una transacción es 'mía', ¿dónde tiene que quedar guardada esa pertenencia? ¿En la transacción, en el usuario, o en los dos?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;En el usuario, que tenga su lista de transacciones&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p>La pertenencia se guarda como una <strong>llave foránea en la transacción</strong> (<code>usuarioId</code>), igual que hicimos con <code>categoriaId</code>. Es el mismo patrón 1 a N del Módulo 2: un <strong>usuario</strong> tiene muchas <strong>transacciones</strong>, y cada transacción apunta a <strong>un</strong> usuario. La FK va en el lado &quot;muchos&quot;.</p></div></div>
+<h3>Qué vamos a cambiar en el schema</h3>
+<div class="panel prose"><p>Tres cosas:</p></div>
+<div class="panel prose"><ol><li>Un modelo nuevo <strong><code>Usuario</code></strong> con <code>email</code> único, <code>password</code> y <code>nombre</code>.</li><li>Una relación 1 a N: un usuario tiene muchas transacciones.</li><li>Un campo <strong><code>usuarioId</code></strong> en <code>Transaccion</code> (la FK que marca el dueño).</li></ol></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 3.1 — Editar el schema</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Agregamos el modelo <code>Usuario</code> y le sumamos a <code>Transaccion</code> los dos campos de la relación (<code>usuarioId</code> y <code>usuario</code>). El resto del schema queda igual.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>prisma/schema.prisma</code>. Define la estructura persistente y las relaciones que Prisma traducirá a PostgreSQL.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}
+
+enum TipoTransaccion {
+  INGRESO
+  GASTO
+}
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  nombre        String
+  email         String        @unique
+  password      String
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;usuarios&quot;)
+}
+
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;categorias&quot;)
+}
+
+model Transaccion {
+  id          Int             @id @default(autoincrement())
+  descripcion String
+  monto       Decimal         @db.Decimal(12, 2)
+  tipo        TipoTransaccion
+  fecha       DateTime        @default(now())
+  categoriaId Int
+  usuarioId   Int
+  categoria   Categoria       @relation(fields: [categoriaId], references: [id])
+  usuario     Usuario         @relation(fields: [usuarioId], references: [id])
+
+  @@index([categoriaId])
+  @@index([usuarioId])
+  @@map(&quot;transacciones&quot;)
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Define la estructura persistente y las relaciones que Prisma traducirá a PostgreSQL.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué el <code>email</code> lleva <code>@unique</code>?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Porque <strong>dos personas no pueden registrarse con el mismo correo</strong>. El correo es el identificador con el que inicias sesión; si se repitiera, el sistema no sabría a quién corresponde.</li><li>A nivel de base, <code>@unique</code> crea una restricción: si alguien intenta registrar un correo ya usado, PostgreSQL lo rechaza. Nuestro código lo aprovechará.</li></ul></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué guardamos <code>password</code> como un campo normal de texto?</strong></h3></div></div>
+<div class="panel prose"><ul><li>En el schema es un <code>String</code>, sí. Pero <strong>nunca guardaremos la contraseña tal cual</strong> la escribió el usuario. Guardaremos una versión cifrada (un <em>hash</em>). Eso lo hacemos en el código, no en el schema. Lo vemos en el Bloque 5.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 3.2 — Migrar el cambio</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> El schema cambió, pero PostgreSQL todavía no lo sabe. La migración crea la tabla <code>usuarios</code> y agrega la columna <code>usuarioId</code> a las transacciones.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. La base de datos recibe el cambio del esquema; no avances hasta confirmar que la migración terminó correctamente.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma migrate dev --name agregar_usuario</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>La base de datos recibe el cambio del esquema; no avances hasta confirmar que la migración terminó correctamente.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>confirmación de la migración aplicada y el cliente regenerado.</p></div></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué a veces <code>migrate dev</code> pide resetear la base?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Porque agregamos una columna <strong>obligatoria</strong> (<code>usuarioId</code>) a una tabla que quizá ya tenía filas. Esas filas viejas no tienen valor para la columna nueva, y PostgreSQL no sabe qué ponerles.</li><li>En desarrollo, resetear es normal: son datos de prueba. <strong>En producción jamás se resetea</strong>; ahí se migra con un valor por defecto o en varios pasos. Es una decisión de negocio, no un comando automático.</li></ul></div></div>
+</section>
+<section class="spa-section" id="piezas">
+  <header class="section-head"><span class="section-number">05 · Preparación</span><h2 class="section-title">Las piezas de autenticación y su responsabilidad</h2><p class="section-summary">Cada dependencia resuelve un problema distinto; el secreto de firma se mantiene fuera del código.</p></header>
+  <div class="section-body"><div class="definition-grid"><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span><h3>bcrypt</h3></div><p>Genera y compara hashes de contraseña.</p></div><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm" data-accent="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c1.2-4 4.2-6 7-6s5.8 2 7 6"></path></svg></span><h3>Passport</h3></div><p>Identifica al usuario en cada petición protegida.</p></div><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm" data-accent="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"></path><path d="M8 13 4.5 16.5a2.5 2.5 0 1 0 3.5 3.5L11.5 16"></path><path d="M16 11l3.5-3.5a2.5 2.5 0 1 0-3.5-3.5L12.5 8"></path></svg></span><h3>JWT</h3></div><p>Transporta una identidad firmada y con vencimiento.</p></div></div><div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 4.1 — Instalar las dependencias</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Cada paquete tiene un trabajo. Vale la pena saber cuál antes de escribirlos.</p></div>
+<div class="definition-grid"><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"></path><path d="M8 13 4.5 16.5a2.5 2.5 0 1 0 3.5 3.5L11.5 16"></path><path d="M16 11l3.5-3.5a2.5 2.5 0 1 0-3.5-3.5L12.5 8"></path></svg></span><h3><code>bcrypt</code></h3></div><p>Genera el <em>hash</em> de las contraseñas</p></div><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm" data-accent="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"></path><path d="M8 13 4.5 16.5a2.5 2.5 0 1 0 3.5 3.5L11.5 16"></path><path d="M16 11l3.5-3.5a2.5 2.5 0 1 0-3.5-3.5L12.5 8"></path></svg></span><h3><code>@nestjs/jwt</code></h3></div><p>Crea y firma los tokens JWT</p></div><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm" data-accent="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"></path><path d="M8 13 4.5 16.5a2.5 2.5 0 1 0 3.5 3.5L11.5 16"></path><path d="M16 11l3.5-3.5a2.5 2.5 0 1 0-3.5-3.5L12.5 8"></path></svg></span><h3><code>@nestjs/passport</code> + <code>passport</code></h3></div><p>El motor de autenticación de NestJS</p></div><div class="panel prose"><div class="icon-row"><span class="icon-orb" data-size="sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"></path><path d="M8 13 4.5 16.5a2.5 2.5 0 1 0 3.5 3.5L11.5 16"></path><path d="M16 11l3.5-3.5a2.5 2.5 0 1 0-3.5-3.5L12.5 8"></path></svg></span><h3><code>passport-jwt</code></h3></div><p>La estrategia que valida tokens JWT</p></div></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm install bcrypt @nestjs/jwt @nestjs/passport passport passport-jwt</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+<div class="panel prose"><p><strong>Explicación:</strong> <code>bcrypt</code>, <code>passport-jwt</code> y demás traen su propio tipado por separado para TypeScript. Los instalamos como dependencias de desarrollo.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm install --save-dev @types/bcrypt @types/passport-jwt</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Estas dependencias quedan registradas en el proyecto y estarán disponibles para los archivos que las importan después.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 4.2 — Agregar el secreto del JWT al <code>.env</code></h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> El JWT se firma con una <strong>clave secreta</strong>. Esa clave vive en el <code>.env</code>, nunca en el código. Con ella el servidor firma los tokens y luego verifica que no fueron alterados.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Agregar este bloque en <code>.env</code>. Centraliza la configuración sensible fuera del código fuente para que cada entorno pueda usar valores distintos.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Agregar</span><span class="code-file">.env</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-properties">JWT_SECRET=&quot;clave-secreta-solo-para-clase-cambiar-en-produccion&quot;
+JWT_EXPIRES_IN=&quot;1h&quot;</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Centraliza la configuración sensible fuera del código fuente para que cada entorno pueda usar valores distintos.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Qué pasa si alguien conoce el <code>JWT_SECRET</code>?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Podría <strong>fabricar tokens falsos</strong> y hacerse pasar por cualquier usuario. Por eso es un secreto real: en producción es una cadena larga y aleatoria, distinta en cada entorno, y nunca se sube a GitHub.</li><li><strong>Analogía:</strong> es el sello del notario. Quien tenga el sello puede falsificar documentos que parecen legítimos.</li></ul></div></div>
+</section>
+<section class="spa-section" id="registro">
+  <header class="section-head"><span class="section-number">06 · Seguridad</span><h2 class="section-title">Registrar sin almacenar contraseñas</h2><p class="section-summary">El backend valida, genera un hash con bcrypt y expone únicamente los datos que el cliente necesita.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Proceso seguro de registro"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Validar</strong><span>DTO de registro</span></div><div class="flow-arrow">→</div><div class="flow-step" data-emphasis><span class="fs-index">02</span><strong>Hashear</strong><span>bcrypt · costo 10</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">03</span><strong>Guardar</strong><span>Nunca texto plano</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">04</span><strong>Responder</strong><span>Sin password</span></div></div></div><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Cuando te registras en una app, ¿la empresa debería poder ver tu contraseña guardada en su base de datos?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Sí, para poder verificar cuando inicio sesión&quot;, &quot;supongo que sí&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p><strong>No, jamás.</strong> Ni la empresa debería poder verla. Si guardaran las contraseñas tal cual y les roban la base de datos, el atacante tendría las contraseñas de todos, en texto plano, listas para usar (y como la gente repite contraseñas, entraría también a sus correos y bancos). La solución es guardar un <strong>hash</strong>: una transformación irreversible de la contraseña.</p></div></div>
+<div class="checkpoint"><span class="component-label">Concepto esencial</span><h3>Definición — Hash de contraseña</h3></div>
+<div class="panel prose"><p><strong>Técnica:</strong> un <em>hash</em> es el resultado de aplicar una función matemática <strong>irreversible</strong> a un texto. De la contraseña sale el hash, pero del hash <strong>no se puede volver</strong> a la contraseña.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> es como triturar un papel. Puedes triturar la hoja, pero no puedes reconstruir la hoja a partir de los pedazos.</p></div>
+<div class="panel prose"><p><strong>Vida real:</strong> el banco no guarda tu PIN; guarda una huella matemática de tu PIN. Cuando lo escribes, calcula la huella otra vez y la compara. Nunca necesita conocer el PIN original.</p></div>
+<h3>Cómo se verifica sin conocer la contraseña</h3>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Modelo de referencia este bloque en <code>referencia de la clase</code>. Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Modelo de referencia</span><span class="code-file">referencia de la clase</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-plaintext">Al registrarte:  contraseña → bcrypt → hash → se guarda el hash
+Al iniciar sesión: contraseña escrita → bcrypt compara con el hash guardado → ¿coinciden?</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+<div class="panel prose"><p><code>bcrypt</code> sabe comparar una contraseña con un hash sin necesidad de descifrarlo. Ese es todo el truco.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Qué es el &quot;10&quot; que vamos a pasarle a bcrypt?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Es el <strong>factor de costo</strong>: cuántas veces bcrypt repite su trabajo internamente. Más alto = más lento = más difícil de atacar por fuerza bruta.</li><li>10 es un valor estándar y seguro para hoy. Se sube con los años, a medida que los computadores se vuelven más rápidos.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 5.1 — Los DTO de registro y login</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Definen y validan lo que llega en el body. El de registro pide nombre, email y contraseña; el de login solo email y contraseña. La contraseña exige mínimo 8 caracteres.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/dto/register.dto.ts</code>. Valida nombre, correo y longitud mínima de la contraseña durante el registro.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/dto/register.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { IsEmail, IsString, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class RegisterDto {
+  @ApiProperty({ example: 'Ana Alvarado' })
+  @IsString()
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  nombre!: string;
+
+  @ApiProperty({ example: 'ana@correo.com' })
+  @IsEmail({}, { message: 'El email no tiene un formato válido' })
+  email!: string;
+
+  @ApiProperty({ example: 'clave1234' })
+  @IsString()
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+  password!: string;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Valida nombre, correo y longitud mínima de la contraseña durante el registro.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/dto/login.dto.ts</code>. Valida las credenciales que llegan al inicio de sesión.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/dto/login.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { IsEmail, IsString, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class LoginDto {
+  @ApiProperty({ example: 'ana@correo.com' })
+  @IsEmail({}, { message: 'El email no tiene un formato válido' })
+  email!: string;
+
+  @ApiProperty({ example: 'clave1234' })
+  @IsString()
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+  password!: string;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Valida las credenciales que llegan al inicio de sesión.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué los campos llevan <code>!</code> al final (<code>nombre!</code>)?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Porque el proyecto está en modo <strong>estricto</strong> de TypeScript, y los DTO no tienen constructor. El <code>!</code> le dice a TypeScript &quot;confía, este campo va a llegar con valor&quot;. Sin él, TypeScript se queja de que el campo no está inicializado.</li><li><strong>No se resuelve aflojando el <code>tsconfig</code>.</strong> El <code>!</code> es la forma correcta y esperada en los DTO de NestJS.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 5.2 — El servicio de autenticación (registro)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Empezamos con el registro. El servicio revisa que el email no exista, genera el hash de la contraseña con bcrypt, crea el usuario y devuelve sus datos <strong>sin la contraseña</strong>.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/auth.service.ts</code>. Implementa el registro seguro y luego el login que compara el hash y firma el JWT.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/auth.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { ConflictException, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
+import { RegisterDto } from './dto/register.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async register(dto: RegisterDto) {
+    const existente = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (existente) {
+      throw new ConflictException('El email ya está registrado');
+    }
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
+    const usuario = await this.prisma.usuario.create({
+      data: { email: dto.email, password: hash, nombre: dto.nombre },
+    });
+
+    return { id: usuario.id, email: usuario.email, nombre: usuario.nombre };
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Implementa el registro seguro y luego el login que compara el hash y firma el JWT.</p></div>
+<div class="panel prose"><p><strong>Qué hace, paso a paso:</strong></p></div>
+<div class="panel prose"><ol><li>Busca si ya existe un usuario con ese email.</li><li>Si existe, lanza un error 409 (conflicto) con mensaje claro.</li><li>Genera el hash de la contraseña con bcrypt y factor 10.</li><li>Crea el usuario guardando el <strong>hash</strong>, nunca la contraseña original.</li><li>Devuelve solo <code>id</code>, <code>email</code> y <code>nombre</code> — <strong>la contraseña nunca sale</strong> en la respuesta.</li></ol></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué devolvemos el usuario sin la contraseña?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Porque una respuesta de API <strong>no debe exponer datos sensibles</strong>, ni siquiera el hash. Si devolviéramos el objeto completo, el hash viajaría al cliente sin necesidad.</li><li>Es una regla de higiene: exponer solo lo que el cliente necesita ver.</li></ul></div></div>
+</section>
+<section class="spa-section" id="jwt">
+  <header class="section-head"><span class="section-number">07 · Identidad temporal</span><h2 class="section-title">Del login al carné firmado</h2><p class="section-summary">El JWT evita reenviar la contraseña y transporta una identidad verificable durante una hora.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Estructura y uso de un JWT"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Header</strong><span>Algoritmo de firma</span></div><div class="flow-arrow">.</div><div class="flow-step"><span class="fs-index">02</span><strong>Payload</strong><span>sub + email</span></div><div class="flow-arrow">.</div><div class="flow-step" data-emphasis><span class="fs-index">03</span><strong>Signature</strong><span>Sello verificable</span></div></div></div><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Después de que inicio sesión con mi correo y contraseña, hago diez peticiones más. ¿Debería mandar mi correo y contraseña en cada una de las diez?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Sí, para que sepa que soy yo cada vez&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p><strong>No.</strong> Mandar la contraseña en cada petición es inseguro (viaja mil veces) e incómodo. En vez de eso, al iniciar sesión el servidor te entrega un <strong>token</strong>: un carné temporal firmado. En las siguientes peticiones mandas el token, no la contraseña. El servidor confía en el token porque él mismo lo firmó.</p></div></div>
+<div class="checkpoint"><span class="component-label">Concepto esencial</span><h3>Definición — JWT (JSON Web Token)</h3></div>
+<div class="panel prose"><p><strong>Técnica:</strong> un JWT es una cadena de texto firmada que <strong>transporta información de identidad</strong> de forma verificable. El servidor lo emite al iniciar sesión y el cliente lo presenta en cada petición.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> es un carné de entrada temporal. Dice quién eres, tiene fecha de vencimiento, y trae un sello que solo el servidor puede poner y reconocer.</p></div>
+<div class="panel prose"><p><strong>Vida real:</strong> la manilla de un concierto. Pagas una vez en la entrada (login) y te ponen la manilla. Adentro no vuelves a pagar en cada puesto; solo muestras la manilla. Está diseñada para no poder falsificarse.</p></div>
+<h3>Las tres partes de un JWT</h3>
+<div class="panel prose"><p>Un JWT tiene tres bloques separados por puntos: <code>xxxxx.yyyyy.zzzzz</code></p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Modelo de referencia este bloque en <code>referencia de la clase</code>. Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Modelo de referencia</span><span class="code-file">referencia de la clase</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-plaintext">Header    → qué algoritmo firma el token
+Payload   → los datos (quién eres): por ejemplo tu id y tu email
+Signature → el sello, hecho con el JWT_SECRET</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+<div class="panel prose"><ul><li>El <strong>payload</strong> no es secreto: cualquiera puede leerlo. Por eso <strong>nunca</strong> se mete una contraseña ahí.</li><li>La <strong>firma</strong> es lo que lo hace confiable: si alguien cambia una letra del payload, la firma deja de coincidir y el servidor lo rechaza.</li></ul></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Entonces cualquiera puede leer el contenido del token?</strong></h3></div></div>
+<div class="panel prose"><ul><li><strong>Sí</strong>, el payload es visible (está codificado, no cifrado). Por eso solo se guardan datos no sensibles: el <code>id</code> del usuario y su email, nunca la contraseña.</li><li>La seguridad <strong>no viene de esconder</strong> el contenido, sino de la <strong>firma</strong>: nadie puede fabricar un token válido sin el <code>JWT_SECRET</code>.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 6.1 — Agregar el login al servicio</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> El login busca al usuario por email, compara la contraseña con bcrypt, y si todo cuadra firma un JWT con el id y el email dentro. Agregamos el método <code>login</code> y los imports que necesita.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>src/auth/auth.service.ts</code>. Implementa el registro seguro y luego el login que compara el hash y firma el JWT.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/auth.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async register(dto: RegisterDto) {
+    const existente = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (existente) {
+      throw new ConflictException('El email ya está registrado');
+    }
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
+    const usuario = await this.prisma.usuario.create({
+      data: { email: dto.email, password: hash, nombre: dto.nombre },
+    });
+
+    return { id: usuario.id, email: usuario.email, nombre: usuario.nombre };
+  }
+
+  async login(dto: LoginDto) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (!usuario) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const passwordOk = await bcrypt.compare(dto.password, usuario.password);
+    if (!passwordOk) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const payload = { sub: usuario.id, email: usuario.email };
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return { access_token };
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Implementa el registro seguro y luego el login que compara el hash y firma el JWT.</p></div>
+<div class="panel prose"><p><strong>Qué hace el login, paso a paso:</strong></p></div>
+<div class="panel prose"><ol><li>Busca al usuario por email.</li><li>Si no existe, lanza 401 con un mensaje <strong>genérico</strong>.</li><li>Compara la contraseña escrita con el hash guardado usando <code>bcrypt.compare</code>.</li><li>Si no coincide, lanza el mismo 401 genérico.</li><li>Si todo cuadra, arma el payload (<code>sub</code> = id, más el email) y firma el JWT.</li><li>Devuelve el token en <code>access_token</code>.</li></ol></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué el mensaje de error es el mismo (&quot;Credenciales inválidas&quot;) tanto si el email no existe como si la contraseña está mal?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Por <strong>seguridad</strong>. Si dijéramos &quot;ese email no existe&quot;, un atacante podría probar correos hasta descubrir cuáles están registrados. Con un mensaje genérico, no revelamos si el fallo fue el email o la contraseña.</li><li>Es una decisión deliberada de un desarrollador senior: menos información al atacante.</li></ul></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Qué es <code>sub</code> en el payload?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Es una convención de JWT: <code>sub</code> (subject) es <strong>el identificador del dueño del token</strong>, en nuestro caso el id del usuario. Es el estándar, por eso lo usamos en vez de inventar un nombre propio.</li></ul></div></div>
+</section>
+<section class="spa-section" id="passport">
+  <header class="section-head"><span class="section-number">08 · Validación</span><h2 class="section-title">Un portero reutilizable para cada petición</h2><p class="section-summary">Passport verifica el Bearer token una vez y deja la identidad disponible para los controladores.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Validación del token en una petición"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Bearer token</strong><span>Authorization header</span></div><div class="flow-arrow">→</div><div class="flow-step" data-emphasis><span class="fs-index">02</span><strong>JwtStrategy</strong><span>Firma y expiración</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">03</span><strong>request.user</strong><span>id + email</span></div></div></div><div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Ya entregamos el token al iniciar sesión. Cuando llega una petición con un token, ¿quién lo revisa, verifica la firma y saca de él quién es el usuario?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;El controlador&quot;, &quot;el servicio&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p>No queremos escribir esa revisión en cada endpoint (sería repetir código en todos lados). Usamos <strong>Passport</strong>, el motor de autenticación de NestJS, con una <strong>estrategia</strong> que sabe leer el token del encabezado, verificar la firma con el <code>JWT_SECRET</code> y entregar el usuario ya identificado. Se escribe una vez y se reutiliza.</p></div></div>
+<div class="checkpoint"><span class="component-label">Concepto esencial</span><h3>Definición — Passport y su estrategia</h3></div>
+<div class="panel prose"><p><strong>Técnica:</strong> Passport es una librería de autenticación para Node. Una <strong>estrategia</strong> es un método concreto de autenticar; la nuestra, <code>passport-jwt</code>, autentica leyendo y verificando un JWT.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> Passport es el portero, y la estrategia es la instrucción que le damos: &quot;revisa que traigan la manilla del concierto, y que sea auténtica&quot;.</p></div>
+<div class="panel prose"><p><strong>Vida real:</strong> el portero de la discoteca no decide las reglas; sigue una instrucción (la estrategia): &quot;deja entrar a quien traiga manilla válida&quot;. Cambias la instrucción y cambias cómo autentica, sin cambiar al portero.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 7.1 — La estrategia JWT</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Define cómo se valida el token: lo saca del encabezado <code>Authorization: Bearer ...</code>, verifica la firma con el secreto, y con el payload arma el objeto de usuario que quedará disponible en la petición.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/jwt.strategy.ts</code>. Extrae el Bearer token, verifica su firma y convierte el payload en un usuario autenticado.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/jwt.strategy.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
+type JwtPayload = { sub: number; email: string };
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException('JWT_SECRET no está definida');
+    }
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: secret,
+    });
+  }
+
+  validate(payload: JwtPayload) {
+    return { id: payload.sub, email: payload.email };
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Extrae el Bearer token, verifica su firma y convierte el payload en un usuario autenticado.</p></div>
+<div class="panel prose"><p><strong>Qué hace, paso a paso:</strong></p></div>
+<div class="panel prose"><ol><li>Lee el token del encabezado <code>Authorization: Bearer &lt;token&gt;</code>.</li><li><code>ignoreExpiration: false</code> → un token vencido se rechaza.</li><li>Verifica la firma con el <code>JWT_SECRET</code>.</li><li>Si el token es válido, <code>validate</code> recibe el payload y devuelve el objeto de usuario.</li><li>Ese objeto (<code>{ id, email }</code>) queda pegado a la petición para que los controladores lo usen.</li></ol></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Qué es &quot;Bearer&quot; en el encabezado?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Es el <strong>tipo de token</strong> que se usa en el estándar HTTP. Se escribe <code>Authorization: Bearer &lt;token&gt;</code>. La palabra <code>Bearer</code> significa &quot;el portador&quot;: quien presente este token, se considera autenticado.</li><li>⚠️ En Postman es un error clásico olvidar la palabra <code>Bearer</code> antes del token. Sin ella, la estrategia no encuentra el token y devuelve 401.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 7.2 — El guard</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> El <em>guard</em> es lo que ponemos sobre un endpoint para exigir autenticación. Activa la estrategia JWT: si el token es válido, deja pasar; si no, corta con 401.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/jwt-auth.guard.ts</code>. Activa la estrategia JWT y bloquea la petición cuando no existe una identidad válida.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/jwt-auth.guard.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Activa la estrategia JWT y bloquea la petición cuando no existe una identidad válida.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> este guard es el &quot;candado&quot; que le pondremos a los endpoints de transacciones. El <code>'jwt'</code> le dice qué estrategia usar para abrirlo.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 7.3 — El decorador de usuario actual</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Necesitamos una forma cómoda de acceder al usuario autenticado dentro de los controladores. Este decorador lo saca de la petición para poder escribir <code>@UsuarioActual()</code> como parámetro.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/usuario-actual.decorator.ts</code>. Recupera el usuario que Passport dejó en la petición sin repetir esa lectura en cada endpoint.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/usuario-actual.decorator.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const UsuarioActual = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) =&gt; {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user as { id: number; email: string };
+  },
+);</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Recupera el usuario que Passport dejó en la petición sin repetir esa lectura en cada endpoint.</p></div>
+<div class="panel prose"><p><strong>En palabras sencillas:</strong> después de que Passport valida el token, deja el usuario pegado en la petición. Este decorador es un atajo para tomarlo sin escribir la misma línea en cada endpoint.</p></div></div>
+</section>
+<section class="spa-section" id="propiedad">
+  <header class="section-head"><span class="section-number">09 · Autorización</span><h2 class="section-title">Un token válido no basta: hay que filtrar por dueño</h2><p class="section-summary">El servicio usa el id firmado para crear, listar, consultar, editar y eliminar únicamente recursos propios.</p></header>
+  <div class="section-body"><div class="visual-panel" aria-label="Arquitectura completa de una petición protegida"><div class="diagram"><div class="diagram-row"><div class="diagram-node">Petición</div><span class="diagram-arrow">→</span><div class="diagram-node" data-emphasis>JwtAuthGuard</div><span class="diagram-arrow">→</span><div class="diagram-node">JwtStrategy</div></div><div class="diagram-row"><span class="diagram-arrow">↓</span></div><div class="diagram-row"><div class="diagram-node">Controller</div><span class="diagram-arrow">→</span><div class="diagram-node" data-emphasis>Service + usuarioId</div><span class="diagram-arrow">→</span><div class="diagram-node">Prisma</div><span class="diagram-arrow">→</span><div class="diagram-node">PostgreSQL</div></div></div></div><div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 8.1 — El controlador de autenticación</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Expone las dos rutas públicas: <code>POST /auth/register</code> y <code>POST /auth/login</code>. Estas <strong>no</strong> llevan guard: para registrarte o iniciar sesión todavía no tienes token.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/auth.controller.ts</code>. Publica las rutas públicas de registro e inicio de sesión.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/auth.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
+  @Post('login')
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Publica las rutas públicas de registro e inicio de sesión.</p></div>
+<h3>Integración — El módulo de autenticación</h3>
+<div class="panel prose"><p><strong>Explicación:</strong> Registra el <code>JwtModule</code> con el secreto y la expiración, y declara el servicio y el controlador (que creamos en el siguiente paso). El <code>JwtModule</code> es lo que le da a <code>AuthService</code> la capacidad de firmar tokens.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Editar este bloque en <code>src/auth/auth.module.ts</code>. Conecta Passport, JWT, estrategia, servicio y controlador de autenticación.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">src/auth/auth.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtStrategy } from './jwt.strategy';
+
+@Module({
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
+})
+export class AuthModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Conecta Passport, JWT, estrategia, servicio y controlador de autenticación.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué <code>expiresIn</code> está escrito fijo como <code>'1h'</code> y no leído del <code>.env</code>?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Por un detalle de tipos de <code>@nestjs/jwt</code>: el valor de una variable de entorno es un <code>string</code> genérico, y la librería espera un formato más específico. Dejarlo fijo evita un error de compilación y mantiene la clase fluida.</li><li>El <code>JWT_EXPIRES_IN</code> del <code>.env</code> queda como referencia; llevarlo a la configuración con el tipo correcto es un ajuste que se puede hacer después sin afectar la clase.</li></ul></div>
+<div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Ya tenemos login y token. Pero si protejo <code>GET /transacciones</code> con el candado, y Ana y Luis están ambos autenticados, ¿basta con exigir token para que Ana no vea las transacciones de Luis?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Sí, con el token ya está protegido&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p><strong>No basta.</strong> El token solo demuestra <em>quién eres</em> (autenticación). Que Ana no vea lo de Luis es <em>autorización</em>: hay que usar el id del token para filtrar y devolver <strong>solo las transacciones de ese usuario</strong>. Un endpoint protegido con token pero que devuelve todo sigue siendo una fuga de datos. Autenticar y autorizar son dos pasos.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 8.2 — Transacciones atadas al dueño</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Reescribimos el servicio de transacciones para que <strong>cada operación use el id del usuario autenticado</strong>. Al crear, se ata la transacción a su dueño; al listar, solo salen las suyas; al pedir una por id, se verifica que sea suya.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>src/transacciones/transacciones.service.ts</code>. Concentra la persistencia de transacciones; en su versión protegida también aplica la propiedad del usuario.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearTransaccionDto } from './dto/crear-transaccion.dto';
+import { ActualizarTransaccionDto } from './dto/actualizar-transaccion.dto';
+
+@Injectable()
+export class TransaccionesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearTransaccionDto, usuarioId: number) {
+    return this.prisma.transaccion.create({
+      data: {
+        descripcion: dto.descripcion,
+        monto: dto.monto,
+        tipo: dto.tipo,
+        categoriaId: dto.categoriaId,
+        usuarioId,
+      },
+      include: { categoria: true },
+    });
+  }
+
+  obtenerMias(usuarioId: number) {
+    return this.prisma.transaccion.findMany({
+      where: { usuarioId },
+      include: { categoria: true },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  async obtenerUna(id: number, usuarioId: number) {
+    const transaccion = await this.prisma.transaccion.findUnique({
+      where: { id },
+      include: { categoria: true },
+    });
+
+    if (!transaccion) {
+      throw new NotFoundException('La transacción no existe');
+    }
+
+    if (transaccion.usuarioId !== usuarioId) {
+      throw new ForbiddenException('Esta transacción no es tuya');
+    }
+
+    return transaccion;
+  }
+
+  async actualizar(
+    id: number,
+    dto: ActualizarTransaccionDto,
+    usuarioId: number,
+  ) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.update({
+      where: { id },
+      data: dto,
+      include: { categoria: true },
+    });
+  }
+
+  async eliminar(id: number, usuarioId: number) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.delete({ where: { id } });
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Concentra la persistencia de transacciones; en su versión protegida también aplica la propiedad del usuario.</p></div>
+<div class="panel prose"><p><strong>Qué cambió respecto al estado inicial:</strong></p></div>
+<div class="panel prose"><ol><li>Cada método ahora recibe <code>usuarioId</code>.</li><li><code>crear</code> ata la transacción a su dueño con <code>usuarioId</code>.</li><li><code>obtenerMias</code> filtra con <code>where: { usuarioId }</code> → solo las tuyas.</li><li><code>obtenerUna</code> verifica: si no existe → 404; si es de otro → 403.</li><li><code>actualizar</code> y <code>eliminar</code> reutilizan <code>obtenerUna</code> para comprobar la propiedad <strong>antes</strong> de tocar nada.</li></ol></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué <code>actualizar</code> y <code>eliminar</code> llaman primero a <code>obtenerUna</code>?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Para <strong>no dejar que alguien edite o borre lo que no es suyo</strong>. Si no verificáramos, Luis podría borrar una transacción de Ana solo con saber su id.</li><li><code>obtenerUna</code> ya trae la lógica de &quot;existe y es tuya&quot;; reutilizarla evita repetir esa comprobación. Es separación de responsabilidades: una sola función decide la propiedad.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 8.3 — El controlador de transacciones protegido</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Le ponemos el candado (<code>JwtAuthGuard</code>) a todo el controlador, y con <code>@UsuarioActual()</code> sacamos el id del token para pasárselo al servicio en cada método.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>src/transacciones/transacciones.controller.ts</code>. Expone las rutas de transacciones y, en la versión protegida, transmite la identidad autenticada.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { TransaccionesService } from './transacciones.service';
+import { CrearTransaccionDto } from './dto/crear-transaccion.dto';
+import { ActualizarTransaccionDto } from './dto/actualizar-transaccion.dto';
+
+@ApiTags('transacciones')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('transacciones')
+export class TransaccionesController {
+  constructor(private readonly transaccionesService: TransaccionesService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  obtenerMias(@UsuarioActual() usuario: { id: number }) {
+    return this.transaccionesService.obtenerMias(usuario.id);
+  }
+
+  @Get(':id')
+  obtenerUna(
+    @Param('id', ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerUna(id, usuario.id);
+  }
+
+  @Patch(':id')
+  actualizar(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ActualizarTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.actualizar(id, dto, usuario.id);
+  }
+
+  @Delete(':id')
+  eliminar(
+    @Param('id', ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.eliminar(id, usuario.id);
+  }
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Expone las rutas de transacciones y, en la versión protegida, transmite la identidad autenticada.</p></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Qué hace exactamente <code>@UseGuards(JwtAuthGuard)</code> sobre la clase?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Aplica el candado a <strong>todos</strong> los métodos del controlador de una sola vez. Ninguna ruta de transacciones responde sin un token válido.</li><li>Si lo pusiéramos sobre un método concreto, solo protegería ese. Al ponerlo en la clase, protegemos todo el recurso. Menos código, misma protección.</li></ul></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Para qué sirve <code>@ApiBearerAuth()</code>?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Es solo para Swagger: hace que en <code>/docs</code> aparezca el botón &quot;Authorize&quot; donde pegas el token, para poder probar los endpoints protegidos desde el navegador.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 8.4 — Registrar los módulos nuevos</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> <code>AuthModule</code> y <code>TransaccionesModule</code> deben estar en <code>app.module.ts</code> o no existen para la app. Este fue uno de los errores clásicos del Módulo 2.</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Reemplazar este bloque en <code>src/app.module.ts</code>. Declara qué módulos existen para la aplicación; un módulo no importado no publica sus rutas.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/app.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { TransaccionesModule } from './transacciones/transacciones.module';
+
+@Module({
+  imports: [PrismaModule, AuthModule, CategoriasModule, TransaccionesModule],
+})
+export class AppModule {}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Declara qué módulos existen para la aplicación; un módulo no importado no publica sus rutas.</p></div></div>
+</section>
+<section class="spa-section" id="pruebas">
+  <header class="section-head"><span class="section-number">10 · Validación</span><h2 class="section-title">Dos usuarios, el mismo endpoint, respuestas diferentes</h2><p class="section-summary">La secuencia completa demuestra registro, login, token, creación, aislamiento de datos y bloqueos esperados.</p></header>
+  <div class="section-body"><div class="stepper"><div class="step-item"><span class="step-num">1</span><div class="step-body"><h4>Registrar</h4><p>Crea a Ana y Luis.</p></div></div><div class="step-item"><span class="step-num">2</span><div class="step-body"><h4>Ingresar</h4><p>Obtén un token por usuario.</p></div></div><div class="step-item"><span class="step-num">3</span><div class="step-body"><h4>Crear</h4><p>Ana registra su transacción.</p></div></div><div class="step-item"><span class="step-num">4</span><div class="step-body"><h4>Aislar</h4><p>Luis recibe una lista vacía.</p></div></div></div><h3>Arrancar el servidor</h3>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. El servidor debe mantenerse activo mientras pruebas las rutas y observas los cambios automáticos.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npm run start:dev</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>El servidor debe mantenerse activo mientras pruebas las rutas y observas los cambios automáticos.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p><code>Nest application successfully started</code>, y entre las rutas mapeadas verás <code>/auth/register</code>, <code>/auth/login</code> y las de <code>/transacciones</code>.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 1 — Crear una categoría</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Las transacciones necesitan una categoría. Las categorías siguen abiertas (no las protegimos hoy), así que se crean sin token.</p></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/categorias</code> → Body → raw → JSON:</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Usaremos este cuerpo de prueba para observar la respuesta real del endpoint. Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Enviar body JSON</span><span class="code-file">POST http://localhost:3000/categorias</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Comida&quot; }</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>responde la categoría creada con su <code>id</code>.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 2 — Registrar el usuario Ana</h3></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/auth/register</code> → Body → raw → JSON:</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Usaremos este cuerpo de prueba para observar la respuesta real del endpoint. Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Enviar body JSON</span><span class="code-file">POST http://localhost:3000/auth/register</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-json">{
+  &quot;nombre&quot;: &quot;Ana&quot;,
+  &quot;email&quot;: &quot;ana@correo.com&quot;,
+  &quot;password&quot;: &quot;clave1234&quot;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>responde <code>id</code>, <code>email</code> y <code>nombre</code> — <strong>sin la contraseña</strong>. Ese detalle es la buena práctica en acción.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 3 — Registrar el usuario Luis</h3></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/auth/register</code> → Body → raw → JSON:</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Usaremos este cuerpo de prueba para observar la respuesta real del endpoint. Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Enviar body JSON</span><span class="code-file">POST http://localhost:3000/auth/register</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-json">{
+  &quot;nombre&quot;: &quot;Luis&quot;,
+  &quot;email&quot;: &quot;luis@correo.com&quot;,
+  &quot;password&quot;: &quot;clave1234&quot;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 4 — Iniciar sesión como Ana</h3></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/auth/login</code> → Body → raw → JSON:</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Usaremos este cuerpo de prueba para observar la respuesta real del endpoint. Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Enviar body JSON</span><span class="code-file">POST http://localhost:3000/auth/login</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-json">{
+  &quot;email&quot;: &quot;ana@correo.com&quot;,
+  &quot;password&quot;: &quot;clave1234&quot;
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>responde <code>{ &quot;access_token&quot;: &quot;eyJ...&quot; }</code>. <strong>Copien ese token de Ana</strong>, lo usaremos ya.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 5 — Ana crea una transacción (con su token)</h3></div>
+<div class="panel prose"><p><strong>Explicación:</strong> Ahora usamos el candado. En Postman, pestaña <strong>Authorization</strong> → Type <strong>Bearer Token</strong> → pega el token de Ana. (O en Headers: <code>Authorization: Bearer &lt;token&gt;</code>.)</p></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/transacciones</code> → Body → raw → JSON:</p></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Usaremos este cuerpo de prueba para observar la respuesta real del endpoint. Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Enviar body JSON</span><span class="code-file">POST http://localhost:3000/transacciones</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-json">{
+  &quot;descripcion&quot;: &quot;Mercado&quot;,
+  &quot;monto&quot;: 50000,
+  &quot;tipo&quot;: &quot;GASTO&quot;,
+  &quot;categoriaId&quot;: 1
+}</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este payload reproduce el caso de prueba indicado y permite comprobar el comportamiento observable de la API.</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>responde la transacción creada con <code>usuarioId</code> igual al id de Ana. <strong>Fíjense: nunca mandamos el usuarioId en el body; salió del token.</strong></p></div></div>
+<div class="callout" data-tone="info"><span class="callout-icon">?</span><div><h3><strong>¿Por qué no mandamos el <code>usuarioId</code> en el body?</strong></h3></div></div>
+<div class="panel prose"><ul><li>Porque <strong>el cliente no es de fiar</strong>. Si el dueño viniera del body, Luis podría mandar <code>usuarioId: 1</code> y crear transacciones a nombre de Ana. El dueño se toma <strong>del token</strong>, que está firmado y no se puede falsificar.</li><li>Misma regla de oro del Módulo 2: el backend nunca confía en datos sensibles que vengan del cliente.</li></ul></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 6 — La prueba de fuego: Ana ve lo suyo, Luis no</h3></div>
+<div class="panel prose"><p><strong>6a. Ana lista sus transacciones</strong> (con el token de Ana):</p></div>
+<div class="panel prose"><p><code>GET http://localhost:3000/transacciones</code></p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>aparece la transacción de Mercado.</p></div></div>
+<div class="panel prose"><p><strong>6b. Inicien sesión como Luis</strong> (<code>POST /auth/login</code> con el correo de Luis) y <strong>copien su token</strong>.</p></div>
+<div class="panel prose"><p><strong>6c. Luis lista sus transacciones</strong> (con el token de Luis):</p></div>
+<div class="panel prose"><p><code>GET http://localhost:3000/transacciones</code></p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p>responde <code>[]</code> — <strong>vacío</strong>. Luis no ve la transacción de Ana, aunque ambos usan el mismo endpoint.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 7 — Confirmar los bloqueos</h3></div>
+<div class="panel prose"><p><strong>7a. Luis intenta ver la transacción de Ana por id</strong> (con el token de Luis):</p></div>
+<div class="panel prose"><p><code>GET http://localhost:3000/transacciones/1</code></p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p><strong>403 Forbidden</strong>. La transacción existe, pero no es suya.</p></div></div>
+<div class="panel prose"><p><strong>7b. Petición sin token:</strong></p></div>
+<div class="panel prose"><p><code>GET http://localhost:3000/transacciones</code> (sin Authorization)</p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p><strong>401 Unauthorized</strong>. Sin carné no se entra.</p></div></div>
+<div class="panel prose"><p><strong>7c. Registro con contraseña corta:</strong></p></div>
+<div class="panel prose"><p><code>POST http://localhost:3000/auth/register</code> con <code>&quot;password&quot;: &quot;123&quot;</code></p></div>
+<div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Verificación observable</h3><p><strong>400 Bad Request</strong>, con el mensaje de que la contraseña debe tener al menos 8 caracteres. El DTO haciendo su trabajo.</p></div></div>
+<div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Paso 8 — Ver el hash en la base (opcional, muy potente)</h3></div>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Ejecutaremos este comando desde la carpeta indicada para preparar o validar el proyecto. La vista de datos permite confirmar visualmente que la contraseña almacenada es un hash y no el texto original.</p></div>
+    <div class="code-block" data-tipo="terminal">
+      <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api/</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma studio</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>La vista de datos permite confirmar visualmente que la contraseña almacenada es un hash y no el texto original.</p></div></div>
+</section>
+<section class="spa-section" id="diagnostico">
+  <header class="section-head"><span class="section-number">11 · Diagnóstico</span><h2 class="section-title">Cómo leer los fallos y ubicar cada pieza</h2><p class="section-summary">Los mensajes de compilación y HTTP señalan en qué capa está el problema; el mapa permite comprobar el alcance completo.</p></header>
+  <div class="section-body"><div class="panel prose"><p><strong>1. <code>Property 'usuario' does not exist on type 'PrismaService'</code></strong></p></div>
+<div class="panel prose"><ul><li><strong>Causa:</strong> se editó el schema pero no se corrió <code>npx prisma migrate dev</code> (o <code>npx prisma generate</code>). El cliente aún no conoce el modelo <code>Usuario</code>.</li><li><strong>Solución:</strong> correr la migración y regenerar. <strong>El error #1 de hoy.</strong></li></ul></div>
+<div class="panel prose"><p><strong>2. <code>401 Unauthorized</code> con un token que parece correcto</strong></p></div>
+<div class="panel prose"><ul><li><strong>Cómo se lee:</strong> el token existe pero no se aceptó.</li><li><strong>Causa más común:</strong> falta la palabra <code>Bearer </code> antes del token, o se copió el token con espacios o incompleto.</li><li><strong>Solución:</strong> en Postman usar Authorization → Bearer Token, o el header <code>Authorization: Bearer &lt;token&gt;</code> exacto.</li></ul></div>
+<div class="panel prose"><p><strong>3. <code>404 Not Found</code> en <code>/auth/register</code></strong></p></div>
+<div class="panel prose"><ul><li><strong>Causa:</strong> <code>AuthModule</code> no está en el <code>imports</code> de <code>app.module.ts</code>.</li><li><strong>Solución:</strong> agregarlo. &quot;Si no lo importas, no existe.&quot;</li></ul></div>
+<div class="panel prose"><p><strong>4. <code>secretOrPrivateKey must have a value</code></strong></p></div>
+<div class="panel prose"><ul><li><strong>Cómo se lee:</strong> el JWT no se pudo firmar porque no encontró el secreto.</li><li><strong>Causa:</strong> falta <code>JWT_SECRET</code> en el <code>.env</code>, o <code>main.ts</code> no tiene <code>import 'dotenv/config'</code> como primera línea.</li><li><strong>Solución:</strong> revisar ambas cosas.</li></ul></div>
+<div class="panel prose"><p><strong>5. <code>403 Forbidden</code> al editar o borrar</strong></p></div>
+<div class="panel prose"><ul><li><strong>Qué significa:</strong> <strong>no es un error, es el sistema protegiendo.</strong> Estás intentando tocar una transacción que no es tuya. Es la autorización funcionando.</li></ul></div>
+<div class="panel prose"><p><strong>6. La migración pide resetear la base</strong></p></div>
+<div class="panel prose"><ul><li><strong>Causa:</strong> se agregó <code>usuarioId</code> obligatorio a una tabla con filas viejas sin dueño.</li><li><strong>Solución:</strong> en clase, aceptar el reset (son datos de prueba).</li></ul></div>
+<div class="timeline"><div class="timeline-item"><strong><code>schema.prisma</code></strong><p><code>prisma/</code> · Editar (versión final con <code>Usuario</code>) · Bloque 0, 3</p></div><div class="timeline-item"><strong><code>.env</code></strong><p>raíz · Editar (agregar <code>JWT_SECRET</code>, <code>JWT_EXPIRES_IN</code>) · Bloque 0, 4</p></div><div class="timeline-item"><strong><code>prisma.service.ts</code></strong><p><code>src/prisma/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>prisma.module.ts</code></strong><p><code>src/prisma/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>crear-categoria.dto.ts</code></strong><p><code>src/categorias/dto/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>actualizar-categoria.dto.ts</code></strong><p><code>src/categorias/dto/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>categorias.service.ts</code></strong><p><code>src/categorias/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>categorias.controller.ts</code></strong><p><code>src/categorias/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>categorias.module.ts</code></strong><p><code>src/categorias/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>crear-transaccion.dto.ts</code></strong><p><code>src/transacciones/dto/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>actualizar-transaccion.dto.ts</code></strong><p><code>src/transacciones/dto/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>transacciones.service.ts</code></strong><p><code>src/transacciones/</code> · Crear (Bloque 0) y editar (versión final, Bloque 8) · Bloque 0, 8</p></div><div class="timeline-item"><strong><code>transacciones.controller.ts</code></strong><p><code>src/transacciones/</code> · Crear (Bloque 0) y editar (versión final, Bloque 8) · Bloque 0, 8</p></div><div class="timeline-item"><strong><code>transacciones.module.ts</code></strong><p><code>src/transacciones/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>prisma-exception.filter.ts</code></strong><p><code>src/common/filters/</code> · Crear · Bloque 0</p></div><div class="timeline-item"><strong><code>register.dto.ts</code></strong><p><code>src/auth/dto/</code> · Crear · Bloque 5</p></div><div class="timeline-item"><strong><code>login.dto.ts</code></strong><p><code>src/auth/dto/</code> · Crear · Bloque 5</p></div><div class="timeline-item"><strong><code>auth.service.ts</code></strong><p><code>src/auth/</code> · Crear (Bloque 5) y editar (versión final, Bloque 6) · Bloque 5, 6</p></div><div class="timeline-item"><strong><code>auth.module.ts</code></strong><p><code>src/auth/</code> · Crear · Bloque 6</p></div><div class="timeline-item"><strong><code>jwt.strategy.ts</code></strong><p><code>src/auth/</code> · Crear · Bloque 7</p></div><div class="timeline-item"><strong><code>jwt-auth.guard.ts</code></strong><p><code>src/auth/</code> · Crear · Bloque 7</p></div><div class="timeline-item"><strong><code>usuario-actual.decorator.ts</code></strong><p><code>src/auth/</code> · Crear · Bloque 7</p></div><div class="timeline-item"><strong><code>auth.controller.ts</code></strong><p><code>src/auth/</code> · Crear · Bloque 8</p></div><div class="timeline-item"><strong><code>app.module.ts</code></strong><p><code>src/</code> · Editar (versión final con <code>AuthModule</code>) · Bloque 0, 8</p></div><div class="timeline-item"><strong><code>main.ts</code></strong><p><code>src/</code> · Editar (versión final del Bloque 0) · Bloque 0</p></div></div></div>
+</section>
+<section class="spa-section" id="cierre">
+  <header class="section-head"><span class="section-number">12 · Criterio técnico</span><h2 class="section-title">La API ya reconoce personas y protege su propiedad</h2><p class="section-summary">El siguiente salto será distinguir jerarquías mediante roles y permisos por rol.</p></header>
+  <div class="section-body"><div class="panel prose"><ul><li>Nuestra API ahora <strong>sabe quién eres</strong> (autenticación con login + JWT).</li><li>Las contraseñas se guardan mediante <strong>hash con bcrypt</strong>, nunca en texto plano.</li><li>Cada petición protegida se valida con <strong>Passport y el guard JWT</strong>.</li><li>Cada usuario <strong>solo ve y toca lo suyo</strong> (autorización básica por propiedad).</li><li>Distinguimos claramente <strong>autenticación</strong> (¿quién eres?) de <strong>autorización</strong> (¿qué puedes hacer?).</li></ul></div>
+<h3>Cómo quedó la arquitectura</h3>
+
+    <div class="panel prose"><span class="component-label">Antes del código</span><p>Modelo de referencia este bloque en <code>referencia de la clase</code>. Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+    <div class="code-block">
+      <div class="code-head"><div><span class="code-context">Modelo de referencia</span><span class="code-file">referencia de la clase</span></div><button class="copy-btn" type="button">Copiar</button></div>
+      <pre class="line-numbers"><code class="language-plaintext">Petición → JwtAuthGuard (¿token válido?) → JwtStrategy (saca el usuario)
+        → Controller (@UsuarioActual) → Service (filtra por usuarioId) → Prisma → PostgreSQL</code></pre>
+    </div>
+    <div class="panel prose"><span class="component-label">Cómo se integra</span><p>Este modelo conecta las piezas en el orden en que participan durante una petición real.</p></div>
+<div class="question-card"><span class="component-label">Detente y decide</span><p class="question"><strong>&quot;Hoy cada usuario ve solo lo suyo. Pero imaginen que la empresa necesita un rol de 'administrador' que pueda ver las transacciones de todos para dar soporte. Con lo que tenemos hoy, ¿un administrador podría hacer eso? ¿Qué le falta a nuestro sistema?&quot;</strong></p></div>
+<div class="compare"><div class="compare-card" data-side="negative"><h3>Primera intuición</h3><p>&quot;Sí, con su token entra&quot;.</p></div><div class="compare-card" data-side="positive"><h3>Criterio técnico</h3><p>Hoy <strong>todos los usuarios son iguales</strong>: cada uno ve lo suyo y nada más, sin excepción. No existe la idea de que unos puedan más que otros. Falta el concepto de <strong>rol</strong> (usuario vs. administrador) y de <strong>permisos por rol</strong>. Eso es exactamente lo que construiremos en la próxima clase: control de acceso basado en roles (RBAC), con guards que revisan no solo <em>quién eres</em> sino <em>qué rol tienes</em>.</p></div></div>
+<div class="panel prose"><ul><li>Si un token se roba, ¿cómo lo invalidamos antes de que venza? (pista: esto lleva al tema de <em>refresh tokens</em> y listas de revocación).</li><li>¿Dónde debería guardar el token la aplicación cliente (web o móvil) para que sea seguro?</li><li>¿Por qué <code>bcrypt.compare</code> puede comparar sin descifrar el hash?</li></ul></div></div>
+</section><footer class="footer">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</footer></div>
+    </main>
+  </div>
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="ana-clase.js?v=5.0-signal-m3c1"></script>
+</body>
+</html>
