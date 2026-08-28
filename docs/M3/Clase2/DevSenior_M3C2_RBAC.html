@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro" data-tema-base="oscuro" data-empresa="dev-senior" data-paleta="custom" data-atmosfera="tecnica" style="--a1:#19d3ff; --a2:#ff8a3d; --a3:#b7e43b; --a4:#a78bfa; --a1-ink:#064454;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>Módulo 3 · Clase 2 · Roles, permisos y guards · Dev Senior</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+  <link rel="stylesheet" href="anaestilos-v9.css">
+</head>
+<body>
+  <a class="skip-link" href="#s1">Saltar al contenido</a>
+  <div class="topline" id="topline" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles">
+    <button class="ctrl" id="temaBtn" type="button" aria-label="Cambiar tema">☀</button>
+    <button class="ctrl" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button>
+  </div>
+  <div class="shell" id="shell" data-collapsed="false">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sb-top"><span class="brand-mark">A</span><div class="sb-title"><b>Dev Senior · Backend</b><span>Módulo 3 · Clase 2</span></div></div>
+      <button class="sb-toggle" id="collapseBtn" type="button" aria-label="Colapsar menú">‹</button>
+      <nav class="sb-nav" id="nav" aria-label="Secciones"><a class="nav-item active" data-icon="✦" href="#portada"><span class="nav-index">00</span><span class="nav-label">Portada</span></a><a class="nav-item" data-icon="🧭" href="#s1"><span class="nav-index">01</span><span class="nav-label">Mapa previo</span></a><a class="nav-item" data-icon="🧰" href="#s2"><span class="nav-index">02</span><span class="nav-label">Estado inicial</span></a><a class="nav-item" data-icon="🎫" href="#s3"><span class="nav-index">03</span><span class="nav-label">Ticket soporte</span></a><a class="nav-item" data-icon="🪪" href="#s4"><span class="nav-index">04</span><span class="nav-label">Modelo RBAC</span></a><a class="nav-item" data-icon="🏗️" href="#s5"><span class="nav-index">05</span><span class="nav-label">Arquitectura</span></a><a class="nav-item" data-icon="🗃️" href="#s6"><span class="nav-index">06</span><span class="nav-label">Rol en datos</span></a><a class="nav-item" data-icon="✍️" href="#s7"><span class="nav-index">07</span><span class="nav-label">JWT · firma</span></a><a class="nav-item" data-icon="🔎" href="#s8"><span class="nav-index">08</span><span class="nav-label">JWT · lectura</span></a><a class="nav-item" data-icon="🏷️" href="#s9"><span class="nav-index">09</span><span class="nav-label">@Roles</span></a><a class="nav-item" data-icon="🛡️" href="#s10"><span class="nav-index">10</span><span class="nav-label">RolesGuard</span></a><a class="nav-item" data-icon="🧩" href="#s11"><span class="nav-index">11</span><span class="nav-label">Categorías</span></a><a class="nav-item" data-icon="🛟" href="#s12"><span class="nav-index">12</span><span class="nav-label">Servicio soporte</span></a><a class="nav-item" data-icon="🚪" href="#s13"><span class="nav-index">13</span><span class="nav-label">Endpoint admin</span></a><a class="nav-item" data-icon="⛑️" href="#s14"><span class="nav-index">14</span><span class="nav-label">Helmet + CORS</span></a><a class="nav-item" data-icon="⏳" href="#s15"><span class="nav-index">15</span><span class="nav-label">Límite global</span></a><a class="nav-item" data-icon="🚦" href="#s16"><span class="nav-index">16</span><span class="nav-label">Límite login</span></a><a class="nav-item" data-icon="🤖" href="#s17"><span class="nav-index">17</span><span class="nav-label">IA con criterio</span></a><a class="nav-item" data-icon="🧪" href="#s18"><span class="nav-index">18</span><span class="nav-label">Prueba usuario</span></a><a class="nav-item" data-icon="🔥" href="#s19"><span class="nav-index">19</span><span class="nav-label">Prueba admin</span></a><a class="nav-item" data-icon="🩺" href="#s20"><span class="nav-index">20</span><span class="nav-label">Diagnóstico</span></a><a class="nav-item" data-icon="🗂️" href="#s21"><span class="nav-index">21</span><span class="nav-label">Mapa archivos</span></a><a class="nav-item" data-icon="🏁" href="#s22"><span class="nav-index">22</span><span class="nav-label">Cierre</span></a></nav>
+      <div class="sb-prog"><div class="lbl"><span>Progreso</span><span id="progPct">0%</span></div><div class="track"><div class="fill" id="progFill"></div></div></div>
+      <p class="sb-foot">© 2026 Ana Alvarado<br>Educadora Tech &amp; Desarrolladora Full Stack</p>
+    </aside>
+    <main class="main">
+      <header class="hero view" id="portada" data-accent="1">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="eyebrow">Finanzas API · Módulo 3 · Clase 2</span>
+            <h1 class="hero-title">Roles, permisos y <em>guards</em></h1>
+            <p class="hero-lead">Diseña una API que sepa quién eres, qué es tuyo y qué puedes hacer, sin entregar privilegios al cliente ni mezclar responsabilidades.</p>
+            <div class="meta"><span class="pill" data-hot>Dev Senior</span><span class="pill">NestJS 11</span><span class="pill">Prisma 7</span><span class="pill">RBAC + JWT</span><span class="pill">PostgreSQL</span></div>
+          </div>
+          <figure class="hero-visual">
+            <svg viewBox="0 0 420 420" role="img" aria-label="Escudo de acceso con una llave y cuatro niveles de autorización">
+              <circle cx="210" cy="210" r="164" fill="none" stroke="var(--a4)" stroke-width="2" stroke-dasharray="8 12"/>
+              <path d="M210 66 326 109v91c0 77-47 129-116 157-69-28-116-80-116-157v-91z" fill="var(--surf-1)" stroke="var(--a1)" stroke-width="6"/>
+              <circle cx="183" cy="195" r="42" fill="none" stroke="var(--a2)" stroke-width="14"/>
+              <path d="m214 225 72 72m-30-30 23-23m-2 43 23-23" fill="none" stroke="var(--a2)" stroke-width="14" stroke-linecap="round"/>
+              <circle cx="210" cy="86" r="9" fill="var(--a3)"/><circle cx="313" cy="128" r="9" fill="var(--a4)"/><circle cx="107" cy="128" r="9" fill="var(--a2)"/>
+            </svg>
+            <figcaption class="hero-note">Identidad abre la sesión. El rol abre la puerta correcta.</figcaption>
+          </figure>
+        </div>
+      </header>
+      <div class="content"><section class="section view" id="s1" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🧭</span>
+    <div class="sec-copy">
+      <span class="sec-n">01 · Mapa previo</span>
+      <h2 class="sec-t">De identidad a capacidad</h2>
+      <p class="sec-s">Reactiva la Clase 1 y ubica el tercer nivel de seguridad que construiremos.</p>
+    </div>
+  </div>
+  <div class="body"><div><div class="flow" aria-label="Arquitectura acumulativa de seguridad">
+  <div class="flow-step"><strong>1 · Identidad</strong><span>JWT confirma quién eres</span></div>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step"><strong>2 · Propiedad</strong><span>El servicio decide qué es tuyo</span></div>
+  <span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step" data-emphasis><strong>3 · Rol</strong><span>Hoy definimos qué puedes hacer</span></div>
+</div></div><div><h3>Paso 0.1 — La idea de fondo, en una frase</h3>
+<p>La Clase 1 le enseñó a <code>finanzas-api</code> dos cosas: <strong>saber quién eres</strong> (autenticación, con login + JWT) y <strong>que cada quien solo toque lo suyo</strong> (autorización básica, por propiedad/<code>ownership</code>). Hoy construimos un tercer nivel: <strong>que no todos los que se identifican pueden lo mismo</strong> (roles).</p>
+<h3>Paso 0.2 — Glosario rápido (refresco, no explicación nueva)</h3>
+<div class="table-wrap"><table class="data-table"><caption>Glosario de la arquitectura previa</caption><thead><tr><th>Término</th><th>Qué hacía en la Clase 1</th></tr></thead><tbody><tr><td><code>bcrypt</code></td><td>Cifraba la contraseña antes de guardarla; nunca se guarda en texto plano</td></tr><tr><td>JWT</td><td>El "carné" firmado que el servidor entrega al hacer login</td></tr><tr><td><code>JwtStrategy</code></td><td>Leía el token del header <code>Authorization</code>, verificaba la firma, sacaba el usuario</td></tr><tr><td><code>JwtAuthGuard</code></td><td>El candado que exige "traer token válido" en un endpoint</td></tr><tr><td><code>@UsuarioActual()</code></td><td>El atajo para leer el usuario ya autenticado dentro de un controlador</td></tr><tr><td>Ownership</td><td>Que una transacción solo la vea, edite o borre su dueño (<code>usuarioId</code>)</td></tr></tbody></table></div>
+<h3>Paso 0.3 — El diagrama de arquitectura de la Clase 1</h3>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Modelo</span><span class="code-file">Flujo de arquitectura</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-plaintext">Petición → JwtAuthGuard (¿token válido?) → JwtStrategy (saca el usuario)
+        → Controller (@UsuarioActual) → Service (filtra por usuarioId) → Prisma → PostgreSQL</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿En qué paso de este diagrama se decide 'quién eres', y en qué paso se decide 'qué es tuyo'?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><code>JwtAuthGuard</code> + <code>JwtStrategy</code> deciden <strong>quién eres</strong> (autenticación).</p>
+      <p>El <strong>Service</strong>, cuando filtra por <code>usuarioId</code>, decide <strong>qué es tuyo</strong> (autorización por propiedad). Son dos pasos distintos, y hoy metemos un tercero: <strong>qué rol tienes</strong>.</p>
+      <p>Una primera intuición frecuente es: silencio, o "en el guard se decide todo".</p>
+    </div>
+  </details>
+</div>
+<h3>Paso 0.4 — Checklist: estos archivos deben existir</h3>
+<div class="table-wrap"><table class="data-table"><caption>Mapa de archivos y acciones</caption><thead><tr><th>Archivo</th><th>Ruta</th><th>Debe existir desde</th></tr></thead><tbody><tr><td><code>schema.prisma</code> (con modelo <code>Usuario</code>)</td><td><code>prisma/</code></td><td>Clase 1</td></tr><tr><td><code>auth.module.ts</code>, <code>auth.service.ts</code>, <code>auth.controller.ts</code></td><td><code>src/auth/</code></td><td>Clase 1</td></tr><tr><td><code>jwt.strategy.ts</code>, <code>jwt-auth.guard.ts</code></td><td><code>src/auth/</code></td><td>Clase 1</td></tr><tr><td><code>usuario-actual.decorator.ts</code></td><td><code>src/auth/</code></td><td>Clase 1</td></tr><tr><td><code>register.dto.ts</code>, <code>login.dto.ts</code></td><td><code>src/auth/dto/</code></td><td>Clase 1</td></tr><tr><td><code>transacciones.service.ts</code> (con <code>usuarioId</code> en cada método)</td><td><code>src/transacciones/</code></td><td>Clase 1</td></tr><tr><td><code>transacciones.controller.ts</code> (con <code>@UseGuards(JwtAuthGuard)</code>)</td><td><code>src/transacciones/</code></td><td>Clase 1</td></tr></tbody></table></div></div></div>
+  
+</section>
+<section class="section view" id="s2" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🧰</span>
+    <div class="sec-copy">
+      <span class="sec-n">02 · Estado inicial</span>
+      <h2 class="sec-t">El proyecto antes del cambio</h2>
+      <p class="sec-s">Comprueba archivos, esquema, servidor y ownership antes de agregar roles.</p>
+    </div>
+  </div>
+  <div class="body"><h3>Paso 0.5 — El schema actual (estado de partida de hoy)</h3>
+<p><strong>Explicación:</strong> Este es el <code>schema.prisma</code> tal como quedó al cerrar la Clase 1. Ya tiene <code>Usuario</code>, <code>Categoria</code> y <code>Transaccion</code> relacionados. Úsalo como referencia y confirma que coincide con tu proyecto. Lo vamos a editar en el Bloque 5 de hoy, así que sirve como punto de comparación.</p>
+<p><strong>Archivo:</strong> <code>prisma/schema.prisma</code> (verificar, no editar todavía):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Verificar</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}
+
+enum TipoTransaccion {
+  INGRESO
+  GASTO
+}
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  nombre        String
+  email         String        @unique
+  password      String
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;usuarios&quot;)
+}
+
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;categorias&quot;)
+}
+
+model Transaccion {
+  id          Int             @id @default(autoincrement())
+  descripcion String
+  monto       Decimal         @db.Decimal(12, 2)
+  tipo        TipoTransaccion
+  fecha       DateTime        @default(now())
+  categoriaId Int
+  usuarioId   Int
+  categoria   Categoria       @relation(fields: [categoriaId], references: [id])
+  usuario     Usuario         @relation(fields: [usuarioId], references: [id])
+
+  @@index([categoriaId])
+  @@index([usuarioId])
+  @@map(&quot;transacciones&quot;)
+}</code></pre>
+</div>
+<h3>Paso 0.6 — Verificación en vivo: arrancar el servidor</h3>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npm run start:dev</code></pre>
+</div>
+<p><strong>Qué debe salir:</strong> <code>Nest application successfully started</code>, y entre las rutas mapeadas: <code>/auth/register</code>, <code>/auth/login</code>, <code>/categorias</code>, <code>/transacciones</code>.</p>
+<h3>Paso 0.7 — Smoke test rápido: confirmar que el ownership sigue vivo</h3>
+<p><strong>0.7a — Login como Ana:</strong></p>
+<p><code>POST http://localhost:3000/auth/login</code></p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Enviar</span><span class="code-file">POST http://localhost:3000/auth/login · body</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-json">{ &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;clave1234&quot; }</code></pre>
+</div>
+<p><strong>Qué debe pasar:</strong> responde <code>{ &quot;access_token&quot;: &quot;eyJ...&quot; }</code>. Guarda este token de Ana, lo seguimos usando.</p>
+<p><strong>0.7b — Ana lista sus transacciones (con su token):</strong></p>
+<p><code>GET http://localhost:3000/transacciones</code></p>
+<p><strong>Qué debe pasar:</strong> aparece(n) su(s) transacción(es), nunca las de Luis.</p>
+<h3>Paso 0.8 — El puente: la pregunta con la que cerramos la Clase 1</h3>
+<div class="panel"><p><em>"Imaginen que la empresa necesita un rol de administrador que pueda ver las transacciones de todos para dar soporte. ¿Un administrador podría hacer eso hoy?"</em></p></div>
+<p>La respuesta fue: <strong>no</strong>, porque hoy todos los usuarios son iguales. Eso es exactamente lo que resolvemos ahora.</p></div>
+  
+</section>
+<section class="section view" id="s3" data-accent="3" data-layout="focus" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🎫</span>
+    <div class="sec-copy">
+      <span class="sec-n">03 · Ticket soporte</span>
+      <h2 class="sec-t">Un ticket que el ownership no resuelve</h2>
+      <p class="sec-s">Soporte necesita ayudar sin suplantar al cliente ni conocer su contraseña.</p>
+    </div>
+  </div>
+  <div class="body"><div><div class="compare">
+  <div class="compare-card" data-side="negative"><h3>Suplantar al cliente</h3><p>Pedir una contraseña rompe la identidad, la auditoría y la confianza.</p></div>
+  <div class="compare-card" data-side="positive"><h3>Permiso por función</h3><p>Soporte conserva su propia identidad y recibe capacidades ampliadas por rol.</p></div>
+</div></div><div><div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Llega un ticket de soporte: 'no veo reflejada mi transacción de ayer'. La persona de soporte de nuestra fintech necesita revisar los movimientos de ese usuario para ayudarlo. Con lo que construimos la clase pasada,</p>
+  <p class="socratica-q">¿cómo hace soporte para ver esa transacción?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>No puede, y pedir la contraseña sería gravísimo.</strong></p>
+      <p>Con el ownership de hoy, cualquiera que no sea el dueño recibe <code>403 Forbidden</code>, <strong>incluido el propio equipo de soporte</strong>. La única salida que se les ocurre (compartir contraseña) es una práctica de seguridad inaceptable: nadie, ni siquiera un desarrollador, debería conocer la contraseña real de otra persona. <strong>Falta un tercer concepto: que ciertos usuarios (administradores) tengan permisos ampliados, sin dejar de ser ellos mismos.</strong> Eso es RBAC.</p>
+      <p>Una primera intuición frecuente es: "Que soporte inicie sesión con la cuenta del usuario", o "que le pida la contraseña".</p>
+    </div>
+  </details>
+</div>
+<h3>El problema real</h3>
+<p>Nuestra API distingue hoy solo dos cosas: <strong>con token</strong> o <strong>sin token</strong>, y <strong>dueño</strong> o <strong>no dueño</strong>. No existe una tercera categoría: alguien identificado, que no es el dueño, pero que <strong>por su cargo</strong> sí tiene permiso.</p>
+<h3>Conexión con el mapa del curso</h3>
+<ul class="checklist"><li><strong>Clase 1 (lo anterior):</strong> la API aprendió a identificarte (autenticación) y a proteger lo tuyo (autorización por propiedad).</li><li><strong>Hoy:</strong> le enseñamos a la API a <strong>distinguir jerarquías</strong>: qué puede hacer un usuario normal frente a lo que puede hacer un administrador.</li><li><strong>Próxima clase:</strong> seguiremos profundizando sobre la base de autenticación (ver "Para pensar" al cierre de esta guía).</li></ul></div></div>
+  
+</section>
+<section class="section view" id="s4" data-accent="4" data-layout="focus" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🪪</span>
+    <div class="sec-copy">
+      <span class="sec-n">04 · Modelo RBAC</span>
+      <h2 class="sec-t">Permisos agrupados por función</h2>
+      <p class="sec-s">Autenticarse igual no significa poder hacer lo mismo.</p>
+    </div>
+  </div>
+  <div class="body"><div><div class="cards">
+  <div class="card" data-accent="1"><span class="orb" data-accent="1" aria-hidden="true">👤</span><b>Usuario</b><p>Ve y administra sus propios movimientos.</p></div>
+  <div class="card" data-accent="2"><span class="orb" data-accent="2" aria-hidden="true">🛟</span><b>Soporte</b><p>Atiende casos sin conocer contraseñas ajenas.</p></div>
+  <div class="card" data-accent="3"><span class="orb" data-accent="3" aria-hidden="true">🛡️</span><b>Administrador</b><p>Accede a operaciones ampliadas y auditables.</p></div>
+</div></div><div><div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>En Mercado Libre hay compradores, vendedores y empleados de soporte interno. Los tres inician sesión con el mismo sistema de login.</p>
+  <p class="socratica-q">¿Debería el código de autenticación (JWT, bcrypt, Passport) ser distinto para cada uno de los tres?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>No.</strong></p>
+      <p>El login es el mismo para los tres: todos demuestran quién son de la misma forma. Lo que cambia <strong>no es cómo se autentican, sino qué se les permite hacer después</strong>. Un vendedor edita sus propios productos; soporte interno puede ver pedidos de cualquier comprador; un comprador solo ve los suyos. Esa diferencia se resuelve con <strong>roles</strong>, no con logins distintos.</p>
+      <p>Una primera intuición frecuente es: "Sí, cada tipo de usuario necesita su propio login".</p>
+    </div>
+  </details>
+</div>
+<h3>Definición — RBAC (Role-Based Access Control)</h3>
+<p><strong>Técnica:</strong> modelo de autorización donde los permisos no se asignan persona por persona, sino que se agrupan en <strong>roles</strong>, y cada usuario recibe uno o más roles. El sistema pregunta "¿qué rol tiene esta persona?" antes de decidir si puede ejecutar una acción.</p>
+<p><strong>En palabras sencillas:</strong> en vez de anotar "Juan puede borrar categorías, Ana no puede, Luis sí puede", defines el rol "administrador" con ese permiso, y a Juan y Luis simplemente les asignas ese rol.</p>
+<p><strong>Vida real:</strong> en un banco, el cargo de "cajero" trae consigo ciertos permisos, y el cargo de "gerente de sucursal" trae otros, sin importar quién ocupe ese cargo hoy. Si Juan deja de ser gerente, pierde esos permisos automáticamente: el permiso está atado al cargo, no a la persona.</p>
+<h3>Por qué RBAC y no permisos sueltos por usuario</h3>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué no simplemente agregar una lista de permisos a cada usuario, en vez de un rol?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque con dos o tres usuarios no se nota,</p>
+      <p>pero con miles, mantener permisos individuales es insostenible: cada usuario nuevo requiere configurar sus permisos uno por uno.</p>
+      <p>Con roles, agregar un usuario nuevo es solo "asignarle un rol que ya existe". Es el mismo principio de <strong>no repetir lógica</strong> (DRY) aplicado a permisos.</p>
+      
+    </div>
+  </details>
+</div></div></div>
+  
+</section>
+<section class="section view" id="s5" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🏗️</span>
+    <div class="sec-copy">
+      <span class="sec-n">05 · Arquitectura</span>
+      <h2 class="sec-t">Cuatro piezas, responsabilidades separadas</h2>
+      <p class="sec-s">Diseña la cadena antes de escribir código y conserva el principio de responsabilidad única.</p>
+    </div>
+  </div>
+  <div class="body"><div class="mindmap">
+  <div class="mindmap-core">RBAC · una decisión antes del controlador</div>
+  <div class="mindmap-branches">
+    <div class="mindmap-node" data-accent="1"><b>Campo rol</b><p>Fuente persistente.</p></div>
+    <div class="mindmap-node" data-accent="2"><b>JWT</b><p>Transporta el rol firmado.</p></div>
+    <div class="mindmap-node" data-accent="3"><b>@Roles</b><p>Declara la política.</p></div>
+    <div class="mindmap-node" data-accent="4"><b>RolesGuard</b><p>Hace cumplir la política.</p></div>
+  </div>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>En la Clase 1 dijimos: mostrar la cédula (autenticación) no es lo mismo que tener permiso para entrar a una oficina (autorización). Si ahora agregamos que la tarjeta de un gerente abre además la bóveda,</p>
+  <p class="socratica-q">¿eso sigue siendo autenticación o es autorización?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>Sigue siendo autorización.</strong></p>
+      <p>La tarjeta (el JWT) identifica a la persona igual para todos; lo que cambia es <strong>qué puertas reconoce esa tarjeta como válidas para ella</strong>, y eso depende del cargo grabado en la tarjeta. RBAC es autorización, con un dato nuevo: el <strong>rol</strong>, que hoy vamos a grabar dentro del propio JWT.</p>
+      <p>Una primera intuición frecuente es: "Autenticación, porque es la misma tarjeta".</p>
+    </div>
+  </details>
+</div>
+<h3>Las piezas nuevas que vamos a construir</h3>
+<div class="table-wrap"><table class="data-table"><caption>Responsabilidades de la solución RBAC</caption><thead><tr><th>Pieza</th><th>Responsabilidad</th></tr></thead><tbody><tr><td>Campo <code>rol</code> en <code>Usuario</code></td><td>Guarda si el usuario es <code>USUARIO</code> o <code>ADMIN</code></td></tr><tr><td><code>rol</code> dentro del payload del JWT</td><td>El token ahora "sabe" el cargo de quien lo porta</td></tr><tr><td><code>@Roles(...)</code> (decorador)</td><td>Marca qué roles puede usar un endpoint</td></tr><tr><td><code>RolesGuard</code></td><td>Lee esa marca y compara contra el rol del usuario autenticado</td></tr></tbody></table></div>
+<h3>¿Por qué un guard nuevo, y no meter la validación de rol dentro de <code>JwtAuthGuard</code>?</h3>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿No sería más simple un solo guard que revise token y rol al tiempo?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Se podría, pero violaría el <strong>Principio de Responsabilidad Única (SOLID)</strong>:</p>
+      <p><code>JwtAuthGuard</code> tiene un solo trabajo, decidir <em>"¿quién eres?"</em>.</p>
+      <p>Meterle también <em>"¿qué puedes?"</em> lo vuelve más difícil de mantener y de reutilizar. Con dos guards separados, <code>JwtAuthGuard</code> sirve para <strong>cualquier</strong> endpoint que solo necesite "estar logueado", y <code>RolesGuard</code> se agrega <strong>encima</strong>, solo donde además se necesita un rol específico. Se combinan, no se fusionan.</p>
+      
+    </div>
+  </details>
+</div>
+<h3>Cómo se van a encadenar los guards</h3>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Modelo</span><span class="code-file">Flujo de arquitectura</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-plaintext">Petición → JwtAuthGuard (¿token válido?) → RolesGuard (¿el rol alcanza?)
+        → Controller → Service → Prisma → PostgreSQL</code></pre>
+</div>
+<p>Si <code>JwtAuthGuard</code> rechaza, ni siquiera se llega a <code>RolesGuard</code>. Los guards se ejecutan en orden, y <strong>todos</strong> deben aprobar para que la petición siga.</p></div>
+  
+</section>
+<section class="section view" id="s6" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🗃️</span>
+    <div class="sec-copy">
+      <span class="sec-n">06 · Rol en datos</span>
+      <h2 class="sec-t">El rol nace seguro en PostgreSQL</h2>
+      <p class="sec-s">USUARIO es el valor por defecto; el registro público nunca decide privilegios.</p>
+    </div>
+  </div>
+  <div class="body"><div class="entity" data-emphasis data-accent="2">
+  <div class="entity-name"><span class="entity-emoji" aria-hidden="true">👤</span> Usuario</div>
+  <ul class="entity-fields">
+    <li class="is-key"><span class="key pk">PK</span> id</li>
+    <li class="is-key"><span class="key uq">UQ</span> email</li>
+    <li>rol · USUARIO por defecto</li>
+    <li>transacciones · relación 1:n</li>
+  </ul>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Vamos a agregar un campo <code>rol</code> al modelo <code>Usuario</code>. Cuando alguien se registre en <code>POST /auth/register</code>,</p>
+  <p class="socratica-q">¿debería poder escribir en el body <code>&quot;rol&quot;: &quot;ADMIN&quot;</code> y registrarse directamente como administrador?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>Jamás.</strong></p>
+      <p>Ya vimos con <code>usuarioId</code> en la Clase 1 que <strong>el backend nunca confía en datos sensibles que vengan del cliente</strong>. El rol es igual de sensible: si el DTO de registro aceptara <code>rol</code>, cualquier persona podría mandar <code>&quot;rol&quot;: &quot;ADMIN&quot;</code> y auto-nombrarse administrador. Por eso <strong>todo usuario nuevo nace con el rol <code>USUARIO</code> por defecto</strong>, y el ascenso a <code>ADMIN</code> se hace por fuera del registro público (hoy, a mano, en la base de datos).</p>
+      <p>Una primera intuición frecuente es: "Sí, para que cada quien elija su tipo de cuenta al registrarse".</p>
+    </div>
+  </details>
+</div>
+<h3>Paso 4.1 — Editar el schema: el enum <code>Rol</code> y el campo en <code>Usuario</code></h3>
+<p><strong>Explicación:</strong> Agregamos un <code>enum Rol</code> con dos valores, y un campo <code>rol</code> en <code>Usuario</code> con valor por defecto <code>USUARIO</code>. El resto del schema no cambia.</p>
+<p><strong>Archivo:</strong> <code>prisma/schema.prisma</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}
+
+enum TipoTransaccion {
+  INGRESO
+  GASTO
+}
+
+enum Rol {
+  USUARIO
+  ADMIN
+}
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  nombre        String
+  email         String        @unique
+  password      String
+  rol           Rol           @default(USUARIO)
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;usuarios&quot;)
+}
+
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  creadoEn      DateTime      @default(now())
+  transacciones Transaccion[]
+
+  @@map(&quot;categorias&quot;)
+}
+
+model Transaccion {
+  id          Int             @id @default(autoincrement())
+  descripcion String
+  monto       Decimal         @db.Decimal(12, 2)
+  tipo        TipoTransaccion
+  fecha       DateTime        @default(now())
+  categoriaId Int
+  usuarioId   Int
+  categoria   Categoria       @relation(fields: [categoriaId], references: [id])
+  usuario     Usuario         @relation(fields: [usuarioId], references: [id])
+
+  @@index([categoriaId])
+  @@index([usuarioId])
+  @@map(&quot;transacciones&quot;)
+}</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué <code>@default(USUARIO)</code> y no dejar el campo obligatorio sin default?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque ya tenemos usuarios reales en la base (Ana, Luis) desde la clase pasada.</p>
+      <p>Un campo obligatorio <strong>sin</strong> default forzaría a resetear la tabla, como pasó la clase anterior con <code>usuarioId</code>. Con <code>@default(USUARIO)</code>, Postgres rellena esa columna sola en las filas viejas, <strong>sin pedir resetear nada</strong>.</p>
+      
+    </div>
+  </details>
+</div>
+<h3>Paso 4.2 — Migrar el cambio</h3>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npx prisma migrate dev --name agregar_rol</code></pre>
+</div>
+<p><strong>Qué debe salir:</strong> confirmación de la migración aplicada y el cliente regenerado. <strong>A diferencia de la clase pasada, aquí no debería pedir resetear nada.</strong></p></div>
+  
+</section>
+<section class="section view" id="s7" data-accent="3" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">✍️</span>
+    <div class="sec-copy">
+      <span class="sec-n">07 · JWT · firma</span>
+      <h2 class="sec-t">El rol entra al token</h2>
+      <p class="sec-s">El login firma identidad y rol para evitar una consulta extra por petición.</p>
+    </div>
+  </div>
+  <div class="body"><div class="flow" aria-label="Viaje del rol dentro del JWT">
+  <div class="flow-step"><strong>Base de datos</strong><span>usuario.rol</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step" data-emphasis><strong>Firma</strong><span>sub + email + rol</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step"><strong>Petición</strong><span>request.user</span></div>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>El rol ya vive en la base de datos. Para que un guard pueda revisarlo en cada petición sin ir a preguntarle a la base de datos en cada una,</p>
+  <p class="socratica-q">¿dónde más convendría tener ese dato disponible?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>Dentro del propio JWT.</strong></p>
+      <p>Ya guardamos ahí <code>sub</code> (el id) y <code>email</code>; agregamos <code>rol</code> al mismo payload. Así, cuando <code>JwtStrategy</code> valida el token, el rol <strong>viaja incluido</strong>, sin necesidad de una consulta extra a Postgres en cada petición protegida. Es el mismo principio del Bloque 6 de la Clase 1: el JWT transporta identidad de forma verificable, sin re-consultar la base a cada rato.</p>
+      <p>Una primera intuición frecuente es: "Consultando la base en cada petición".</p>
+    </div>
+  </details>
+</div>
+<h3>Paso 5.1 — Incluir el rol al firmar el token</h3>
+<p><strong>Explicación:</strong> En <code>login()</code>, el payload que se firma ahora incluye <code>rol: usuario.rol</code>. El método <code>register()</code> no cambia: como el schema ya pone <code>USUARIO</code> por defecto, Prisma lo asigna solo, sin que el código tenga que hacer nada extra.</p>
+<p><strong>Archivo:</strong> <code>src/auth/auth.service.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/auth.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from &#x27;@nestjs/common&#x27;;
+import { JwtService } from &#x27;@nestjs/jwt&#x27;;
+import * as bcrypt from &#x27;bcrypt&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { RegisterDto } from &#x27;./dto/register.dto&#x27;;
+import { LoginDto } from &#x27;./dto/login.dto&#x27;;
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async register(dto: RegisterDto) {
+    const existente = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (existente) {
+      throw new ConflictException(&#x27;El email ya está registrado&#x27;);
+    }
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
+    const usuario = await this.prisma.usuario.create({
+      data: { email: dto.email, password: hash, nombre: dto.nombre },
+    });
+
+    return { id: usuario.id, email: usuario.email, nombre: usuario.nombre };
+  }
+
+  async login(dto: LoginDto) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (!usuario) {
+      throw new UnauthorizedException(&#x27;Credenciales inválidas&#x27;);
+    }
+
+    const passwordOk = await bcrypt.compare(dto.password, usuario.password);
+    if (!passwordOk) {
+      throw new UnauthorizedException(&#x27;Credenciales inválidas&#x27;);
+    }
+
+    const payload = {
+      sub: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return { access_token };
+  }
+}</code></pre>
+</div>
+<p><strong>Qué cambió respecto a la Clase 1:</strong> una sola línea nueva en el payload (<code>rol: usuario.rol</code>). Todo lo demás —hash, comparación, mensaje genérico de error— sigue igual.</p></div>
+  
+</section>
+<section class="section view" id="s8" data-accent="4" data-layout="focus" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🔎</span>
+    <div class="sec-copy">
+      <span class="sec-n">08 · JWT · lectura</span>
+      <h2 class="sec-t">El rol sale del token validado</h2>
+      <p class="sec-s">JwtStrategy y @UsuarioActual exponen un usuario tipado dentro de la petición.</p>
+    </div>
+  </div>
+  <div class="body"><h3>Paso 5.2 — Leer el rol al validar el token</h3>
+<p><strong>Explicación:</strong> <code>JwtStrategy</code> debe leer <code>rol</code> del payload y dejarlo en el objeto de usuario, igual que ya hace con <code>id</code> y <code>email</code>.</p>
+<p><strong>Archivo:</strong> <code>src/auth/jwt.strategy.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/jwt.strategy.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import { Injectable, UnauthorizedException } from &#x27;@nestjs/common&#x27;;
+import { PassportStrategy } from &#x27;@nestjs/passport&#x27;;
+import { ExtractJwt, Strategy } from &#x27;passport-jwt&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+type JwtPayload = { sub: number; email: string; rol: Rol };
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException(&#x27;JWT_SECRET no está definida&#x27;);
+    }
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: secret,
+    });
+  }
+
+  validate(payload: JwtPayload) {
+    return { id: payload.sub, email: payload.email, rol: payload.rol };
+  }
+}</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿De dónde sale el tipo <code>Rol</code> que se importa aquí?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Prisma lo generó automáticamente al correr <code>migrate dev</code>,</p>
+      <p>como un <code>enum</code> de TypeScript real, disponible en <code>src/generated/prisma/client</code>.</p>
+      <p>Es el mismo lugar de donde ya importábamos <code>Prisma</code> en el filtro de errores de la Clase 1.</p>
+      
+    </div>
+  </details>
+</div>
+<h3>Paso 5.3 — Actualizar el decorador de usuario actual</h3>
+<p><strong>Explicación:</strong> Solo cambia el tipo que devuelve, para que TypeScript sepa que ahora también viene <code>rol</code>. La lógica es idéntica a la Clase 1.</p>
+<p><strong>Archivo:</strong> <code>src/auth/usuario-actual.decorator.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/usuario-actual.decorator.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import { createParamDecorator, ExecutionContext } from &#x27;@nestjs/common&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+export const UsuarioActual = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) =&gt; {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user as { id: number; email: string; rol: Rol };
+  },
+);</code></pre>
+</div></div>
+  
+</section>
+<section class="section view" id="s9" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🏷️</span>
+    <div class="sec-copy">
+      <span class="sec-n">09 · @Roles</span>
+      <h2 class="sec-t">La ruta declara su política</h2>
+      <p class="sec-s">Metadata tipada conecta la intención del endpoint con la decisión del guard.</p>
+    </div>
+  </div>
+  <div class="body"><div><div class="twin">
+  <div class="cell a"><span class="tag">Declaración</span><h3>@Roles([Rol.ADMIN])</h3><p>La ruta publica su requisito como metadata tipada.</p></div>
+  <div class="cell b"><span class="tag">Ejecución</span><h3>RolesGuard</h3><p>El guard lee la metadata y compara el rol autenticado.</p></div>
+</div></div><div><div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Necesitamos que cada endpoint declare qué roles puede usarlo, sin repetir un <code>if</code> gigante dentro de cada método.</p>
+  <p class="socratica-q">¿Cómo le 'pegamos una etiqueta' a un método de un controlador, para que algo externo la lea después?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">En NestJS, eso se hace con <strong>metadata</strong>:</p>
+      <p>información adicional "pegada" a una clase o método, invisible en tiempo de ejecución normal, pero legible por un guard usando una herramienta llamada <code>Reflector</code>.</p>
+      <p>Vamos a crear un decorador <code>@Roles([...])</code> que pega esa etiqueta, y un <code>RolesGuard</code> que la lee.</p>
+      <p>Una primera intuición frecuente es: "Con un comentario", "con el nombre del método".</p>
+    </div>
+  </details>
+</div>
+<h3>Paso 6.1 — El decorador <code>@Roles</code></h3>
+<p><strong>Explicación:</strong> <code>Reflector.createDecorator</code> crea un decorador tipado: cuando lo usamos como <code>@Roles([Rol.ADMIN])</code>, guarda ese arreglo como metadata del método, lista para que un guard la consulte.</p>
+<p><strong>Generar por consola (Nest CLI):</strong></p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">nest g decorator auth/roles --flat</code></pre>
+</div>
+<p><strong>Archivo:</strong> <code>src/auth/roles.decorator.ts</code> (crear):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/roles.decorator.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import { Reflector } from &#x27;@nestjs/core&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+export const Roles = Reflector.createDecorator&lt;Rol[]&gt;();</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué no usamos <code>@SetMetadata(&#x27;roles&#x27;, [...])</code>, que es lo que más se ve en tutoriales viejos?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><code>SetMetadata</code> funciona,</p>
+      <p>pero exige recordar la misma clave de texto (<code>&#x27;roles&#x27;</code>) en el decorador y en el guard; si alguien la escribe distinto en un lado, falla en silencio.</p>
+      <p><code>Reflector.createDecorator</code> es la forma recomendada hoy en la documentación oficial de NestJS: es genérica en TypeScript (<code>Rol[]</code>), así que si te equivocas de tipo, el compilador te avisa antes de correr nada.</p>
+      
+    </div>
+  </details>
+</div></div></div>
+  
+</section>
+<section class="section view" id="s10" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🛡️</span>
+    <div class="sec-copy">
+      <span class="sec-n">10 · RolesGuard</span>
+      <h2 class="sec-t">El guard hace cumplir la política</h2>
+      <p class="sec-s">Autenticar siempre ocurre antes de autorizar.</p>
+    </div>
+  </div>
+  <div class="body"><div class="stepper">
+  <div class="step-item"><span class="step-num">1</span><h4>Leer la política</h4><p>Reflector obtiene los roles del método actual.</p></div>
+  <div class="step-item"><span class="step-num">2</span><h4>Confirmar identidad</h4><p>request.user ya existe gracias a JwtAuthGuard.</p></div>
+  <div class="step-item"><span class="step-num">3</span><h4>Comparar</h4><p>El rol debe estar en la lista permitida.</p></div>
+  <div class="step-item"><span class="step-num">4</span><h4>Decidir</h4><p>Continúa o responde 403 Forbidden.</p></div>
+</div>
+<h3>Paso 6.2 — El <code>RolesGuard</code></h3>
+<p><strong>Explicación:</strong> Este guard lee la metadata que dejó <code>@Roles(...)</code> sobre el método. Si el método no tiene esa etiqueta, deja pasar (no todos los endpoints necesitan restricción de rol). Si la tiene, compara contra el rol del usuario ya autenticado.</p>
+<p><strong>Generar por consola (Nest CLI):</strong></p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">nest g guard auth/roles --no-spec --flat</code></pre>
+</div>
+<p>Reemplaza el contenido completo:</p>
+<p><strong>Archivo:</strong> <code>src/auth/roles.guard.ts</code> (crear):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/roles.guard.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from &#x27;@nestjs/common&#x27;;
+import { Reflector } from &#x27;@nestjs/core&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { Roles } from &#x27;./roles.decorator&#x27;;
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const rolesRequeridos = this.reflector.get(Roles, context.getHandler());
+
+    if (!rolesRequeridos) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const usuario = request.user as { rol: Rol };
+
+    if (!rolesRequeridos.includes(usuario.rol)) {
+      throw new ForbiddenException(&#x27;No tienes permiso para realizar esta acción&#x27;);
+    }
+
+    return true;
+  }
+}</code></pre>
+</div>
+<p><strong>Qué hace, paso a paso:</strong></p>
+<ol class="stepper"><li class="step-item"><span class="step-num">1</span><p><code>reflector.get(Roles, context.getHandler())</code> busca si el método actual tiene la etiqueta <code>@Roles(...)</code>.</p></li><li class="step-item"><span class="step-num">2</span><p>Si no la tiene (<code>undefined</code>), deja pasar: ese endpoint no restringe por rol.</p></li><li class="step-item"><span class="step-num">3</span><p>Si la tiene, saca <code>request.user</code> (ya lo dejó ahí <code>JwtStrategy</code>) y compara su <code>rol</code> contra la lista permitida.</p></li><li class="step-item"><span class="step-num">4</span><p>Si no está en la lista, lanza <code>403 Forbidden</code> con un mensaje claro.</p></li></ol>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué <code>RolesGuard</code> puede leer <code>request.user</code> con confianza, sin volver a validar el token?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque <code>RolesGuard</code> <strong>siempre se coloca después de <code>JwtAuthGuard</code></strong> en la cadena.</p>
+      <p>Para cuando <code>RolesGuard</code> se ejecuta, <code>JwtAuthGuard</code> ya validó el token y <code>JwtStrategy</code> ya dejó el usuario en la petición. <code>RolesGuard</code> confía en ese trabajo previo; no lo repite.</p>
+      
+    </div>
+  </details>
+</div>
+<h3>Paso 6.3 — ¿Qué pasa si <code>RolesGuard</code> se usa sin <code>JwtAuthGuard</code>?</h3>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué es peligroso poner <code>@UseGuards(RolesGuard)</code> solo, sin <code>JwtAuthGuard</code> antes?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque <code>RolesGuard</code> asume que <code>request.user</code> <strong>ya existe</strong>.</p>
+      <p>Sin <code>JwtAuthGuard</code>, nadie lo puso ahí: <code>request.user</code> sería <code>undefined</code>, y <code>usuario.rol</code> lanzaría un error de servidor (500), no un 403 controlado. Por eso siempre se combinan en ese orden: primero autenticar, después autorizar.</p>
+      
+    </div>
+  </details>
+</div></div>
+  
+</section>
+<section class="section view" id="s11" data-accent="3" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🧩</span>
+    <div class="sec-copy">
+      <span class="sec-n">11 · Categorías</span>
+      <h2 class="sec-t">Lectura compartida, escritura administrativa</h2>
+      <p class="sec-s">La propiedad no sirve para un catálogo común: aquí manda el rol.</p>
+    </div>
+  </div>
+  <div class="body"><div class="table-wrap"><table class="data-table">
+  <caption>Matriz de acceso para categorías</caption>
+  <thead><tr><th>Operación</th><th>USUARIO</th><th>ADMIN</th><th>Política</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>Permitido</td><td>Permitido</td><td>JwtAuthGuard</td></tr>
+    <tr><td>POST</td><td>403</td><td>Permitido</td><td>JwtAuthGuard + RolesGuard</td></tr>
+    <tr><td>PATCH</td><td>403</td><td>Permitido</td><td>JwtAuthGuard + RolesGuard</td></tr>
+    <tr><td>DELETE</td><td>403</td><td>Permitido</td><td>JwtAuthGuard + RolesGuard</td></tr>
+  </tbody>
+</table></div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Las categorías (Comida, Salario) son compartidas por todos los usuarios de la app. Hoy, cualquiera con o sin cuenta puede crear, editar o borrar una categoría.</p>
+  <p class="socratica-q">¿Debería un usuario cualquiera poder borrar la categoría 'Salario' y afectar los reportes de todos los demás?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>No</strong>, y aquí el problema no se resuelve con ownership (las categorías no le pertenecen a nadie en particular,</p>
+      <p>son de todos).</p>
+      <p>Se resuelve con <strong>rol</strong>: cualquier usuario autenticado puede <strong>ver</strong> las categorías (las necesita para crear transacciones), pero solo un <strong>administrador</strong> puede crearlas, editarlas o borrarlas.</p>
+      <p>Una primera intuición frecuente es: "No, solo quien la creó" (pero las categorías no tienen dueño, son compartidas).</p>
+    </div>
+  </details>
+</div>
+<h3>Paso 7.1 — El controlador de categorías, protegido por rol</h3>
+<p><strong>Explicación:</strong> Ponemos <code>JwtAuthGuard</code> en toda la clase (hoy nadie sin token toca categorías). Los métodos de lectura (<code>GET</code>) se quedan solo con ese candado. Los de escritura (<code>POST</code>, <code>PATCH</code>, <code>DELETE</code>) suman <code>RolesGuard</code> + <code>@Roles([Rol.ADMIN])</code>.</p>
+<p><strong>Archivo:</strong> <code>src/categorias/categorias.controller.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/categorias/categorias.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import { ApiBearerAuth, ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/jwt-auth.guard&#x27;;
+import { RolesGuard } from &#x27;../auth/roles.guard&#x27;;
+import { Roles } from &#x27;../auth/roles.decorator&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { CategoriasService } from &#x27;./categorias.service&#x27;;
+import { CrearCategoriaDto } from &#x27;./dto/crear-categoria.dto&#x27;;
+import { ActualizarCategoriaDto } from &#x27;./dto/actualizar-categoria.dto&#x27;;
+
+@ApiTags(&#x27;categorias&#x27;)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller(&#x27;categorias&#x27;)
+export class CategoriasController {
+  constructor(private readonly categoriasService: CategoriasService) {}
+
+  @Post()
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  crear(@Body() dto: CrearCategoriaDto) {
+    return this.categoriasService.crear(dto);
+  }
+
+  @Get()
+  obtenerTodas() {
+    return this.categoriasService.obtenerTodas();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerUna(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.categoriasService.obtenerUna(id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() dto: ActualizarCategoriaDto,
+  ) {
+    return this.categoriasService.actualizar(id, dto);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  eliminar(@Param(&#x27;id&#x27;, ParseIntPipe) id: number) {
+    return this.categoriasService.eliminar(id);
+  }
+}</code></pre>
+</div>
+<p><strong>Qué cambió respecto a la Clase 1:</strong> el controlador entero quedó protegido con token (<code>JwtAuthGuard</code> a nivel de clase); los tres métodos de escritura además exigen rol <code>ADMIN</code>. <code>categorias.service.ts</code> <strong>no cambia</strong>: la lógica de negocio es la misma, solo cambió quién puede llamarla.</p>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué <code>@UseGuards(RolesGuard)</code> se repite en cada método de escritura en vez de ponerlo también en la clase?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque si <code>RolesGuard</code> estuviera en la clase,</p>
+      <p>se ejecutaría también en <code>GET</code>, y como esos métodos no tienen <code>@Roles(...)</code>, igual dejaría pasar (por el <code>if (!rolesRequeridos) return true;</code> que ya vimos).</p>
+      <p>Funcionaría, pero es menos explícito. Ponerlo método por método deja clarísimo, con solo mirar el código, cuáles rutas exigen rol y cuáles no.</p>
+      
+    </div>
+  </details>
+</div></div>
+  
+</section>
+<section class="section view" id="s12" data-accent="4" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🛟</span>
+    <div class="sec-copy">
+      <span class="sec-n">12 · Servicio soporte</span>
+      <h2 class="sec-t">La consulta administrativa ve el conjunto</h2>
+      <p class="sec-s">El servicio obtiene todas las transacciones; el controlador protege quién puede pedirlas.</p>
+    </div>
+  </div>
+  <div class="body"><div class="compare">
+  <div class="compare-card" data-side="negative"><h3>obtenerMias(usuarioId)</h3><p>Filtra por dueño. Es la frontera normal de propiedad.</p></div>
+  <div class="compare-card" data-side="positive"><h3>obtenerTodasAdmin()</h3><p>No filtra por dueño; la frontera de acceso vive en el controlador.</p></div>
+</div>
+<h3>Paso 8.1 — Nuevo método en el servicio: todas las transacciones, para soporte</h3>
+<p><strong>Explicación:</strong> A diferencia de <code>obtenerMias</code> (que filtra por <code>usuarioId</code>), este método <strong>no filtra por dueño</strong>: trae todas las transacciones de todos los usuarios, con el nombre y correo del dueño incluidos, para que soporte sepa de quién es cada una.</p>
+<p><strong>Archivo:</strong> <code>src/transacciones/transacciones.service.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ActualizarTransaccionDto } from &#x27;./dto/actualizar-transaccion.dto&#x27;;
+
+@Injectable()
+export class TransaccionesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearTransaccionDto, usuarioId: number) {
+    return this.prisma.transaccion.create({
+      data: {
+        descripcion: dto.descripcion,
+        monto: dto.monto,
+        tipo: dto.tipo,
+        categoriaId: dto.categoriaId,
+        usuarioId,
+      },
+      include: { categoria: true },
+    });
+  }
+
+  obtenerMias(usuarioId: number) {
+    return this.prisma.transaccion.findMany({
+      where: { usuarioId },
+      include: { categoria: true },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerTodasAdmin() {
+    return this.prisma.transaccion.findMany({
+      include: {
+        categoria: true,
+        usuario: { select: { id: true, nombre: true, email: true } },
+      },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  async obtenerUna(id: number, usuarioId: number) {
+    const transaccion = await this.prisma.transaccion.findUnique({
+      where: { id },
+      include: { categoria: true },
+    });
+
+    if (!transaccion) {
+      throw new NotFoundException(&#x27;La transacción no existe&#x27;);
+    }
+
+    if (transaccion.usuarioId !== usuarioId) {
+      throw new ForbiddenException(&#x27;Esta transacción no es tuya&#x27;);
+    }
+
+    return transaccion;
+  }
+
+  async actualizar(
+    id: number,
+    dto: ActualizarTransaccionDto,
+    usuarioId: number,
+  ) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.update({
+      where: { id },
+      data: dto,
+      include: { categoria: true },
+    });
+  }
+
+  async eliminar(id: number, usuarioId: number) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.delete({ where: { id } });
+  }
+}</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué <code>obtenerTodasAdmin</code> no recibe <code>usuarioId</code> como parámetro?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque, a propósito, <strong>no filtra por nadie</strong>: ese es justo su trabajo.</p>
+      <p>La protección de que solo un administrador pueda llamarlo no vive en el servicio, vive en el controlador (guard + rol). El servicio no necesita saber quién lo llamó, solo qué hacer si lo llaman.</p>
+      
+    </div>
+  </details>
+</div></div>
+  
+</section>
+<section class="section view" id="s13" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🚪</span>
+    <div class="sec-copy">
+      <span class="sec-n">13 · Endpoint admin</span>
+      <h2 class="sec-t">La puerta de soporte</h2>
+      <p class="sec-s">La ruta fija y específica exige ADMIN antes de llegar al servicio.</p>
+    </div>
+  </div>
+  <div class="body"><h3>Paso 8.2 — El endpoint, protegido para administradores</h3>
+<p><strong>Explicación:</strong> Agregamos <code>GET /transacciones/admin/todas</code>, protegido con <code>RolesGuard</code> + <code>@Roles([Rol.ADMIN])</code>. Se coloca <strong>antes</strong> de <code>@Get(&#x27;:id&#x27;)</code> en el archivo: es buena práctica declarar las rutas más específicas antes que las rutas con parámetro variable.</p>
+<p><strong>Archivo:</strong> <code>src/transacciones/transacciones.controller.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import { ApiBearerAuth, ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/jwt-auth.guard&#x27;;
+import { RolesGuard } from &#x27;../auth/roles.guard&#x27;;
+import { Roles } from &#x27;../auth/roles.decorator&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { UsuarioActual } from &#x27;../auth/usuario-actual.decorator&#x27;;
+import { TransaccionesService } from &#x27;./transacciones.service&#x27;;
+import { CrearTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ActualizarTransaccionDto } from &#x27;./dto/actualizar-transaccion.dto&#x27;;
+
+@ApiTags(&#x27;transacciones&#x27;)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller(&#x27;transacciones&#x27;)
+export class TransaccionesController {
+  constructor(private readonly transaccionesService: TransaccionesService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  obtenerMias(@UsuarioActual() usuario: { id: number }) {
+    return this.transaccionesService.obtenerMias(usuario.id);
+  }
+
+  @Get(&#x27;admin/todas&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  obtenerTodasAdmin() {
+    return this.transaccionesService.obtenerTodasAdmin();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerUna(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerUna(id, usuario.id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() dto: ActualizarTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.actualizar(id, dto, usuario.id);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.eliminar(id, usuario.id);
+  }
+}</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué importa el orden entre <code>admin/todas</code> y <code>:id</code>?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque <code>/transacciones/admin/todas</code> tiene dos segmentos después de <code>/transacciones/</code>,</p>
+      <p>y <code>:id</code> solo espera uno, así que en este caso concreto no colisionan.</p>
+      <p>Aun así, declarar las rutas fijas (<code>admin/todas</code>) antes que las rutas con parámetro (<code>:id</code>) es una convención sana: evita sorpresas si más adelante alguien agrega una ruta de un solo segmento que sí podría chocar.</p>
+      
+    </div>
+  </details>
+</div></div>
+  
+</section>
+<section class="section view" id="s14" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">⛑️</span>
+    <div class="sec-copy">
+      <span class="sec-n">14 · Helmet + CORS</span>
+      <h2 class="sec-t">Seguridad transversal</h2>
+      <p class="sec-s">Middleware y guards protegen capas distintas de la petición.</p>
+    </div>
+  </div>
+  <div class="body"><div><div class="twin">
+  <div class="cell a"><span class="tag">Middleware</span><h3>Helmet</h3><p>Actúa igual sobre todas las respuestas, antes del contexto de la ruta.</p></div>
+  <div class="cell b"><span class="tag">Guard</span><h3>JWT · Roles · Throttler</h3><p>Decide con información de la ruta, la identidad o la política.</p></div>
+</div></div><div><div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Helmet, que vamos a instalar ahora, agrega encabezados de seguridad a <em>todas</em> las respuestas de la API, sin importar qué controlador ni qué usuario esté detrás. No consulta <code>request.user</code>, no sabe qué ruta es.</p>
+  <p class="socratica-q">¿Eso lo hace un guard o un middleware?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>Un middleware.</strong></p>
+      <p>Los guards (como <code>JwtAuthGuard</code> y <code>RolesGuard</code>) tienen acceso al <code>ExecutionContext</code>: saben qué controlador, qué método y qué usuario hay detrás de la petición. Un middleware, en cambio, corre <strong>antes</strong>, a nivel más bajo, sin ese contexto: solo ve la petición y la respuesta en crudo. Es la herramienta correcta para algo que aplica <strong>igual a todo</strong>, como encabezados de seguridad.</p>
+      <p>Una primera intuición frecuente es: "Un guard, porque también protege".</p>
+    </div>
+  </details>
+</div>
+<h3>Definición — Helmet</h3>
+<p><strong>Técnica:</strong> middleware de Express/Fastify que agrega un conjunto de encabezados HTTP de seguridad (contra <em>clickjacking</em>, <em>sniffing</em> de tipo de contenido, entre otros) a cada respuesta.</p>
+<p><strong>En palabras sencillas:</strong> son advertencias que el servidor le pone a cada respuesta para que el navegador de quien la reciba se comporte con más cuidado.</p>
+<p><strong>Vida real:</strong> es como el sello de seguridad en el empaque de un medicamento: no evita todos los problemas, pero reduce ataques conocidos y comunes con una sola línea de configuración.</p>
+<h3>Paso 9.1 — Instalar Helmet</h3>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npm install helmet</code></pre>
+</div>
+<h3>Paso 9.2 — Activar Helmet y CORS en <code>main.ts</code></h3>
+<p><strong>Explicación:</strong> <code>helmet()</code> debe registrarse <strong>antes</strong> que cualquier otro <code>app.use()</code> o configuración (así lo indica la documentación oficial de NestJS). <code>enableCors()</code> habilita que un frontend en otro dominio pueda consumir la API.</p>
+<p><strong>Archivo:</strong> <code>src/main.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import &#x27;dotenv/config&#x27;;
+import { NestFactory } from &#x27;@nestjs/core&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common&#x27;;
+import { SwaggerModule, DocumentBuilder } from &#x27;@nestjs/swagger&#x27;;
+import helmet from &#x27;helmet&#x27;;
+import { AppModule } from &#x27;./app.module&#x27;;
+import { PrismaExceptionFilter } from &#x27;./common/filters/prisma-exception.filter&#x27;;
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true }),
+  );
+
+  app.useGlobalFilters(new PrismaExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle(&#x27;Finanzas API&#x27;)
+    .setDescription(&#x27;API de finanzas personales · Dev Senior&#x27;)
+    .setVersion(&#x27;1.0&#x27;)
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(&#x27;docs&#x27;, app, document);
+
+  await app.listen(3000);
+}
+bootstrap();</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Qué pasaría si <code>helmet()</code> se registrara después del <code>ValidationPipe</code>?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Probablemente nada visible hoy,</p>
+      <p>pero es una mala práctica: la documentación de NestJS es explícita en que Helmet debe ir primero.</p>
+      <p>Algunas protecciones de encabezados dependen de aplicarse antes de que cualquier otra respuesta empiece a construirse. Regístralo siempre de primero, por costumbre y por seguridad.</p>
+      
+    </div>
+  </details>
+</div></div></div>
+  
+</section>
+<section class="section view" id="s15" data-accent="3" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">⏳</span>
+    <div class="sec-copy">
+      <span class="sec-n">15 · Límite global</span>
+      <h2 class="sec-t">Frenar la fuerza bruta</h2>
+      <p class="sec-s">Un origen no puede intentar indefinidamente dentro de la misma ventana.</p>
+    </div>
+  </div>
+  <div class="body"><div class="databox">
+  <div class="chart-title">Límites por IP en una ventana de 60 segundos</div>
+  <div class="bars">
+    <div class="bar-row"><span class="bar-label">API global</span><div class="bar-track"><div class="bar-fill" data-target="100"></div></div><span class="bar-value">10</span></div>
+    <div class="bar-row"><span class="bar-label">Login</span><div class="bar-track"><div class="bar-fill" data-target="50" data-accent="2"></div></div><span class="bar-value">5</span></div>
+  </div>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Si alguien escribe un script que prueba mil contraseñas por segundo contra <code>POST /auth/login</code>,</p>
+  <p class="socratica-q">¿qué se lo impide hoy?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>Nada, a nivel de la API.</strong></p>
+      <p><code>bcrypt</code> hace que <em>cada</em> intento sea un poco más lento de calcular, pero no limita <em>cuántos</em> intentos por minuto puede hacer la misma persona o IP. Eso es un ataque de <strong>fuerza bruta</strong>, y se combate limitando la tasa de peticiones: <em>rate limiting</em>.</p>
+      <p>Una primera intuición frecuente es: "bcrypt lo hace lento", "nada".</p>
+    </div>
+  </details>
+</div>
+<h3>Definición — Rate limiting</h3>
+<p><strong>Técnica:</strong> mecanismo que restringe cuántas peticiones puede hacer un mismo origen (normalmente por IP) en una ventana de tiempo determinada. Al superar el límite, el servidor responde <code>429 Too Many Requests</code> en vez de procesar la petición.</p>
+<p><strong>En palabras sencillas:</strong> es como una fila de banco con un guardia que solo deja pasar a cierta cantidad de personas cada minuto: no importa cuánta gente llegue, solo entra la cuota permitida.</p>
+<p><strong>Vida real:</strong> los bancos bloquean temporalmente una tarjeta después de tres intentos fallidos de PIN. La lógica es la misma: no eliminan el PIN, solo limitan cuántas veces se puede fallar en poco tiempo.</p>
+<h3>Paso 10.1 — Instalar <code>@nestjs/throttler</code></h3>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npm install --save @nestjs/throttler</code></pre>
+</div>
+<h3>Paso 10.2 — Configurar un límite global</h3>
+<p><strong>Explicación:</strong> <code>ThrottlerModule.forRoot</code> define un límite por defecto para <strong>toda</strong> la API: 10 peticiones por minuto por IP. Registrar <code>ThrottlerGuard</code> como <code>APP_GUARD</code> lo aplica automáticamente a cada endpoint, sin tener que agregarlo controlador por controlador.</p>
+<p><strong>Archivo:</strong> <code>src/app.module.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/app.module.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
+import { APP_GUARD } from &#x27;@nestjs/core&#x27;;
+import { ThrottlerGuard, ThrottlerModule } from &#x27;@nestjs/throttler&#x27;;
+import { PrismaModule } from &#x27;./prisma/prisma.module&#x27;;
+import { AuthModule } from &#x27;./auth/auth.module&#x27;;
+import { CategoriasModule } from &#x27;./categorias/categorias.module&#x27;;
+import { TransaccionesModule } from &#x27;./transacciones/transacciones.module&#x27;;
+
+@Module({
+  imports: [
+    PrismaModule,
+    AuthModule,
+    CategoriasModule,
+    TransaccionesModule,
+    ThrottlerModule.forRoot({
+      throttlers: [{ ttl: 60000, limit: 10 }],
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
+})
+export class AppModule {}</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿<code>ThrottlerGuard</code> es un guard o un middleware, después de lo que vimos en el Bloque 9?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Es un <strong>guard</strong>:</p>
+      <p>para decidir "¿a qué ruta le aplico qué límite?" necesita el <code>ExecutionContext</code> (puede leer decoradores como <code>@Throttle(...)</code> sobre un método específico).</p>
+      <p>Helmet, en cambio, no necesita saber nada de eso: por eso uno es middleware y el otro es guard, aunque los dos sean "seguridad".</p>
+      
+    </div>
+  </details>
+</div></div>
+  
+</section>
+<section class="section view" id="s16" data-accent="4" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🚦</span>
+    <div class="sec-copy">
+      <span class="sec-n">16 · Límite login</span>
+      <h2 class="sec-t">El login merece un límite más estricto</h2>
+      <p class="sec-s">La política específica reduce el máximo global de 10 a 5 intentos por minuto.</p>
+    </div>
+  </div>
+  <div class="body"><h3>Paso 10.3 — Un límite más estricto solo para login</h3>
+<p><strong>Explicación:</strong> El límite global (10/min) es razonable para toda la API, pero el login merece un límite más agresivo: <code>@Throttle(...)</code> sobrescribe el límite global solo en ese método.</p>
+<p><strong>Archivo:</strong> <code>src/auth/auth.controller.ts</code> — <strong>versión final consolidada</strong> (reemplazar TODO):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/auth/auth.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Post } from &#x27;@nestjs/common&#x27;;
+import { ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { Throttle } from &#x27;@nestjs/throttler&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
+import { RegisterDto } from &#x27;./dto/register.dto&#x27;;
+import { LoginDto } from &#x27;./dto/login.dto&#x27;;
+
+@ApiTags(&#x27;auth&#x27;)
+@Controller(&#x27;auth&#x27;)
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post(&#x27;register&#x27;)
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post(&#x27;login&#x27;)
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
+  }
+}</code></pre>
+</div>
+<p><strong>Qué cambió:</strong> solo <code>login()</code> ahora acepta un máximo de 5 intentos por minuto por IP. Al sexto intento en el mismo minuto, responde <code>429 Too Many Requests</code> sin ni siquiera consultar la base de datos.</p>
+<h3>Checklist — buenas prácticas de autenticación que ya tiene <code>finanzas-api</code></h3>
+<ul class="checklist"><li>Contraseñas cifradas con <code>bcrypt</code>, nunca en texto plano.</li><li>Mensajes de error genéricos en login (no revelan si el email existe).</li><li>Tokens con expiración (<code>1h</code>), no eternos.</li><li>Secretos (<code>JWT_SECRET</code>) fuera del código, en <code>.env</code>.</li><li>Rol nunca autoasignable desde el registro público.</li><li>Límite de intentos en login (<code>@Throttle</code>), recién agregado.</li><li>Encabezados de seguridad con Helmet, recién agregado.</li></ul></div>
+  
+</section>
+<section class="section view" id="s17" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🤖</span>
+    <div class="sec-copy">
+      <span class="sec-n">17 · IA con criterio</span>
+      <h2 class="sec-t">Copiloto para código sensible</h2>
+      <p class="sec-s">Delega patrones; conserva las decisiones de seguridad y valida cada sugerencia.</p>
+    </div>
+  </div>
+  <div class="body"><div class="compare">
+  <div class="compare-card" data-side="negative"><h3>“Agrégale roles”</h3><p>Deja la restricción de seguridad a la imaginación del asistente.</p></div>
+  <div class="compare-card" data-side="positive"><h3>Reglas explícitas</h3><p>Define valores, default, frontera del cliente y contenido del JWT.</p></div>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Si le pides a Cursor AI (o a cualquier asistente de código) 'agrégale roles a mi API de usuarios', y aceptas su primera sugerencia sin leerla,</p>
+  <p class="socratica-q">¿qué es lo peor que podría pasar en un proyecto como este?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Lo peor no es que falle: es que <strong>compile y funcione, pero de forma insegura</strong>.</p>
+      <p>Un prompt vago como ese podría hacer que la IA agregue el campo <code>rol</code> directamente al <code>RegisterDto</code> —exactamente el error que evitamos en el Bloque 4— porque, sin más contexto, "agregar roles" suena a "que el usuario los elija". La IA no conoce las reglas de seguridad de tu proyecto a menos que se las des.</p>
+      <p>Una primera intuición frecuente es: "Que el código no compile", "que tenga un bug".</p>
+    </div>
+  </details>
+</div>
+<h3>La IA como copiloto, no como piloto</h3>
+<p><strong>Qué le puedes delegar a Cursor AI hoy:</strong> escribir el esqueleto repetitivo (DTOs, imports, un guard que sigue un patrón ya establecido). <strong>Qué nunca le delegas sin revisar:</strong> decisiones de seguridad — qué datos vienen del cliente y cuáles nunca, qué guard va en qué orden, qué se firma dentro de un JWT.</p>
+<h3>Cómo escribir un prompt seguro (comparación)</h3>
+<p><strong>Prompt vago (riesgoso):</strong></p>
+<div class="panel"><p>"Agrégale roles de admin y usuario a mi API."</p></div>
+<p><strong>Prompt con restricciones de seguridad (mejor):</strong></p>
+<div class="panel"><p>"Agrega un enum <code>Rol</code> con <code>USUARIO</code> y <code>ADMIN</code> al modelo <code>Usuario</code> de Prisma, con <code>USUARIO</code> como valor por defecto. El campo <code>rol</code> <strong>nunca</strong> debe poder venir del body de una petición pública; solo se cambia manualmente en la base de datos. Incluye <code>rol</code> en el payload del JWT al hacer login."</p></div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p class="socratica-q">¿Por qué el segundo prompt es mejor aunque sea más largo de escribir?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Porque <strong>explicita la restricción de seguridad</strong>,</p>
+      <p>en vez de dejar que la IA la infiera (y probablemente la infiera mal).</p>
+      <p>El tiempo que toma escribir un prompt así se recupera muchas veces en el tiempo que ahorras revisando —o corrigiendo en producción— una sugerencia insegura.</p>
+      
+    </div>
+  </details>
+</div>
+<h3>Cursor Rules: reglas de seguridad que persisten en todo el proyecto</h3>
+<p><strong>Técnica:</strong> Cursor permite crear archivos de reglas (<code>.cursor/rules/*.mdc</code>) que se incluyen automáticamente en el contexto de cada sugerencia de la IA dentro del proyecto. No hay que repetir la restricción en cada prompt: queda fijada una sola vez.</p>
+<p><strong>En palabras sencillas:</strong> es como dejarle al asistente un manual de estilo y de seguridad pegado en la pared de la oficina, que consulta antes de contestarte cualquier cosa.</p>
+<p><strong>Archivo:</strong> <code>.cursor/rules/seguridad-backend.mdc</code> (crear, en la raíz del proyecto):</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">.cursor/rules/seguridad-backend.mdc</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-markdown">---
+description: Reglas de seguridad para finanzas-api (NestJS + Prisma + JWT)
+alwaysApply: true
+---
+
+# Seguridad de autenticación y autorización
+
+- Nunca agregues un campo &quot;rol&quot; o &quot;usuarioId&quot; a un DTO que el cliente pueda
+  enviar. El rol y el dueño de un recurso se asignan en el servidor, nunca
+  vienen del body de la petición.
+- Toda contraseña se cifra con bcrypt (factor de costo 10 o más). Nunca la
+  guardes ni la registres en texto plano, ni en logs ni en consola.
+- El JWT se firma solo con el algoritmo por defecto de @nestjs/jwt. Nunca
+  sugieras deshabilitar la verificación de la firma.
+- Todo endpoint que modifique datos debe pasar por JwtAuthGuard, y si aplica
+  una restricción de rol, también por RolesGuard.
+- Los mensajes de error de login y registro nunca deben revelar si un email
+  existe o no en la base de datos.
+- Nunca imprimas JWT_SECRET, un access_token completo, ni contraseñas en
+  console.log ni en mensajes de error.</code></pre>
+</div>
+<h3>Checklist de revisión de código de autenticación generado por IA</h3>
+<p>Antes de aceptar una sugerencia de IA en código de login, JWT o roles, revisa:</p>
+<ul class="checklist"><li>¿El algoritmo de firma del JWT sigue siendo el seguro por defecto (nunca <code>&quot;none&quot;</code>)?</li><li>¿Las verificaciones de rol están realmente presentes en cada endpoint que las necesita, o la IA asumió que "ya estaban"?</li><li>¿Los mensajes de error siguen siendo genéricos, sin filtrar si un usuario existe?</li><li>¿Algún dato sensible (rol, id de dueño) quedó expuesto en una respuesta o en un log?</li><li>¿La sugerencia introduce una librería de autenticación que no conocías? Si es así, verifica su versión y su vigencia antes de instalarla.</li></ul>
+<p><strong>Regla de oro del bloque:</strong> trata todo código de autenticación generado por IA como si lo hubiera escrito un desarrollador que nunca has conocido: se revisa igual, sin excepciones, aunque el código "se vea bien".</p></div>
+  
+</section>
+<section class="section view" id="s18" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🧪</span>
+    <div class="sec-copy">
+      <span class="sec-n">18 · Prueba usuario</span>
+      <h2 class="sec-t">Primero demuestra el 403</h2>
+      <p class="sec-s">La secuencia verifica que un usuario autenticado todavía puede carecer de permiso.</p>
+    </div>
+  </div>
+  <div class="body"><div class="flow" aria-label="Prueba de acceso por rol">
+  <div class="flow-step"><strong>Ana · USUARIO</strong><span>Login y token inicial</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step"><strong>Ruta ADMIN</strong><span>403 Forbidden</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step" data-emphasis><strong>Ascenso controlado</strong><span>Prisma Studio</span></div>
+</div>
+<h3>Arrancar el servidor (si no seguía corriendo)</h3>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npm run start:dev</code></pre>
+</div>
+<p><strong>Qué debe salir:</strong> <code>Nest application successfully started</code>, con la nueva ruta <code>/transacciones/admin/todas</code> entre las mapeadas.</p>
+<h3>Paso 1 — Ana inicia sesión (sigue siendo <code>USUARIO</code>)</h3>
+<p><code>POST http://localhost:3000/auth/login</code></p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Enviar</span><span class="code-file">POST http://localhost:3000/auth/login · body</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-json">{ &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;clave1234&quot; }</code></pre>
+</div>
+<p><strong>Qué debe pasar:</strong> responde el <code>access_token</code>. Ábrelo en jwt.io: el payload ahora trae <code>&quot;rol&quot;: &quot;USUARIO&quot;</code>, además de <code>sub</code> y <code>email</code>.</p>
+<h3>Paso 2 — Ana intenta ver todas las transacciones (endpoint de soporte)</h3>
+<p><code>GET http://localhost:3000/transacciones/admin/todas</code> (con el token de Ana)</p>
+<p><strong>Qué debe pasar:</strong> <strong>403 Forbidden</strong>. Ana está autenticada, pero su rol no alcanza.</p>
+<h3>Paso 3 — Ana intenta crear una categoría</h3>
+<p><code>POST http://localhost:3000/categorias</code> (con el token de Ana)</p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Enviar</span><span class="code-file">POST http://localhost:3000/categorias · body</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Entretenimiento&quot; }</code></pre>
+</div>
+<p><strong>Qué debe pasar:</strong> <strong>403 Forbidden</strong>. Escribir categorías quedó restringido a <code>ADMIN</code>.</p>
+<h3>Paso 4 — Ascender a Ana a administradora (a mano, en Prisma Studio)</h3>
+<p><strong>Explicación:</strong> Hoy no existe un endpoint para autoascenderse (y nunca debería existirlo sin control). El ascenso a <code>ADMIN</code> se hace directamente en la base de datos.</p>
+<p><strong>¿Dónde?</strong> En la terminal, dentro de <code>finanzas-api</code>.</p>
+<div class="code-block" data-tipo="terminal">
+  <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">finanzas-api · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre><code class="language-bash">npx prisma studio</code></pre>
+</div>
+<p><strong>Qué hacer:</strong> abre la tabla <code>usuarios</code>, busca a Ana, y cambia su columna <code>rol</code> de <code>USUARIO</code> a <code>ADMIN</code>. Guarda el cambio.</p></div>
+  
+</section>
+<section class="section view" id="s19" data-accent="3" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🔥</span>
+    <div class="sec-copy">
+      <span class="sec-n">19 · Prueba admin</span>
+      <h2 class="sec-t">El token es una fotografía</h2>
+      <p class="sec-s">Cambiar la base no reescribe tokens ya emitidos: vuelve a iniciar sesión.</p>
+    </div>
+  </div>
+  <div class="body"><div class="compare">
+  <div class="compare-card" data-side="negative"><h3>rol: USUARIO</h3><p>Sigue congelado y recibe 403, aunque la base ya diga ADMIN.</p></div>
+  <div class="compare-card" data-side="positive"><h3>rol: ADMIN</h3><p>Se emite al volver a iniciar sesión y habilita la ruta de soporte.</p></div>
+</div>
+<h3>Paso 5 — La prueba de fuego: el token viejo no sirve, hay que volver a iniciar sesión</h3>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Acabamos de cambiar el rol de Ana en la base de datos. Si Ana vuelve a pedir <code>GET /transacciones/admin/todas</code> usando el <strong>mismo token</strong> que ya tenía (el de antes del cambio),</p>
+  <p class="socratica-q">¿la dejará entrar?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer"><strong>No.</strong></p>
+      <p>El rol que cuenta es el que quedó <strong>grabado dentro del token</strong> en el momento del login, no el que hay ahora mismo en la base de datos. El JWT es información <strong>congelada</strong> en el instante en que se firmó. Ana necesita <strong>volver a iniciar sesión</strong> para recibir un token nuevo, con <code>&quot;rol&quot;: &quot;ADMIN&quot;</code> adentro.</p>
+      <p>Una primera intuición frecuente es: "Sí, porque ya es admin".</p>
+    </div>
+  </details>
+</div>
+<p><strong>5a. Ana vuelve a iniciar sesión:</strong></p>
+<p><code>POST http://localhost:3000/auth/login</code> con las mismas credenciales de Ana. Copia el <strong>nuevo</strong> token.</p>
+<p><strong>5b. Ana (ahora con el token nuevo) pide todas las transacciones:</strong></p>
+<p><code>GET http://localhost:3000/transacciones/admin/todas</code></p>
+<p><strong>Qué debe pasar:</strong> <strong>200 OK</strong>, con las transacciones de Ana <strong>y</strong> de Luis juntas, cada una con los datos de su dueño.</p>
+<p><strong>5c. Ana (con el token nuevo) crea una categoría:</strong></p>
+<p><code>POST http://localhost:3000/categorias</code></p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Enviar</span><span class="code-file">POST http://localhost:3000/categorias · body</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Entretenimiento&quot; }</code></pre>
+</div>
+<p><strong>Qué debe pasar:</strong> <strong>201 Created</strong>. Ahora sí, porque su token trae <code>&quot;rol&quot;: &quot;ADMIN&quot;</code>.</p>
+<h3>Paso 6 — Confirmar el freno de fuerza bruta</h3>
+<p><strong>Explicación:</strong> Intenta iniciar sesión 6 veces seguidas con una contraseña incorrecta, en menos de un minuto.</p>
+<p><code>POST http://localhost:3000/auth/login</code></p>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Enviar</span><span class="code-file">POST http://localhost:3000/auth/login · body</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-json">{ &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;incorrecta&quot; }</code></pre>
+</div>
+<p><strong>Qué debe pasar:</strong> las primeras 5 veces, <code>401 Unauthorized</code> (credenciales inválidas). La sexta vez, dentro del mismo minuto: <strong>429 Too Many Requests</strong>, sin llegar siquiera a consultar la contraseña.</p></div>
+  
+</section>
+<section class="section view" id="s20" data-accent="4" data-layout="focus" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🩺</span>
+    <div class="sec-copy">
+      <span class="sec-n">20 · Diagnóstico</span>
+      <h2 class="sec-t">Leer el error antes de tocar el código</h2>
+      <p class="sec-s">Cinco señales frecuentes con causa y corrección concreta.</p>
+    </div>
+  </div>
+  <div class="body"><p><strong>1. <code>403 Forbidden</code> en un endpoint que "debería" dejar pasar a un administrador</strong></p>
+<ul class="checklist"><li><strong>Causa más común:</strong> el administrador está usando un token viejo, emitido antes de cambiarle el rol en la base.</li><li><strong>Solución:</strong> volver a iniciar sesión para obtener un token con el rol actualizado.</li></ul>
+<p><strong>2. <code>@Roles([Rol.ADMIN])</code> puesto, pero el endpoint no protege nada</strong></p>
+<ul class="checklist"><li><strong>Causa:</strong> falta <code>@UseGuards(RolesGuard)</code> en ese mismo método (o en la clase). El decorador solo pone metadata; sin el guard, nadie la lee.</li><li><strong>Solución:</strong> agregar <code>@UseGuards(RolesGuard)</code> junto al decorador.</li></ul>
+<p><strong>3. Error de tipos con <code>Rol</code> al compilar</strong></p>
+<ul class="checklist"><li><strong>Causa:</strong> se importó <code>Rol</code> desde un archivo equivocado, o no se corrió <code>npx prisma generate</code> / <code>migrate dev</code> tras editar el schema.</li><li><strong>Solución:</strong> confirmar el import (<code>../generated/prisma/client</code>) y volver a migrar.</li></ul>
+<p><strong>4. <code>429 Too Many Requests</code> inesperado durante las pruebas</strong></p>
+<ul class="checklist"><li><strong>Cómo se lee:</strong> no es un bug, es el <code>ThrottlerGuard</code> funcionando. Se hicieron más peticiones de las permitidas en la ventana de tiempo.</li><li><strong>Solución:</strong> esperar unos segundos a que se reinicie la ventana, o reiniciar el servidor.</li></ul>
+<p><strong>5. La migración del rol pide resetear la base</strong></p>
+<ul class="checklist"><li><strong>Causa:</strong> el campo <code>rol</code> se agregó <strong>sin</strong> <code>@default(USUARIO)</code>.</li><li><strong>Solución:</strong> siempre poner un valor por defecto cuando se agrega un campo obligatorio a una tabla con filas existentes.</li></ul></div>
+  
+</section>
+<section class="section view" id="s21" data-accent="1" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🗂️</span>
+    <div class="sec-copy">
+      <span class="sec-n">21 · Mapa archivos</span>
+      <h2 class="sec-t">Trece archivos, una evolución coherente</h2>
+      <p class="sec-s">Ubica cada cambio, su acción y el bloque donde se construyó.</p>
+    </div>
+  </div>
+  <div class="body"><div class="table-wrap"><table class="data-table"><caption>Mapa de archivos y acciones</caption><thead><tr><th>Archivo</th><th>Ruta</th><th>Acción</th><th>Bloque</th></tr></thead><tbody><tr><td><code>schema.prisma</code></td><td><code>prisma/</code></td><td>Editar (agregar <code>enum Rol</code> y campo <code>rol</code>)</td><td>4</td></tr><tr><td><code>auth.service.ts</code></td><td><code>src/auth/</code></td><td>Editar (versión final, <code>rol</code> en el payload)</td><td>5</td></tr><tr><td><code>jwt.strategy.ts</code></td><td><code>src/auth/</code></td><td>Editar (versión final, <code>rol</code> en el payload)</td><td>5</td></tr><tr><td><code>usuario-actual.decorator.ts</code></td><td><code>src/auth/</code></td><td>Editar (versión final, tipo con <code>rol</code>)</td><td>5</td></tr><tr><td><code>roles.decorator.ts</code></td><td><code>src/auth/</code></td><td><strong>Generar con CLI</strong>, luego reemplazar contenido</td><td>6</td></tr><tr><td><code>roles.guard.ts</code></td><td><code>src/auth/</code></td><td><strong>Generar con CLI</strong>, luego reemplazar contenido</td><td>6</td></tr><tr><td><code>categorias.controller.ts</code></td><td><code>src/categorias/</code></td><td>Editar (versión final, guards por rol)</td><td>7</td></tr><tr><td><code>transacciones.service.ts</code></td><td><code>src/transacciones/</code></td><td>Editar (versión final, <code>obtenerTodasAdmin</code>)</td><td>8</td></tr><tr><td><code>transacciones.controller.ts</code></td><td><code>src/transacciones/</code></td><td>Editar (versión final, endpoint admin)</td><td>8</td></tr><tr><td><code>main.ts</code></td><td><code>src/</code></td><td>Editar (versión final, Helmet + CORS)</td><td>9</td></tr><tr><td><code>app.module.ts</code></td><td><code>src/</code></td><td>Editar (versión final, <code>ThrottlerModule</code>)</td><td>10</td></tr><tr><td><code>auth.controller.ts</code></td><td><code>src/auth/</code></td><td>Editar (versión final, <code>@Throttle</code> en login)</td><td>10</td></tr><tr><td><code>seguridad-backend.mdc</code></td><td><code>.cursor/rules/</code></td><td>Crear</td><td>11</td></tr></tbody></table></div></div>
+  
+</section>
+<section class="section view" id="s22" data-accent="2" data-layout="canvas" hidden>
+  <div class="sec-head">
+    <span class="sec-icon" aria-hidden="true">🏁</span>
+    <div class="sec-copy">
+      <span class="sec-n">22 · Cierre</span>
+      <h2 class="sec-t">Quién eres · qué es tuyo · qué puedes</h2>
+      <p class="sec-s">La arquitectura final y las preguntas que abren el siguiente nivel de seguridad.</p>
+    </div>
+  </div>
+  <div class="body"><div class="flow" aria-label="Arquitectura final de la API">
+  <div class="flow-step"><strong>JwtAuthGuard</strong><span>¿Token válido?</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step" data-emphasis><strong>RolesGuard</strong><span>¿El rol alcanza?</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step"><strong>Controller + Service</strong><span>Ownership o acceso ADMIN</span></div><span class="flow-arrow" aria-hidden="true">→</span>
+  <div class="flow-step"><strong>Prisma</strong><span>PostgreSQL</span></div>
+</div>
+<ul class="checklist"><li>La API ahora distingue <strong>quién eres</strong> (Clase 1), <strong>qué es tuyo</strong> (Clase 1) y <strong>qué rol tienes</strong> (hoy).</li><li>Los roles nunca se autoasignan: nacen en <code>USUARIO</code> y se ascienden fuera del registro público.</li><li>Un <code>RolesGuard</code> separado de <code>JwtAuthGuard</code> mantiene cada guard con una sola responsabilidad.</li><li>Categorías (dato compartido) y el nuevo endpoint de soporte quedaron protegidos por rol, no por propiedad.</li><li>Sumamos capas de seguridad transversales: encabezados con Helmet y límite de intentos con <code>@nestjs/throttler</code>.</li><li>Aprendimos a usar Cursor AI como copiloto en código sensible, con prompts explícitos y reglas de proyecto (<code>.cursor/rules</code>), nunca aceptando sugerencias de autenticación sin revisión.</li></ul>
+<h3>Cómo quedó la arquitectura</h3>
+<div class="code-block">
+  <div class="code-head"><div><span class="code-context">Modelo</span><span class="code-file">Flujo de arquitectura</span></div><button class="copy-btn" type="button">Copiar</button></div>
+  <pre class="line-numbers"><code class="language-plaintext">Petición → JwtAuthGuard (¿token válido?) → RolesGuard (¿el rol alcanza?)
+        → Controller (@UsuarioActual) → Service → Prisma → PostgreSQL
+
+Transversal a todas las rutas: Helmet (encabezados) y ThrottlerGuard (límite de peticiones)</code></pre>
+</div>
+<div class="socratica">
+  <span class="component-label">Para pensar</span>
+  <p>Hoy resolvimos 'quién puede qué'. Pero el JWT de Ana dura 1 hora fija. Si alguien le roba el token a mitad de esa hora,</p>
+  <p class="socratica-q">¿cómo hacemos que deje de funcionar antes de que expire solo?</p>
+  <details class="reveal">
+    <summary>Ver respuesta</summary>
+    <div class="reveal-body">
+      <p class="lead-answer">Con lo que tenemos hoy,</p>
+      <p><strong>no se puede revocar un JWT antes de que expire por sí mismo</strong>: es la naturaleza <em>stateless</em> del token (el servidor no lleva una lista de "tokens vivos").</p>
+      <p>Cambiar la contraseña no invalida el token ya emitido. Este es exactamente el problema de los <strong>refresh tokens</strong> y las <strong>listas de revocación</strong>, que quedó anotado desde la Clase 1 y que retomaremos más adelante.</p>
+      <p>Una primera intuición frecuente es: "Cambiándole la contraseña", "esperando a que expire".</p>
+    </div>
+  </details>
+</div>
+<ul class="checklist"><li>Si un usuario puede tener más de un rol al tiempo (por ejemplo, <code>ADMIN</code> y <code>USUARIO</code> juntos), ¿cómo cambiaría el modelo de datos? (pista: de un campo <code>rol</code> a una relación muchos-a-muchos).</li><li>¿Debería existir un endpoint para que un <code>ADMIN</code> ascienda a otros usuarios, en vez de hacerlo siempre a mano en Prisma Studio? ¿Qué validaciones necesitaría?</li><li>Si Cursor AI te sugiere código de autenticación que "se ve bien" pero no puedes explicar por qué funciona, ¿deberías aceptarlo?</li></ul></div>
+  <p class="doc-foot">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</p>
+</section></div>
+      <nav class="view-controls" id="viewControls" aria-label="Navegación entre secciones">
+        <button class="view-btn" id="prevView" type="button" aria-label="Sección anterior">←</button>
+        <span class="view-position" id="viewPosition" aria-live="polite">Portada</span>
+        <button class="view-btn" id="nextView" type="button" aria-label="Sección siguiente">→</button>
+      </nav>
+    </main>
+  </div>
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="anaclase-v9.js"></script>
+</body>
+</html>
