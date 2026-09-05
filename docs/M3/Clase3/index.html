@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<!--
+  PLANTILLA SPA · ANA LEARNING EXPERIENCE SYSTEM v11.0 "CONSTRUCCIÓN ACTIVA"
+  © 2026 Ana Alvarado
+
+  ESTO ES REFERENCIA DE ESTRUCTURA, NO DE CONTENIDO.
+  Copia el andamiaje (shell -> sidebar -> portada -> escenas) y reemplaza el
+  contenido de ejemplo. NO reestilices los componentes: ya viven en
+  anaestilos-v11.css. Solo usa sus clases.
+
+  CONFIGURACIÓN EN <html>:
+    data-tema="oscuro"        -> abre en oscuro (por defecto). "claro" opcional.
+    data-tema-base="oscuro"   -> tema inicial si no hay preferencia guardada.
+    data-empresa="dev-senior" -> firma de marca (o "generation").
+    data-paleta="cian"        -> paleta de la clase (o "custom").
+    data-atmosfera="tecnica" style="--a1:light-dark(#12616b,#5cdbc8); --a2:light-dark(#235c9b,#91baff); --a3:light-dark(#79501d,#ffd084); --a4:light-dark(#85426d,#efa4d7); --a1-ink:#063e3a;"  -> personalidad visual sin cambiar estructura.
+
+  Para una paleta custom, define solo --a1, --a2, --a3, --a4 y --a1-ink en <html>.
+
+  Mermaid está enlazado: úsalo SOLO para grafos/flujos/secuencia/estado reales.
+  Para entidades y relaciones usa .entity / .rel-pair / .er-board.
+-->
+<html lang="es" data-tema="oscuro" data-tema-base="oscuro" data-empresa="dev-senior" data-paleta="custom" data-atmosfera="tecnica" style="--a1:light-dark(#12616b,#5cdbc8); --a2:light-dark(#235c9b,#91baff); --a3:light-dark(#79501d,#ffd084); --a4:light-dark(#85426d,#efa4d7); --a1-ink:#063e3a;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>M3 · Clase 3 · Validaciones, errores y Swagger · Ana Alvarado</title>
+  <link href="recursos/fuentes.css" rel="stylesheet">
+  <link rel="stylesheet" href="recursos/prism-line-numbers.min.css">
+  <link rel="stylesheet" href="anaestilos-v11.css">
+</head>
+<body><a class="skip-link" href="#problema">Saltar al contenido</a><div class="topline" id="topline" aria-hidden="true"></div><div class="controls" aria-label="Controles"><button class="ctrl" id="temaBtn" type="button" aria-label="Cambiar tema">☀</button><button class="ctrl" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button></div><div class="shell" id="shell" data-collapsed="false"><aside class="sidebar" aria-label="Índice de la clase"><div class="sb-top"><span class="brand-mark">A</span><div class="sb-title"><b>JavaScript AI Backend</b><span>Módulo 3 · Clase 3</span></div></div><button class="sb-toggle" id="collapseBtn" type="button" aria-label="Colapsar menú">‹</button><nav class="sb-nav" id="nav" aria-label="Secciones"><a class="nav-item active" href="#portada" data-icon="✦"><span class="nav-index">00</span><span class="nav-label">Portada</span></a><a class="nav-item" href="#problema" data-icon="🎯"><span class="nav-index">01</span><span class="nav-label">El problema</span></a><a class="nav-item" href="#base" data-icon="🔐"><span class="nav-index">02</span><span class="nav-label">Punto de partida</span></a><a class="nav-item" href="#cursor" data-icon="⌨"><span class="nav-index">03</span><span class="nav-label">Preparar Cursor</span></a><a class="nav-item" href="#criterio" data-icon="🧭"><span class="nav-index">04</span><span class="nav-label">Dirigir la IA</span></a><a class="nav-item" href="#pipes" data-icon="🚦"><span class="nav-index">05</span><span class="nav-label">Transformar y validar</span></a><a class="nav-item" href="#dto" data-icon="🧩"><span class="nav-index">06</span><span class="nav-label">Construir el DTO</span></a><a class="nav-item" href="#service" data-icon="🗃"><span class="nav-index">07</span><span class="nav-label">Consultar y paginar</span></a><a class="nav-item" href="#controller" data-icon="🔌"><span class="nav-index">08</span><span class="nav-label">Conectar el endpoint</span></a><a class="nav-item" href="#pruebas-filtros" data-icon="🧪"><span class="nav-index">09</span><span class="nav-label">Probar la entrada</span></a><a class="nav-item" href="#http-filter" data-icon="🛟"><span class="nav-index">10</span><span class="nav-label">Errores HTTP</span></a><a class="nav-item" href="#prisma-filter" data-icon="🗄"><span class="nav-index">11</span><span class="nav-label">Errores de Prisma</span></a><a class="nav-item" href="#registro" data-icon="🔀"><span class="nav-index">12</span><span class="nav-label">Registrar los filtros</span></a><a class="nav-item" href="#pruebas-errores" data-icon="⚖"><span class="nav-index">13</span><span class="nav-label">Comprobar el contrato</span></a><a class="nav-item" href="#swagger" data-icon="📖"><span class="nav-index">14</span><span class="nav-label">Documentar el contrato</span></a><a class="nav-item" href="#practica" data-icon="🛠"><span class="nav-index">15</span><span class="nav-label">Transferir con Cursor</span></a><a class="nav-item" href="#cierre" data-icon="✅"><span class="nav-index">16</span><span class="nav-label">Qué cambió</span></a><a class="nav-item" href="#consulta" data-icon="📚"><span class="nav-index">17</span><span class="nav-label">Consulta opcional</span></a></nav><div class="sb-prog"><div class="lbl"><span>Recorrido</span><span id="progPct">0%</span></div><div class="track"><div class="fill" id="progFill"></div></div></div></aside><main class="main"><header class="hero view" id="portada" data-accent="1" data-layout="focus"><div class="hero-inner body"><div class="hero-copy"><span class="eyebrow">Dev Senior · Módulo 3 · Clase 3</span><h1 class="hero-title">Una API con <em>reglas claras</em></h1><p class="hero-lead">Valida el historial de finanzas-api, responde errores con un contrato común y documéntalo en Swagger.</p><div class="meta"><span class="pill" data-hot>Validaciones</span><span class="pill">Manejo de errores</span><span class="pill">OpenAPI</span><span class="pill">Cursor AI</span></div></div><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Entrada</strong><span>Datos válidos</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">02</span><strong>Error</strong><span>Respuesta consistente</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">03</span><strong>Contrato</strong><span>Documentación compartida</span></div></div></div></header><div class="content"><section class="section view" id="problema" data-accent="1" data-layout="split" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🎯</span><div><span class="sec-n">01 · El problema</span><h2 class="sec-t">El frontend necesita un contrato</h2><p class="sec-s">El historial crece. Consultarlo y entender sus errores debe ser predecible.</p></div></div><div class="body"><div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">La API ya reconoce al usuario. ¿Por qué el frontend sigue teniendo dificultades para integrar el historial?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">La identidad y los permisos no resuelven la calidad de los datos ni el formato de los errores. Necesitamos filtros, paginación y una respuesta de error común.</p></div></details></div><div class="panel"><h3>La petición de producto</h3><p>El historial debe filtrar por <strong>tipo y rango de fechas</strong>, con <strong>paginación</strong>. Si llega una página negativa o una fecha inválida, el frontend necesita interpretar la respuesta con el mismo contrato.</p><p>El filtro de Prisma solo atiende sus errores. La validación y los fallos inesperados tienen sus propias respuestas. Hoy coordinamos esas piezas.</p></div></div></section><section class="section view" id="base" data-accent="2" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🔐</span><div><span class="sec-n">02 · Punto de partida</span><h2 class="sec-t">La seguridad sigue en su lugar</h2><p class="sec-s">Continuamos finanzas-api con el trabajo de las clases 1 y 2.</p></div></div><div class="body"><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Pilar</th><th scope="col">Origen</th><th scope="col">Qué resuelve</th></tr></thead><tbody><tr><td>Autenticación · JWT, bcrypt, Passport</td><td>C1</td><td>¿Quién eres?</td></tr><tr><td>Autorización por propiedad · ownership</td><td>C1</td><td>¿Esto es tuyo?</td></tr><tr><td>Autorización por rol · RBAC y guards</td><td>C2</td><td>¿Qué permite tu cargo?</td></tr></tbody></table></div><div class="micro-task"><span class="component-label">Recupera</span><p class="micro-task-q">¿Qué pieza decide si Ana puede ver las transacciones de Luis?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">El Service conserva <code>where: { usuarioId }</code>. Los guards controlan el acceso; el Service restringe los registros al propietario.</p></details></div><p>Trabajamos con <strong>NestJS 11, Prisma 7 y PostgreSQL</strong>, junto con class-validator, class-transformer y @nestjs/swagger. Abre la terminal en <code>finanzas-api</code> y arranca el proyecto acumulado. Deben existir sus dependencias, base de datos y archivos de C1/C2.</p><div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Ejecutar · bash</span><span class="code-file" title="finanzas-api/ · terminal">finanzas-api/ · terminal</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-bash">npm run start:dev</code></pre></div><div class="callout" data-tone="success"><span class="callout-icon" aria-hidden="true">✓</span><div><h3>Checkpoint de arranque</h3><p>Busca <code>Nest application successfully started</code> y la ruta <code>/transacciones/admin/todas</code>. Si falta, completa primero el trabajo de C2.</p></div></div></div></section><section class="section view" id="cursor" data-accent="4" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">⌨</span><div><span class="sec-n">03 · Preparar Cursor</span><h2 class="sec-t">Tres formas de pedir ayuda</h2><p class="sec-s">Desde esta clase, Cursor es el editor oficial del programa.</p></div></div><div class="body"><p>Cursor es un editor basado en VS Code con un agente integrado que puede explorar el proyecto, editar archivos y ejecutar comandos. Piensa en un compañero rápido al que das una tarea concreta: tú revisas las decisiones y el resultado.</p><div class="panel"><h3>Instala y abre el proyecto</h3><p>Descarga la versión para tu sistema en <a href="https://cursor.com/downloads" target="_blank" rel="noopener">cursor.com/downloads</a>, inicia sesión y abre la carpeta <code>finanzas-api</code>. Comprueba allí los requisitos actuales para macOS, Windows o Linux.</p><p>El plan Hobby es gratuito y tiene uso limitado. Consulta <a href="https://cursor.com/pricing" target="_blank" rel="noopener">los límites vigentes</a>; la disponibilidad del agente depende de tu cuota.</p></div><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Herramienta</th><th scope="col">Acceso</th><th scope="col">Úsala para</th></tr></thead><tbody><tr><td>Tab</td><td>Aparece mientras escribes</td><td>Completar código local según el contexto.</td></tr><tr><td>Agente</td><td><kbd>Cmd + I</kbd> / <kbd>Ctrl + I</kbd></td><td>Pedir una tarea que puede involucrar varios archivos y comandos.</td></tr><tr><td>Plan Mode</td><td><kbd>Shift + Tab</kbd> en el agente</td><td>Investigar y proponer un plan antes de implementar un cambio amplio.</td></tr></tbody></table></div><div class="panel"><h3>Controla el autocompletado</h3><p><kbd>Tab</kbd> acepta la sugerencia; <kbd>Esc</kbd> la rechaza. <kbd>Cmd + →</kbd> / <kbd>Ctrl + →</kbd> acepta la siguiente palabra. Lee también los cambios pequeños: pueden repetir un patrón equivocado.</p></div><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Comprueba la interfaz instalada</h3><p>Los atajos pueden variar con la versión o tu configuración. El agente puede editar archivos durante la tarea: revisa el diff antes de conservar el resultado. Consulta <a href="https://cursor.com/docs/agent/overview" target="_blank" rel="noopener">la documentación de Cursor</a>.</p></div></div></div></section><section class="section view" id="criterio" data-accent="4" data-layout="focus" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🧭</span><div><span class="sec-n">04 · Dirigir la IA</span><h2 class="sec-t">Cursor propone, tú decides</h2><p class="sec-s">La herramienta cambia; la responsabilidad sobre el código sigue siendo tuya.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Decide</span><p class="micro-task-q">¿Pedirías directamente «agrega paginación a todos los listados» o empezarías por un plan?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Un cambio que cruza varios endpoints merece un plan: inspeccionar responsabilidades, acordar el alcance y después implementar. Para un cambio pequeño y preciso, el agente puede trabajar directamente.</p></details></div><div class="panel"><h3>Evita que la IA invente el negocio</h3><p>«Agrégale validaciones a mi DTO» no especifica las reglas. La IA podría imponer un límite de monto que nadie pidió. Describe el archivo, el patrón existente, el resultado esperado y las restricciones que debe conservar.</p></div><ul class="checklist"><li>Revisa <code>.cursor/rules/seguridad-backend.mdc</code>, creado en C2, con <code>alwaysApply: true</code>.</li><li>Lee el diff: qué archivos cambió, qué reglas añadió y qué protecciones conservó.</li><li>Ejecuta la comprobación del comportamiento. Aceptar una sugerencia no demuestra que funcione.</li></ul></div></section><section class="section view" id="pipes" data-accent="1" data-layout="split" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🚦</span><div><span class="sec-n">05 · Transformar y validar</span><h2 class="sec-t">La aduana de la petición</h2><p class="sec-s">Un Pipe actúa antes de entregar el argumento al método del controlador.</p></div></div><div class="body"><div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">La URL contiene <code>?pagina=2</code>. ¿Qué debe ocurrir antes de calcular la paginación?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Convertir ese texto a número y validar que sea un entero permitido. En las propiedades de este DTO usamos <code>@Type(() =&gt; Number)</code> junto con <code>transform: true</code>.</p></div></details></div><div class="panel"><h3>Dos trabajos, una frontera</h3><p><strong>Transformar</strong> cambia la forma o el tipo del dato. <strong>Validar</strong> comprueba reglas y lanza una excepción si no se cumplen. Como una aduana, el Pipe prepara o rechaza la entrada antes del negocio.</p><p><code>ParseIntPipe</code> resuelve un <code>:id</code>. Para cinco campos y una regla entre fechas, usamos un DTO con el <code>ValidationPipe</code> global. El Service mantiene la lógica de consulta.</p></div></div></section><section class="section view" id="dto" data-accent="1" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🧩</span><div><span class="sec-n">06 · Construir el DTO</span><h2 class="sec-t">Cinco filtros, reglas explícitas</h2><p class="sec-s">El contrato de entrada vive en FiltrarTransaccionesDto.</p></div></div><div class="body"><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Campo opcional</th><th scope="col">Regla</th><th scope="col">Si no llega</th></tr></thead><tbody><tr><td>tipo</td><td>INGRESO o GASTO</td><td>Sin filtro de tipo</td></tr><tr><td>desde / hasta</td><td>Fecha ISO; hasta no puede ser anterior a desde</td><td>Solo se aplica el extremo recibido</td></tr><tr><td>pagina</td><td>Entero ≥ 1</td><td>1</td></tr><tr><td>limite</td><td>Entero entre 1 y 50</td><td>10</td></tr></tbody></table></div><div class="micro-task"><span class="component-label">Predice</span><p class="micro-task-q">Si solo llega <code>hasta</code>, ¿el validador de rango debe rechazar la petición?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">No hay dos extremos que comparar. La validación del formato sigue activa; la comparación del rango retorna <code>true</code> cuando falta una fecha.</p></details></div><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Convertir antes de exigir un entero</h3><p class="build-step-purpose">El transformador necesita una instrucción explícita para esta propiedad. El valor inicial y el decorador opcional resuelven la ausencia del parámetro.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/transacciones/dto/filtrar-transacciones.dto.ts">src/transacciones/dto/filtrar-transacciones.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">  @Type(() =&gt; Number)
+  @IsInt({ message: &#x27;La página debe ser un número entero&#x27; })
+  @Min(1, { message: &#x27;La página debe ser al menos 1&#x27; })
+  pagina?: number = 1;</code></pre></div></div></div><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Comparar campos relacionados</h3><p class="build-step-purpose">El validador personalizado recibe hasta y accede a desde mediante args.object. Esa regla no se resuelve mirando cada propiedad por separado.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/transacciones/dto/filtrar-transacciones.dto.ts">src/transacciones/dto/filtrar-transacciones.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">    const dto = args.object as FiltrarTransaccionesDto;
+    if (!dto.desde || !hasta) {
+      return true;
+    }
+    return new Date(hasta) &gt;= new Date(dto.desde);</code></pre></div></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver filtrar-transacciones.dto.ts completo</span><span class="code-reveal-note">Archivo: filtrar-transacciones.dto.ts · Ubicación: src/transacciones/dto/ · Crear · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear · typescript</span><span class="code-file" title="src/transacciones/dto/filtrar-transacciones.dto.ts">src/transacciones/dto/filtrar-transacciones.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { Type } from &#x27;class-transformer&#x27;;
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  Max,
+  Min,
+  Validate,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from &#x27;class-validator&#x27;;
+import { ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+import { TipoTransaccionDto } from &#x27;./crear-transaccion.dto&#x27;;
+
+@ValidatorConstraint({ name: &#x27;RangoDeFechasValido&#x27;, async: false })
+class RangoDeFechasValidoConstraint implements ValidatorConstraintInterface {
+  validate(hasta: string | undefined, args: ValidationArguments) {
+    const dto = args.object as FiltrarTransaccionesDto;
+    if (!dto.desde || !hasta) {
+      return true;
+    }
+    return new Date(hasta) &gt;= new Date(dto.desde);
+  }
+
+  defaultMessage() {
+    return &#x27;La fecha &quot;hasta&quot; no puede ser anterior a la fecha &quot;desde&quot;&#x27;;
+  }
+}
+
+export class FiltrarTransaccionesDto {
+  @ApiPropertyOptional({ enum: TipoTransaccionDto })
+  @IsOptional()
+  @IsEnum(TipoTransaccionDto, { message: &#x27;El tipo debe ser INGRESO o GASTO&#x27; })
+  tipo?: TipoTransaccionDto;
+
+  @ApiPropertyOptional({ example: &#x27;2026-01-01&#x27; })
+  @IsOptional()
+  @IsDateString({}, { message: &#x27;La fecha &quot;desde&quot; debe tener formato AAAA-MM-DD&#x27; })
+  desde?: string;
+
+  @ApiPropertyOptional({ example: &#x27;2026-01-31&#x27; })
+  @IsOptional()
+  @IsDateString({}, { message: &#x27;La fecha &quot;hasta&quot; debe tener formato AAAA-MM-DD&#x27; })
+  @Validate(RangoDeFechasValidoConstraint)
+  hasta?: string;
+
+  @ApiPropertyOptional({ example: 1, default: 1 })
+  @IsOptional()
+  @Type(() =&gt; Number)
+  @IsInt({ message: &#x27;La página debe ser un número entero&#x27; })
+  @Min(1, { message: &#x27;La página debe ser al menos 1&#x27; })
+  pagina?: number = 1;
+
+  @ApiPropertyOptional({ example: 10, default: 10 })
+  @IsOptional()
+  @Type(() =&gt; Number)
+  @IsInt({ message: &#x27;El límite debe ser un número entero&#x27; })
+  @Min(1, { message: &#x27;El límite debe ser al menos 1&#x27; })
+  @Max(50, { message: &#x27;El límite no puede superar 50&#x27; })
+  limite?: number = 10;
+}</code></pre></div></div></details><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Qué representa la fecha</h3><p>El mensaje usa AAAA-MM-DD y los ejemplos son fechas simples. <code>@IsDateString()</code> valida ISO 8601; no limita por sí solo la entrada exclusivamente a ese formato corto.</p></div></div></div></section><section class="section view" id="service" data-accent="2" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🗃</span><div><span class="sec-n">07 · Consultar y paginar</span><h2 class="sec-t">El filtro nunca pierde al dueño</h2><p class="sec-s">Prisma consulta la página y cuenta el mismo conjunto de registros.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Detecta la responsabilidad</span><p class="micro-task-q">¿Dónde debe permanecer <code>usuarioId</code> al añadir filtros opcionales?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Dentro del where base, siempre presente en obtenerMias. Los filtros opcionales no sustituyen la restricción por propietario.</p></details></div><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Construir el conjunto de consulta</h3><p class="build-step-purpose">El where conserva usuarioId y añade tipo y fechas solo cuando llegan. gte y lte incluyen sus instantes límite.</p></div></div><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Obtener una página y su total</h3><p class="build-step-purpose">skip indica cuántos registros saltar; take limita la página. findMany y count reciben el mismo where. Promise.all espera ambas operaciones; no crea por sí solo una transacción.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/transacciones/transacciones.service.ts">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">        skip: (pagina - 1) * limite,
+        take: limite,</code></pre></div></div></div><div class="build-step"><span class="build-step-index">03</span><div class="build-step-copy"><h3 class="build-step-title">Entregar datos y contexto</h3><p class="build-step-purpose">El cliente recibe datos y meta: pagina, limite, total y totalPaginas. Crear, consultar una transacción, actualizar y eliminar mantienen sus responsabilidades anteriores.</p></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver transacciones.service.ts completo</span><span class="code-reveal-note">Archivo: transacciones.service.ts · Ubicación: src/transacciones/ · Reemplazar · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar · typescript</span><span class="code-file" title="src/transacciones/transacciones.service.ts">src/transacciones/transacciones.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from &#x27;@nestjs/common&#x27;;
+import { Prisma } from &#x27;../generated/prisma/client&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ActualizarTransaccionDto } from &#x27;./dto/actualizar-transaccion.dto&#x27;;
+import { FiltrarTransaccionesDto } from &#x27;./dto/filtrar-transacciones.dto&#x27;;
+
+@Injectable()
+export class TransaccionesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearTransaccionDto, usuarioId: number) {
+    return this.prisma.transaccion.create({
+      data: {
+        descripcion: dto.descripcion,
+        monto: dto.monto,
+        tipo: dto.tipo,
+        categoriaId: dto.categoriaId,
+        usuarioId,
+      },
+      include: { categoria: true },
+    });
+  }
+
+  async obtenerMias(usuarioId: number, filtros: FiltrarTransaccionesDto) {
+    const { tipo, desde, hasta, pagina = 1, limite = 10 } = filtros;
+
+    const where: Prisma.TransaccionWhereInput = {
+      usuarioId,
+      ...(tipo &amp;&amp; { tipo }),
+      ...(desde || hasta
+        ? {
+            fecha: {
+              ...(desde &amp;&amp; { gte: new Date(desde) }),
+              ...(hasta &amp;&amp; { lte: new Date(hasta) }),
+            },
+          }
+        : {}),
+    };
+
+    const [datos, total] = await Promise.all([
+      this.prisma.transaccion.findMany({
+        where,
+        include: { categoria: true },
+        orderBy: { fecha: &#x27;desc&#x27; },
+        skip: (pagina - 1) * limite,
+        take: limite,
+      }),
+      this.prisma.transaccion.count({ where }),
+    ]);
+
+    return {
+      datos,
+      meta: { pagina, limite, total, totalPaginas: Math.ceil(total / limite) },
+    };
+  }
+
+  obtenerTodasAdmin() {
+    return this.prisma.transaccion.findMany({
+      include: {
+        categoria: true,
+        usuario: { select: { id: true, nombre: true, email: true } },
+      },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  async obtenerUna(id: number, usuarioId: number) {
+    const transaccion = await this.prisma.transaccion.findUnique({
+      where: { id },
+      include: { categoria: true },
+    });
+
+    if (!transaccion) {
+      throw new NotFoundException(&#x27;La transacción no existe&#x27;);
+    }
+
+    if (transaccion.usuarioId !== usuarioId) {
+      throw new ForbiddenException(&#x27;Esta transacción no es tuya&#x27;);
+    }
+
+    return transaccion;
+  }
+
+  async actualizar(
+    id: number,
+    dto: ActualizarTransaccionDto,
+    usuarioId: number,
+  ) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.update({
+      where: { id },
+      data: dto,
+      include: { categoria: true },
+    });
+  }
+
+  async eliminar(id: number, usuarioId: number) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.transaccion.delete({ where: { id } });
+  }
+}</code></pre></div></div></details><div class="callout" data-tone="warning"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Alcance exacto de «hasta»</h3><p>El código conserva <code>lte: new Date(hasta)</code>. Con <code>2026-01-31</code>, el límite es el inicio de ese día en UTC, no todo el día. Tenlo presente al interpretar resultados con hora.</p></div></div></div></section><section class="section view" id="controller" data-accent="2" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🔌</span><div><span class="sec-n">08 · Conectar el endpoint</span><h2 class="sec-t">La query llega al Service</h2><p class="sec-s">Primera versión completa: ya puedes probar los filtros.</p></div></div><div class="body"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Query</strong><span>Parámetros de la URL</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">02</span><strong>ValidationPipe</strong><span>Transformación y reglas</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">03</span><strong>Controller</strong><span>DTO + usuario actual</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">04</span><strong>Service</strong><span>where + paginación</span></div></div><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Recibir el DTO</h3><p class="build-step-purpose">@Query() entrega los parámetros al DTO. El controlador obtiene el usuario autenticado y pasa ambos argumentos al Service.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/transacciones/transacciones.controller.ts">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">  obtenerMias(
+    @Query() filtros: FiltrarTransaccionesDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerMias(usuario.id, filtros);
+  }</code></pre></div></div></div><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Describir los parámetros</h3><p class="build-step-purpose">Esta guía declara los cinco @ApiQuery explícitamente. Los guards de JWT y de la ruta administrativa permanecen en el archivo. La documentación de errores se añade después.</p></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver transacciones.controller.ts completo · primera etapa</span><span class="code-reveal-note">Archivo: transacciones.controller.ts · Ubicación: src/transacciones/ · Reemplazar · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar · typescript</span><span class="code-file" title="src/transacciones/transacciones.controller.ts">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import { ApiBearerAuth, ApiQuery, ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/jwt-auth.guard&#x27;;
+import { RolesGuard } from &#x27;../auth/roles.guard&#x27;;
+import { Roles } from &#x27;../auth/roles.decorator&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { UsuarioActual } from &#x27;../auth/usuario-actual.decorator&#x27;;
+import { TransaccionesService } from &#x27;./transacciones.service&#x27;;
+import { CrearTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ActualizarTransaccionDto } from &#x27;./dto/actualizar-transaccion.dto&#x27;;
+import { FiltrarTransaccionesDto } from &#x27;./dto/filtrar-transacciones.dto&#x27;;
+import { TipoTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+
+@ApiTags(&#x27;transacciones&#x27;)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller(&#x27;transacciones&#x27;)
+export class TransaccionesController {
+  constructor(private readonly transaccionesService: TransaccionesService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  @ApiQuery({ name: &#x27;tipo&#x27;, required: false, enum: TipoTransaccionDto })
+  @ApiQuery({ name: &#x27;desde&#x27;, required: false, example: &#x27;2026-01-01&#x27; })
+  @ApiQuery({ name: &#x27;hasta&#x27;, required: false, example: &#x27;2026-01-31&#x27; })
+  @ApiQuery({ name: &#x27;pagina&#x27;, required: false, example: 1 })
+  @ApiQuery({ name: &#x27;limite&#x27;, required: false, example: 10 })
+  obtenerMias(
+    @Query() filtros: FiltrarTransaccionesDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerMias(usuario.id, filtros);
+  }
+
+  @Get(&#x27;admin/todas&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  obtenerTodasAdmin() {
+    return this.transaccionesService.obtenerTodasAdmin();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerUna(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerUna(id, usuario.id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() dto: ActualizarTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.actualizar(id, dto, usuario.id);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.eliminar(id, usuario.id);
+  }
+}</code></pre></div></div></details><div class="callout" data-tone="success"><span class="callout-icon" aria-hidden="true">✓</span><div><h3>Checkpoint</h3><p>Esta versión no importa <code>ErrorRespuestaDto</code>. Puedes ejecutar las pruebas siguientes sin esperar al bloque de documentación.</p></div></div></div></section><section class="section view" id="pruebas-filtros" data-accent="3" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🧪</span><div><span class="sec-n">09 · Probar la entrada</span><h2 class="sec-t">Una consulta válida, dos rechazos</h2><p class="sec-s">En Postman, utiliza el token de Ana en Authorization · Bearer Token.</p></div></div><div class="body"><div class="panel"><h3>1 · Página válida</h3><div class="code-block"><div class="code-head"><div><span class="code-context">GET · plaintext</span><span class="code-file" title="Postman · URL">Postman · URL</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">http://localhost:3000/transacciones?tipo=GASTO&amp;pagina=1&amp;limite=5</code></pre></div><p><strong>200 OK</strong>. <code>datos</code> contiene como máximo 5 registros; <code>meta</code> incluye <code>pagina: 1</code>, <code>limite: 5</code>, <code>total</code> y <code>totalPaginas</code>.</p></div><div class="panel"><h3>2 · Fechas invertidas</h3><div class="code-block"><div class="code-head"><div><span class="code-context">GET · plaintext</span><span class="code-file" title="Postman · URL">Postman · URL</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">http://localhost:3000/transacciones?desde=2026-02-01&amp;hasta=2026-01-01</code></pre></div><p><strong>400 Bad Request</strong>. La fecha «hasta» no puede ser anterior a la fecha «desde».</p></div><div class="panel"><h3>3 · Página negativa</h3><div class="code-block"><div class="code-head"><div><span class="code-context">GET · plaintext</span><span class="code-file" title="Postman · URL">Postman · URL</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">http://localhost:3000/transacciones?pagina=-1</code></pre></div><p><strong>400 Bad Request</strong>. «La página debe ser al menos 1».</p></div><div class="micro-task"><span class="component-label">Interpreta el resultado</span><p class="micro-task-q">Ya rechazamos entradas inválidas. ¿Eso garantiza el mismo contrato para cualquier error?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">No. El formato de validación y el del filtro de Prisma aún pueden diferir. Ahora coordinaremos sus respuestas.</p></details></div></div></section><section class="section view" id="http-filter" data-accent="3" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🛟</span><div><span class="sec-n">10 · Errores HTTP</span><h2 class="sec-t">Una respuesta predecible</h2><p class="sec-s">El filtro decide qué recibe el cliente cuando se lanza una excepción.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Decide</span><p class="micro-task-q">¿Qué debe conservar un error HTTP conocido y qué debe ocultar un error inesperado?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Una HttpException conserva su estado y mensaje. Un fallo inesperado responde 500 con un mensaje genérico; su detalle técnico se registra en el servidor.</p></details></div><p>Un Exception Filter intercepta una excepción de la petición y construye la respuesta HTTP. Es un protocolo de atención: distintas causas, el mismo formato para comunicar qué pasó, cuándo y en qué ruta.</p><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Distinguir la excepción</h3><p class="build-step-purpose">@Catch() sin argumentos puede atender cualquier excepción. instanceof HttpException distingue las excepciones HTTP conocidas de otros fallos.</p></div></div><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Separar respuesta y diagnóstico</h3><p class="build-step-purpose">El cliente recibe statusCode, timestamp, path y message. El bloque de errores inesperados registra el detalle con console.error y usa un mensaje genérico.</p></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver http-exception.filter.ts completo</span><span class="code-reveal-note">Archivo: http-exception.filter.ts · Ubicación: src/common/filters/ · Crear · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear · typescript</span><span class="code-file" title="src/common/filters/http-exception.filter.ts">src/common/filters/http-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from &#x27;@nestjs/common&#x27;;
+import { Request, Response } from &#x27;express&#x27;;
+
+@Catch()
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse&lt;Response&gt;();
+    const request = ctx.getRequest&lt;Request&gt;();
+
+    const esExcepcionHttp = exception instanceof HttpException;
+    const statusCode = esExcepcionHttp
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    let mensaje: string | string[] = &#x27;Error interno del servidor&#x27;;
+    if (esExcepcionHttp) {
+      const cuerpo = exception.getResponse();
+      mensaje = typeof cuerpo === &#x27;string&#x27; ? cuerpo : (cuerpo as any).message;
+    } else {
+      console.error(exception);
+    }
+
+    response.status(statusCode).json({
+      statusCode,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: mensaje,
+    });
+  }
+}</code></pre></div></div></details><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Qué aporta este filtro</h3><p>NestJS ya devuelve un 500 genérico ante errores no reconocidos. Aquí definimos nuestro contrato común y el registro explícito del detalle en esta implementación. <a href="https://docs.nestjs.com/exception-filters" target="_blank" rel="noopener">Referencia de NestJS</a>.</p></div></div></div></section><section class="section view" id="prisma-filter" data-accent="3" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🗄</span><div><span class="sec-n">11 · Errores de Prisma</span><h2 class="sec-t">El específico también cumple</h2><p class="sec-s">Los dos filtros deben devolver los mismos cuatro campos.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Predice</span><p class="micro-task-q">Si Prisma responde primero, ¿puede el filtro general completar después timestamp y path?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">No. El filtro que atiende la excepción envía la respuesta. Por eso el filtro específico también debe construir el contrato completo.</p></details></div><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Código Prisma</th><th scope="col">Estado HTTP</th><th scope="col">Mensaje de respuesta</th></tr></thead><tbody><tr><td>P2025</td><td>404 · Not Found</td><td>El recurso solicitado no existe</td></tr><tr><td>P2002</td><td>409 · Conflict</td><td>Ya existe un registro con ese valor único</td></tr><tr><td>P2003</td><td>400 · Bad Request</td><td>La relación referenciada no existe</td></tr><tr><td>Otro error conocido de Prisma</td><td>500 · Internal Server Error</td><td>Error interno de base de datos</td></tr></tbody></table></div><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Compartir los datos del incidente</h3><p class="build-step-purpose">request.url identifica la ruta; new Date().toISOString() registra el momento. El objeto base se incorpora en cada rama con ...base.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/common/filters/prisma-exception.filter.ts">src/common/filters/prisma-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">    const base = {
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    };</code></pre></div></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver prisma-exception.filter.ts completo</span><span class="code-reveal-note">Archivo: prisma-exception.filter.ts · Ubicación: src/common/filters/ · Reemplazar · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar · typescript</span><span class="code-file" title="src/common/filters/prisma-exception.filter.ts">src/common/filters/prisma-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from &#x27;@nestjs/common&#x27;;
+import { Request, Response } from &#x27;express&#x27;;
+import { Prisma } from &#x27;../../generated/prisma/client&#x27;;
+
+@Catch(Prisma.PrismaClientKnownRequestError)
+export class PrismaExceptionFilter implements ExceptionFilter {
+  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse&lt;Response&gt;();
+    const request = ctx.getRequest&lt;Request&gt;();
+
+    const base = {
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    };
+
+    switch (exception.code) {
+      case &#x27;P2025&#x27;:
+        return response.status(HttpStatus.NOT_FOUND).json({
+          statusCode: HttpStatus.NOT_FOUND,
+          ...base,
+          message: &#x27;El recurso solicitado no existe&#x27;,
+        });
+      case &#x27;P2002&#x27;:
+        return response.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
+          ...base,
+          message: &#x27;Ya existe un registro con ese valor único&#x27;,
+        });
+      case &#x27;P2003&#x27;:
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.BAD_REQUEST,
+          ...base,
+          message: &#x27;La relación referenciada no existe&#x27;,
+        });
+      default:
+        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          ...base,
+          message: &#x27;Error interno de base de datos&#x27;,
+        });
+    }
+  }
+}</code></pre></div></div></details></div></section><section class="section view" id="registro" data-accent="3" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🔀</span><div><span class="sec-n">12 · Registrar los filtros</span><h2 class="sec-t">General primero al registrar</h2><p class="sec-s">El específico conserva la prioridad para los errores conocidos de Prisma.</p></div></div><div class="body"><p>Reemplaza <code>src/main.ts</code> después de crear el filtro general y actualizar el específico. Conserva Helmet, CORS, el ValidationPipe global y la configuración de Swagger.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/main.ts">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());</code></pre></div><div class="panel"><h3>Dos rutas hacia el mismo contrato</h3><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Error conocido de Prisma</strong><span>P2025, P2002, P2003…</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">02</span><strong>Filtro específico</strong><span>PrismaExceptionFilter</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">03</span><strong>Respuesta</strong><span>Los cuatro campos</span></div></div><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Otras excepciones</strong><span>HTTP o inesperadas</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">02</span><strong>Filtro general</strong><span>HttpExceptionFilter</span></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-step"><span class="fs-index">03</span><strong>Respuesta</strong><span>Los cuatro campos</span></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver main.ts completo</span><span class="code-reveal-note">Archivo: main.ts · Ubicación: src/ · Reemplazar · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar · typescript</span><span class="code-file" title="src/main.ts">src/main.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import &#x27;dotenv/config&#x27;;
+import { NestFactory } from &#x27;@nestjs/core&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common&#x27;;
+import { SwaggerModule, DocumentBuilder } from &#x27;@nestjs/swagger&#x27;;
+import helmet from &#x27;helmet&#x27;;
+import { AppModule } from &#x27;./app.module&#x27;;
+import { PrismaExceptionFilter } from &#x27;./common/filters/prisma-exception.filter&#x27;;
+import { HttpExceptionFilter } from &#x27;./common/filters/http-exception.filter&#x27;;
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true }),
+  );
+
+  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle(&#x27;Finanzas API&#x27;)
+    .setDescription(&#x27;API de finanzas personales · Dev Senior&#x27;)
+    .setVersion(&#x27;1.0&#x27;)
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(&#x27;docs&#x27;, app, document);
+
+  await app.listen(3000);
+}
+bootstrap();</code></pre></div></div></details><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>El orden no es una cadena de transformación</h3><p>El filtro general se declara primero en <code>useGlobalFilters</code>; el específico puede resolver los errores que reconoce. No se envía la misma excepción de un filtro al otro para completar el JSON.</p></div></div></div></section><section class="section view" id="pruebas-errores" data-accent="3" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">⚖</span><div><span class="sec-n">13 · Comprobar el contrato</span><h2 class="sec-t">Dos orígenes, la misma forma</h2><p class="sec-s">Este es el punto de integración que necesitaba el frontend.</p></div></div><div class="body"><div class="panel"><h3>A · Error de validación</h3><div class="code-block"><div class="code-head"><div><span class="code-context">GET · plaintext</span><span class="code-file" title="Postman · URL">Postman · URL</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">http://localhost:3000/transacciones?pagina=-1</code></pre></div><p><strong>400</strong>, atendido por <code>HttpExceptionFilter</code>. El mensaje explica la regla de página.</p></div><div class="panel"><h3>B · Error real de Prisma</h3><p>Envía <strong>POST</strong> a <code>http://localhost:3000/transacciones</code> con el token de Ana. En <strong>Body → raw → JSON</strong>, copia este payload. La categoría <code>9999</code> debe ser inexistente para reproducir el caso.</p><div class="code-block"><div class="code-head"><div><span class="code-context">Enviar · json</span><span class="code-file" title="Postman · Body raw">Postman · Body raw</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-json">{ &quot;descripcion&quot;: &quot;Prueba&quot;, &quot;monto&quot;: 10000, &quot;tipo&quot;: &quot;GASTO&quot;, &quot;categoriaId&quot;: 9999 }</code></pre></div><p><strong>400</strong>, código Prisma <code>P2003</code>, atendido por <code>PrismaExceptionFilter</code>: «La relación referenciada no existe».</p></div><ul class="checklist"><li>Ambas respuestas incluyen <code>statusCode</code>, <code>timestamp</code>, <code>path</code> y <code>message</code>.</li><li>El estado y mensaje expresan la causa; el formato común permite al frontend interpretarlas con el mismo contrato.</li></ul><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Un 404 distinto</h3><p><code>GET /transacciones/9999999</code>, si el registro no existe, lanza la <code>NotFoundException</code> del Service: «La transacción no existe». Ese caso lo atiende el filtro general, no el de Prisma.</p></div></div></div></section><section class="section view" id="swagger" data-accent="2" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">📖</span><div><span class="sec-n">14 · Documentar el contrato</span><h2 class="sec-t">Una definición reutilizable</h2><p class="sec-s">La implementación responde; OpenAPI describe esa respuesta.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Compara responsabilidades</span><p class="micro-task-q">¿ErrorRespuestaDto necesita class-validator para que Swagger muestre los errores?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">No. Este DTO describe una salida; no valida una entrada. @ApiProperty documenta las propiedades y @ApiResponse referencia la clase.</p></details></div><p><code>@nestjs/swagger</code> genera la especificación OpenAPI desde el código y sus decoradores. Es el manual interactivo en <code>/docs</code>: mantenerlo correcto requiere conservar la correspondencia entre documentación y comportamiento.</p><div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Describir el error una vez</h3><p class="build-step-purpose">Crea primero ErrorRespuestaDto. statusCode es numérico; timestamp y path son texto; message puede contener uno o varios mensajes.</p></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver error-respuesta.dto.ts completo</span><span class="code-reveal-note">Archivo: error-respuesta.dto.ts · Ubicación: src/common/dto/ · Crear · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear · typescript</span><span class="code-file" title="src/common/dto/error-respuesta.dto.ts">src/common/dto/error-respuesta.dto.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
+
+export class ErrorRespuestaDto {
+  @ApiProperty({ example: 400 })
+  statusCode!: number;
+
+  @ApiProperty({ example: &#x27;2026-09-04T15:30:00.000Z&#x27; })
+  timestamp!: string;
+
+  @ApiProperty({ example: &#x27;/transacciones&#x27; })
+  path!: string;
+
+  @ApiProperty({
+    example: [&#x27;El monto debe ser positivo&#x27;],
+    description: &#x27;Uno o varios mensajes, según el tipo de error&#x27;,
+  })
+  message!: string | string[];
+}</code></pre></div></div></details><div class="active-build"><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Referenciarlo desde el controlador</h3><p class="build-step-purpose">Añade ApiResponse y el import del DTO. El 401 a nivel de clase documenta la falta de autenticación; el 400 en obtenerMias documenta filtros inválidos.</p><div class="code-block" data-role="fragment"><div class="code-head"><div><span class="code-context">Fragmento · typescript</span><span class="code-file" title="src/transacciones/transacciones.controller.ts">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">@ApiResponse({ status: 401, description: &#x27;No autenticado&#x27;, type: ErrorRespuestaDto })</code></pre></div></div></div></div><details class="code-reveal"><summary><span><span class="code-reveal-title">Ver transacciones.controller.ts completo · con errores documentados</span><span class="code-reveal-note">Archivo: transacciones.controller.ts · Ubicación: src/transacciones/ · Reemplazar · TypeScript</span></span></summary><div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar · typescript</span><span class="code-file" title="src/transacciones/transacciones.controller.ts">src/transacciones/transacciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import {
+  ApiBearerAuth,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/jwt-auth.guard&#x27;;
+import { RolesGuard } from &#x27;../auth/roles.guard&#x27;;
+import { Roles } from &#x27;../auth/roles.decorator&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { UsuarioActual } from &#x27;../auth/usuario-actual.decorator&#x27;;
+import { TransaccionesService } from &#x27;./transacciones.service&#x27;;
+import { CrearTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ActualizarTransaccionDto } from &#x27;./dto/actualizar-transaccion.dto&#x27;;
+import { FiltrarTransaccionesDto } from &#x27;./dto/filtrar-transacciones.dto&#x27;;
+import { TipoTransaccionDto } from &#x27;./dto/crear-transaccion.dto&#x27;;
+import { ErrorRespuestaDto } from &#x27;../common/dto/error-respuesta.dto&#x27;;
+
+@ApiTags(&#x27;transacciones&#x27;)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@ApiResponse({ status: 401, description: &#x27;No autenticado&#x27;, type: ErrorRespuestaDto })
+@Controller(&#x27;transacciones&#x27;)
+export class TransaccionesController {
+  constructor(private readonly transaccionesService: TransaccionesService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  @ApiQuery({ name: &#x27;tipo&#x27;, required: false, enum: TipoTransaccionDto })
+  @ApiQuery({ name: &#x27;desde&#x27;, required: false, example: &#x27;2026-01-01&#x27; })
+  @ApiQuery({ name: &#x27;hasta&#x27;, required: false, example: &#x27;2026-01-31&#x27; })
+  @ApiQuery({ name: &#x27;pagina&#x27;, required: false, example: 1 })
+  @ApiQuery({ name: &#x27;limite&#x27;, required: false, example: 10 })
+  @ApiResponse({ status: 400, description: &#x27;Filtros inválidos&#x27;, type: ErrorRespuestaDto })
+  obtenerMias(
+    @Query() filtros: FiltrarTransaccionesDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerMias(usuario.id, filtros);
+  }
+
+  @Get(&#x27;admin/todas&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  obtenerTodasAdmin() {
+    return this.transaccionesService.obtenerTodasAdmin();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerUna(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.obtenerUna(id, usuario.id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() dto: ActualizarTransaccionDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.actualizar(id, dto, usuario.id);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.transaccionesService.eliminar(id, usuario.id);
+  }
+}</code></pre></div></div></details><ul class="checklist"><li>Abre <a href="http://localhost:3000/docs" target="_blank" rel="noopener">http://localhost:3000/docs</a>.</li><li>GET /transacciones debe mostrar <code>tipo</code>, <code>desde</code>, <code>hasta</code>, <code>pagina</code> y <code>limite</code>.</li><li>Las respuestas <code>400</code> y <code>401</code> deben referenciar <code>ErrorRespuestaDto</code>.</li></ul><div class="callout" data-tone="info"><span class="callout-icon" aria-hidden="true">i</span><div><h3>Extender el mismo patrón</h3><p>Para documentar 403 o 404 en otras rutas, referencia la misma clase en su <code>@ApiResponse</code>. Los decoradores documentan; no crean ni cambian el comportamiento de los errores.</p></div></div></div></section><section class="section view" id="practica" data-accent="4" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">🛠</span><div><span class="sec-n">15 · Transferir con Cursor</span><h2 class="sec-t">Paginar la vista de soporte</h2><p class="sec-s">Reutiliza el patrón y cambia una decisión: el alcance de los registros.</p></div></div><div class="body"><div class="micro-task"><span class="component-label">Recupera antes de delegar</span><p class="micro-task-q">¿Qué protección conservas y qué filtro omites en el listado administrativo?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Se conservan RolesGuard y @Roles([Rol.ADMIN]). Se omite el filtro por usuarioId porque soporte consulta registros de todos los usuarios.</p></details></div><p>Abre el agente de Cursor sobre <code>finanzas-api</code>. El endpoint administrativo aún usa <code>obtenerTodasAdmin</code> sin paginación. Pídele que aplique el patrón que ya construiste con este encargo.</p><div class="code-block"><div class="code-head"><div><span class="code-context">Prompt · plaintext</span><span class="code-file" title="Cursor · Agente">Cursor · Agente</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">En transacciones.service.ts, agrega un método obtenerTodasAdminConFiltros que reciba el mismo FiltrarTransaccionesDto que ya existe, y aplique el mismo patrón de filtros y paginación que tiene obtenerMias, pero sin filtrar por usuarioId (este método es para administradores y debe ver transacciones de todos). Incluye usuario con id, nombre y email, igual que la versión actual. Luego actualiza el endpoint GET /transacciones/admin/todas en el controlador para que reciba los mismos query params con @Query(), conservando @UseGuards(RolesGuard) y @Roles([Rol.ADMIN]) — no los quites ni los cambies.</code></pre></div><ul class="checklist"><li>El nuevo método <code>obtenerTodasAdminConFiltros</code> no recibe <code>usuarioId</code>.</li><li>El endpoint conserva <code>@UseGuards(RolesGuard)</code> y <code>@Roles([Rol.ADMIN])</code>.</li><li>Reutiliza <code>FiltrarTransaccionesDto</code> e incluye <code>usuario</code> con <code>id</code>, <code>nombre</code> y <code>email</code>.</li></ul><div class="code-block"><div class="code-head"><div><span class="code-context">GET · plaintext</span><span class="code-file" title="Postman · URL">Postman · URL</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-plaintext">http://localhost:3000/transacciones/admin/todas?tipo=GASTO&amp;pagina=1&amp;limite=5</code></pre></div><div class="callout" data-tone="success"><span class="callout-icon" aria-hidden="true">✓</span><div><h3>Checkpoint de transferencia</h3><p>Usa el token de una administradora, cuyo rol se configuró en Prisma Studio en C2. Espera <strong>200 OK</strong>, <code>datos</code> con el alcance de todos los usuarios y <code>meta</code> de paginación. El resultado depende de los registros existentes.</p></div></div></div></section><section class="section view" id="cierre" data-accent="1" data-layout="focus" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">✅</span><div><span class="sec-n">16 · Qué cambió</span><h2 class="sec-t">Un historial que se puede integrar</h2><p class="sec-s">Devolver registros ya no basta: ahora la API expresa sus reglas y sus errores.</p></div></div><div class="body"><ul class="checklist"><li><strong>Problema resuelto:</strong> el historial ya permite consultas acotadas; las respuestas de error comparten una estructura.</li><li><strong>Construimos:</strong> filtros y paginación por propietario, validación de rango, filtros de excepciones coordinados y documentación del contrato.</li><li><strong>Ahora puedes:</strong> verificar consultas válidas, interpretar rechazos y revisar una ampliación administrativa generada con IA.</li></ul><div class="panel"><h3>Tres ideas para conservar</h3><p><strong>1. Valida en la frontera.</strong> Transforma y comprueba antes del negocio.</p><p><strong>2. Coordina el contrato.</strong> Cada filtro que responde debe cumplirlo.</p><p><strong>3. Documenta lo que ocurre.</strong> El esquema y las pruebas deben corresponder al comportamiento.</p></div><div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">¿Está lista para recibir usuarios reales desde internet?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Aún falta preparar la producción: variables de entorno, JWT_SECRET adecuado, Docker y despliegue. Ese es el siguiente avance de C4.</p></div></details></div></div></section><section class="section view" id="consulta" data-accent="2" data-layout="canvas" hidden><div class="sec-head"><span class="sec-icon" aria-hidden="true">📚</span><div><span class="sec-n">17 · Consulta opcional</span><h2 class="sec-t">Cuando necesitas volver a una pieza</h2><p class="sec-s">Diagnóstico, mapa de archivos y preguntas para seguir pensando.</p></div></div><div class="body"><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Señal</th><th scope="col">Cómo interpretarla</th><th scope="col">Qué revisar</th></tr></thead><tbody><tr><td>El filtro de fecha no afecta el resultado</td><td>Un nombre desconocido puede descartarse con whitelist.</td><td>Usa <code>desde</code>, no <code>Desde</code>.</td></tr><tr><td>Se rechaza hasta</td><td>Puede ser anterior a desde o tener un formato inválido.</td><td>Lee el mensaje y revisa formato y orden.</td></tr><tr><td>Prisma devuelve 500 genérico</td><td>El filtro general puede estar atendiendo el error específico.</td><td>General primero en useGlobalFilters; revisa ambas implementaciones.</td></tr><tr><td>Faltan query params en Swagger</td><td>La documentación no refleja los campos.</td><td>En esta guía, comprueba los cinco @ApiQuery.</td></tr><tr><td>Se rechaza un número de la query</td><td>Sin @Type, el valor puede conservarse como texto y fallar @IsInt.</td><td>Verifica @Type y transform: true; no asumas que el resultado es undefined.</td></tr></tbody></table></div><div class="table-wrap"><table class="data-table"><caption>Mapa de implementación</caption><thead><tr><th scope="col">Archivo</th><th scope="col">Ubicación</th><th scope="col">Acción</th></tr></thead><tbody><tr><td><code>filtrar-transacciones.dto.ts</code></td><td><code>src/transacciones/dto/</code></td><td>Crear</td></tr><tr><td><code>transacciones.service.ts</code></td><td><code>src/transacciones/</code></td><td>Reemplazar</td></tr><tr><td><code>transacciones.controller.ts</code></td><td><code>src/transacciones/</code></td><td>Reemplazar en dos etapas</td></tr><tr><td><code>http-exception.filter.ts</code></td><td><code>src/common/filters/</code></td><td>Crear</td></tr><tr><td><code>prisma-exception.filter.ts</code></td><td><code>src/common/filters/</code></td><td>Reemplazar</td></tr><tr><td><code>main.ts</code></td><td><code>src/</code></td><td>Reemplazar</td></tr><tr><td><code>error-respuesta.dto.ts</code></td><td><code>src/common/dto/</code></td><td>Crear</td></tr><tr><td><code>seguridad-backend.mdc</code></td><td><code>.cursor/rules/</code></td><td>Revisar · existe desde C2</td></tr></tbody></table></div><div class="micro-task"><span class="component-label">Transfiere</span><p class="micro-task-q">Si añades categoriaId como filtro, ¿qué piezas necesitas revisar?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">El DTO incorpora la regla de entrada; el Service aplica la condición al where y el controlador/documentación refleja el parámetro. La paginación y el contrato de error se reutilizan.</p></details></div><div class="micro-task"><span class="component-label">Explica</span><p class="micro-task-q">¿Por qué message puede ser texto o un arreglo?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Una validación puede producir varios mensajes; otras excepciones expresan una sola causa. El cliente debe manejar ambas posibilidades.</p></details></div><div class="panel"><h3>Detalles para profundizar</h3><p>El DTO de salida conserva el código de la fuente. Una unión TypeScript como <code>string | string[]</code> no describe por sí sola sus alternativas en OpenAPI; comprueba el esquema generado y considera una definición explícita con <code>oneOf</code> al profundizar. <a href="https://docs.nestjs.com/openapi/types-and-parameters" target="_blank" rel="noopener">Tipos y parámetros de NestJS</a>.</p><p>Los filtros de este ejercicio cubren las excepciones de las peticiones atendidas por Nest. El registro local sirve para estudiar; el monitoreo de producción requiere un trabajo adicional, que puede apoyarse en herramientas como Sentry o Datadog.</p></div><p class="doc-foot">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · <a href="https://www.linkedin.com/in/ana-alvarado-instructora-full-stack" target="_blank" rel="noopener">linkedin.com/in/ana-alvarado-instructora-full-stack</a></p></div></section></div>      <nav class="view-controls" id="viewControls" aria-label="Navegación entre secciones">
+        <button class="view-btn" id="prevView" type="button" aria-label="Sección anterior">←</button>
+        <span class="view-position" id="viewPosition" aria-live="polite">Portada</span>
+        <button class="view-btn" id="nextView" type="button" aria-label="Sección siguiente">→</button>
+      </nav>
+    </main>
+  </div>
+  <script src="recursos/prism-core.min.js"></script>
+<script src="recursos/prism-markup.min.js"></script>
+<script src="recursos/prism-css.min.js"></script>
+<script src="recursos/prism-clike.min.js"></script>
+<script src="recursos/prism-javascript.min.js"></script>
+<script src="recursos/prism-typescript.min.js"></script>
+<script src="recursos/prism-json.min.js"></script>
+<script src="recursos/prism-bash.min.js"></script>
+<script src="recursos/prism-line-numbers.min.js"></script>
+<script src="anaclase-v11.js"></script>
+</body>
+</html>
