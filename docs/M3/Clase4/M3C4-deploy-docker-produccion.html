@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro" data-tema-base="oscuro" data-empresa="dev-senior" data-paleta="cobalto" data-atmosfera="tecnica">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="description" content="Clase visual sobre variables de entorno, Docker, Supabase y deploy de NestJS en Render.">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>Módulo 3 · Clase 4 · Deploy y Docker · Ana Alvarado</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='12' width='48' height='40' rx='10' fill='%235b8cff'/%3E%3Cpath d='M20 25h24v18H20zM20 31h24M32 25v18' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+  <link rel="stylesheet" href="anaestilos-v11.css">
+</head>
+<body>
+  <a class="skip-link" href="#s1">Saltar al contenido</a>
+  <div class="topline" id="topline" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles"><button class="ctrl" id="temaBtn" type="button" aria-label="Cambiar tema">☀</button><button class="ctrl" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button></div>
+  <div class="shell" id="shell" data-collapsed="false">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sb-top"><span class="brand-mark">A</span><div class="sb-title"><b>JavaScript AI Backend</b><span>Módulo 3 · Clase 4</span></div></div>
+      <button class="sb-toggle" id="collapseBtn" type="button" aria-label="Colapsar menú">‹</button>
+      <nav class="sb-nav" id="nav" aria-label="Secciones"><a class="nav-item active" data-icon="✦" href="#portada"><span class="nav-index">00</span><span class="nav-label">Portada</span></a>
+<a class="nav-item" data-icon="🚨" href="#s1"><span class="nav-index">01</span><span class="nav-label">Incidente</span></a>
+<a class="nav-item" data-icon="🧱" href="#s2"><span class="nav-index">02</span><span class="nav-label">Estructura segura</span></a>
+<a class="nav-item" data-icon="🗄️" href="#s3"><span class="nav-index">03</span><span class="nav-label">Prisma</span></a>
+<a class="nav-item" data-icon="🔐" href="#s4"><span class="nav-index">04</span><span class="nav-label">Autenticación</span></a>
+<a class="nav-item" data-icon="✅" href="#s5"><span class="nav-index">05</span><span class="nav-label">Tareas</span></a>
+<a class="nav-item" data-icon="🧪" href="#s6"><span class="nav-index">06</span><span class="nav-label">Prueba local</span></a>
+<a class="nav-item" data-icon="🔑" href="#s7"><span class="nav-index">07</span><span class="nav-label">Entorno</span></a>
+<a class="nav-item" data-icon="📦" href="#s8"><span class="nav-index">08</span><span class="nav-label">Docker</span></a>
+<a class="nav-item" data-icon="🐳" href="#s9"><span class="nav-index">09</span><span class="nav-label">Contenedor</span></a>
+<a class="nav-item" data-icon="☁️" href="#s10"><span class="nav-index">10</span><span class="nav-label">Supabase</span></a>
+<a class="nav-item" data-icon="🌿" href="#s11"><span class="nav-index">11</span><span class="nav-label">GitHub</span></a>
+<a class="nav-item" data-icon="🚀" href="#s12"><span class="nav-index">12</span><span class="nav-label">Render</span></a>
+<a class="nav-item" data-icon="🔬" href="#s13"><span class="nav-index">13</span><span class="nav-label">Pruebas</span></a>
+<a class="nav-item" data-icon="🏁" href="#s14"><span class="nav-index">14</span><span class="nav-label">Cierre</span></a></nav>
+      <div class="sb-prog"><div class="lbl"><span>Progreso</span><span id="progPct">0%</span></div><div class="track"><div class="fill" id="progFill"></div></div></div>
+      <p class="sb-foot">Dev Senior<br>Backend listo para producción</p>
+    </aside>
+    <main class="main">
+      <header class="hero view" id="portada" data-accent="1">
+        <div class="hero-inner">
+          <div class="hero-copy"><span class="eyebrow">Módulo 3 · Clase 4 · 120 min</span><h1 class="hero-title">De localhost a <em>producción</em></h1><p class="hero-lead">Construye desde código verificado y despliega un gestor de tareas seguro con Docker, Supabase y Render.</p><div class="meta"><span class="pill" data-hot>NestJS 11</span><span class="pill">Prisma 7</span><span class="pill">Docker</span><span class="pill">Deploy real</span></div></div>
+          <figure class="hero-visual"><div class="emoji-line"><span class="emoji-hero">📦</span><span class="emoji-hero">☁️</span></div><figcaption class="hero-note">Estructura exacta. Código verificado. Una URL pública.</figcaption></figure>
+        </div>
+      </header>
+      <div class="content"><section class="section view" id="s1" data-accent="1" data-layout="split" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🚨</span>
+        <div class="sec-copy">
+          <span class="sec-n">01 · Incidente</span>
+          <h2 class="sec-t">En mi máquina sí funciona</h2>
+          <p class="sec-s">La API existe, pero nadie fuera de tu computador puede alcanzarla.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="socratica">
+    <span class="component-label">Para pensar</span>
+    <p class="socratica-q">Un reclutador abre http://localhost:3000 desde otro país. ¿Qué le falta exactamente a la API para que pueda usarla?</p>
+    <p class="socratica-hint">No respondas solo “subirla”. Identifica las dependencias que hoy viven en tu máquina.</p>
+    <details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body">
+      <p class="lead-answer">Configuración externa, un paquete reproducible, una base pública y un servidor con URL.</p>
+      <p>Las variables de entorno separan configuración y secretos; Docker empaqueta la ejecución; Supabase aloja PostgreSQL; Render ejecuta el contenedor y publica HTTPS.</p>
+    </div></details>
+  </div>
+  <div class="panel">
+    <h3>El avance del módulo</h3>
+    <div class="timeline">
+      <div class="timeline-item"><h3>C1 · Identidad</h3><p>Registro, login, bcrypt y JWT.</p></div>
+      <div class="timeline-item"><h3>C2 · Permisos</h3><p>Roles, guards y autorización RBAC.</p></div>
+      <div class="timeline-item"><h3>C3 · Calidad</h3><p>Validaciones, errores uniformes y Swagger.</p></div>
+      <div class="timeline-item"><h3>C4 · Producción</h3><p>La API sale de localhost y se vuelve evaluable.</p></div>
+    </div>
+  </div>
+</div>
+    </section><section class="section view" id="s2" data-accent="2" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🧱</span>
+        <div class="sec-copy">
+          <span class="sec-n">02 · Estructura segura</span>
+          <h2 class="sec-t">Preparar el proyecto sin gastar IA en código</h2>
+          <p class="sec-s">Cursor crea únicamente las rutas vacías; el código completo y verificado se copia desde esta SPA.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="active-build">
+    <div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Crear NestJS 11</h3><p class="build-step-purpose">La versión queda fijada para conservar el proyecto CommonJS que usa esta clase.</p><div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">Carpeta de proyectos</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx @nestjs/cli@11 new gestor-tareas --package-manager npm
+cd gestor-tareas</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Instalar el stack exacto</h3><p class="build-step-purpose">Auth, validación, Swagger, seguridad y Prisma 7 con driver adapter.</p><div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npm install @nestjs/jwt@^11 @nestjs/passport@^11 passport passport-jwt bcrypt class-validator class-transformer @nestjs/swagger@^11 helmet dotenv @prisma/client@^7 @prisma/adapter-pg pg
+npm install -D prisma@^7 @types/passport-jwt @types/bcrypt @types/pg</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">03</span><div class="build-step-copy"><h3 class="build-step-title">Inicializar Prisma 7</h3><p class="build-step-purpose">Este paso crea prisma/schema.prisma, prisma.config.ts y .env antes de editarlos.</p><div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma init --datasource-provider postgresql</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">04</span><div class="build-step-copy"><h3 class="build-step-title">Crear solo la estructura faltante</h3><p class="build-step-purpose">Pega este prompt en el Agente de Cursor. No genera lógica ni sobrescribe los archivos creados por Nest y Prisma.</p><div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Prompt</span><span class="code-file">Agente de Cursor · raíz del proyecto</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-plaintext">Crea la siguiente estructura de carpetas y archivos vacíos. No escribas código dentro de ellos y no sobrescribas ningún archivo que ya exista; solo crea los faltantes:
+
+src/prisma/prisma.service.ts
+src/prisma/prisma.module.ts
+src/auth/dto/register.dto.ts
+src/auth/dto/login.dto.ts
+src/auth/auth.service.ts
+src/auth/auth.controller.ts
+src/auth/auth.module.ts
+src/auth/jwt.strategy.ts
+src/auth/jwt-auth.guard.ts
+src/auth/usuario-actual.decorator.ts
+src/auth/roles.decorator.ts
+src/auth/roles.guard.ts
+src/tareas/dto/crear-tarea.dto.ts
+src/tareas/dto/actualizar-tarea.dto.ts
+src/tareas/tareas.service.ts
+src/tareas/tareas.controller.ts
+src/tareas/tareas.module.ts
+src/common/filters/http-exception.filter.ts
+.cursor/rules/seguridad-backend.mdc
+.env.example
+Dockerfile
+.dockerignore
+
+.env, src/main.ts, src/app.module.ts, prisma/schema.prisma y prisma.config.ts ya existen: consérvalos intactos.</code></pre>
+    </div></div></div>
+  </div>
+  <div class="micro-task"><span class="component-label">Decide el límite</span><p class="micro-task-q">¿Qué parte se delega a Cursor en esta clase: la lógica del backend o la estructura?</p><details class="micro-reveal"><summary>Comprobar criterio</summary><p class="micro-answer"><strong>Solo la estructura.</strong> Cursor crea carpetas y archivos vacíos. Después pegas en cada ruta el código verificado de esta SPA.</p></details></div>
+  <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Archivos que se reemplazan, no se crean</h3><p>src/main.ts y src/app.module.ts nacen con Nest; prisma/schema.prisma, prisma.config.ts y .env nacen con prisma init. El prompt los conserva para no borrar su contenido.</p></div></div>
+  <details class="code-reveal" data-reference="true">
+      <summary><span><span class="code-reveal-title">Alternativa sin Cursor</span><span class="code-reveal-note">Ejecutar · raíz del proyecto · Mac/Linux</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Ejecutar</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">mkdir -p src/prisma src/auth/dto src/tareas/dto src/common/filters .cursor/rules
+touch src/prisma/prisma.service.ts src/prisma/prisma.module.ts \
+  src/auth/dto/register.dto.ts src/auth/dto/login.dto.ts \
+  src/auth/auth.service.ts src/auth/auth.controller.ts src/auth/auth.module.ts \
+  src/auth/jwt.strategy.ts src/auth/jwt-auth.guard.ts \
+  src/auth/usuario-actual.decorator.ts src/auth/roles.decorator.ts src/auth/roles.guard.ts \
+  src/tareas/dto/crear-tarea.dto.ts src/tareas/dto/actualizar-tarea.dto.ts \
+  src/tareas/tareas.service.ts src/tareas/tareas.controller.ts src/tareas/tareas.module.ts \
+  src/common/filters/http-exception.filter.ts \
+  .cursor/rules/seguridad-backend.mdc .env.example Dockerfile .dockerignore</code></pre>
+    </div>
+      </div>
+    </details>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">Reglas de seguridad de Cursor</span><span class="code-reveal-note">Crear · .cursor/rules/seguridad-backend.mdc · Markdown</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">.cursor/rules/seguridad-backend.mdc</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-markdown">---
+description: Reglas de seguridad para gestor-tareas (NestJS + Prisma + JWT)
+alwaysApply: true
+---
+
+# Seguridad de autenticación y autorización
+
+- Nunca agregues un campo &quot;rol&quot; ni &quot;usuarioId&quot; a un DTO que el cliente pueda
+  enviar. El rol y el dueño de un recurso se asignan en el servidor, nunca
+  vienen del body de la petición.
+- Toda contraseña se cifra con bcrypt (factor de costo 10 o más). Nunca la
+  guardes ni la registres en texto plano, ni en logs ni en consola.
+- El JWT se firma solo con el algoritmo por defecto de @nestjs/jwt. Nunca
+  sugieras deshabilitar la verificación de la firma.
+- Todo endpoint que modifique o exponga datos debe pasar por JwtAuthGuard, y
+  si aplica una restricción de rol, también por RolesGuard.
+- Los mensajes de error de login y registro nunca deben revelar si un email
+  existe o no en la base de datos.
+- Nunca imprimas JWT_SECRET, DATABASE_URL, un access_token completo ni
+  contraseñas en console.log ni en mensajes de error.
+- La configuración sensible (JWT_SECRET, DATABASE_URL) se lee de variables de
+  entorno; nunca la escribas literal en el código ni la subas a GitHub.</code></pre>
+    </div>
+      </div>
+    </details>
+  <div class="checkpoint"><span class="component-label">Antes de continuar</span><h3>Rutas vacías, fuente verificada</h3><p>Comprueba que la estructura existe. Luego abre los respaldos completos de las secciones siguientes, copia cada archivo en su ruta exacta y guarda.</p></div>
+</div>
+    </section><section class="section view" id="s3" data-accent="3" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🗄️</span>
+        <div class="sec-copy">
+          <span class="sec-n">03 · Base técnica</span>
+          <h2 class="sec-t">El dominio y la conexión a PostgreSQL</h2>
+          <p class="sec-s">Usuario y Tarea forman el modelo; PrismaService concentra una conexión que cambia por entorno, no por código.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="rel-pair">
+    <div class="entity" data-emphasis><div class="entity-name">Usuario</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li class="is-key"><span class="key uq">UQ</span> email</li><li>rol · USUARIO | ADMIN</li></ul></div>
+    <div class="rel-link"><span class="rel-card">1 : n</span><span class="rel-desc">un usuario posee muchas tareas</span></div>
+    <div class="entity" data-accent="2"><div class="entity-name">Tarea</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li class="is-key"><span class="key fk">FK</span> usuarioId</li><li>estado · prioridad</li></ul></div>
+  </div>
+  <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Ajuste de integridad técnica</h3><p>Prisma 7 necesita un prisma.config.ts en la raíz para que la CLI encuentre el schema, las migraciones y DATABASE_URL. La guía lo mencionaba, pero no mostraba su contenido; aquí queda completo.</p></div></div>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">schema.prisma completo</span><span class="code-reveal-note">Reemplazar · prisma/schema.prisma · Prisma</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Reemplazar</span><span class="code-file">prisma/schema.prisma</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = &quot;prisma-client&quot;
+  output       = &quot;../src/generated/prisma&quot;
+  moduleFormat = &quot;cjs&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+}
+
+enum Rol {
+  USUARIO
+  ADMIN
+}
+
+enum EstadoTarea {
+  PENDIENTE
+  EN_PROGRESO
+  COMPLETADA
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       Rol      @default(USUARIO)
+  creadoEn  DateTime @default(now())
+  tareas    Tarea[]
+
+  @@map(&quot;usuarios&quot;)
+}
+
+model Tarea {
+  id          Int         @id @default(autoincrement())
+  titulo      String
+  descripcion String?
+  estado      EstadoTarea @default(PENDIENTE)
+  prioridad   Prioridad   @default(MEDIA)
+  usuarioId   Int
+  creadoEn    DateTime    @default(now())
+  usuario     Usuario     @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@map(&quot;tareas&quot;)
+}</code></pre>
+    </div>
+      </div>
+    </details>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">prisma.config.ts completo</span><span class="code-reveal-note">Crear · prisma.config.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">prisma.config.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import &#x27;dotenv/config&#x27;;
+import { defineConfig, env } from &#x27;prisma/config&#x27;;
+
+export default defineConfig({
+  schema: &#x27;prisma/schema.prisma&#x27;,
+  migrations: {
+    path: &#x27;prisma/migrations&#x27;,
+  },
+  datasource: {
+    url: env(&#x27;DATABASE_URL&#x27;),
+  },
+});</code></pre>
+    </div>
+      </div>
+    </details>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">PrismaService completo</span><span class="code-reveal-note">Crear · src/prisma/prisma.service.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/prisma/prisma.service.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable, OnModuleInit, OnModuleDestroy } from &#x27;@nestjs/common&#x27;;
+import { PrismaPg } from &#x27;@prisma/adapter-pg&#x27;;
+import { PrismaClient } from &#x27;../generated/prisma/client&#x27;;
+
+@Injectable()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  constructor() {
+    super({
+      adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+    });
+  }
+
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">PrismaModule completo</span><span class="code-reveal-note">Crear · src/prisma/prisma.module.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/prisma/prisma.module.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Global, Module } from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;./prisma.service&#x27;;
+
+@Global()
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService],
+})
+export class PrismaModule {}</code></pre>
+    </div>
+      </div>
+    </details>
+</div>
+    </section><section class="section view" id="s4" data-accent="4" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🔐</span>
+        <div class="sec-copy">
+          <span class="sec-n">04 · Repaso aplicado</span>
+          <h2 class="sec-t">Autenticación y autorización</h2>
+          <p class="sec-s">El patrón conocido se traslada al nuevo dominio: credenciales protegidas, JWT con rol y guardas en capas.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="flow">
+    <div class="flow-step"><span class="fs-index">01</span><strong>DTO</strong><span>valida la entrada</span></div><div class="flow-arrow">→</div>
+    <div class="flow-step"><span class="fs-index">02</span><strong>Service</strong><span>hash o comparación</span></div><div class="flow-arrow">→</div>
+    <div class="flow-step"><span class="fs-index">03</span><strong>JWT</strong><span>sub + email + rol</span></div><div class="flow-arrow">→</div>
+    <div class="flow-step" data-emphasis><span class="fs-index">04</span><strong>Guards</strong><span>401 antes de 403</span></div>
+  </div>
+  <div class="micro-task"><span class="component-label">Detecta el riesgo</span><p class="micro-task-q">¿Por qué el DTO de registro no acepta el campo rol?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Porque un cliente podría registrarse como ADMIN. El modelo asigna USUARIO por defecto y cualquier ascenso ocurre por un canal controlado.</p></details></div>
+  <div class="panel"><h3>Archivos completos para comparar con el diff</h3><p>Abre cada respaldo después de revisar la propuesta de Cursor. El mensaje de login es genérico, la contraseña nunca se devuelve y RolesGuard siempre trabaja después de JwtAuthGuard.</p></div>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">RegisterDto completo</span><span class="code-reveal-note">Crear · src/auth/dto/register.dto.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/dto/register.dto.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
+import { IsEmail, IsString, MinLength } from &#x27;class-validator&#x27;;
+
+export class RegisterDto {
+  @ApiProperty({ example: &#x27;Ana Alvarado&#x27; })
+  @IsString()
+  @MinLength(2, { message: &#x27;El nombre debe tener al menos 2 caracteres&#x27; })
+  nombre!: string;
+
+  @ApiProperty({ example: &#x27;ana@correo.com&#x27; })
+  @IsEmail({}, { message: &#x27;El email no tiene un formato válido&#x27; })
+  email!: string;
+
+  @ApiProperty({ example: &#x27;clave1234&#x27; })
+  @IsString()
+  @MinLength(8, { message: &#x27;La contraseña debe tener al menos 8 caracteres&#x27; })
+  password!: string;
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">LoginDto completo</span><span class="code-reveal-note">Crear · src/auth/dto/login.dto.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/dto/login.dto.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from &#x27;@nestjs/swagger&#x27;;
+import { IsEmail, IsString } from &#x27;class-validator&#x27;;
+
+export class LoginDto {
+  @ApiProperty({ example: &#x27;ana@correo.com&#x27; })
+  @IsEmail({}, { message: &#x27;El email no tiene un formato válido&#x27; })
+  email!: string;
+
+  @ApiProperty({ example: &#x27;clave1234&#x27; })
+  @IsString()
+  password!: string;
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">AuthService completo</span><span class="code-reveal-note">Crear · src/auth/auth.service.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.service.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from &#x27;@nestjs/common&#x27;;
+import { JwtService } from &#x27;@nestjs/jwt&#x27;;
+import * as bcrypt from &#x27;bcrypt&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { RegisterDto } from &#x27;./dto/register.dto&#x27;;
+import { LoginDto } from &#x27;./dto/login.dto&#x27;;
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async register(dto: RegisterDto) {
+    const existente = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (existente) {
+      throw new ConflictException(&#x27;El email ya está registrado&#x27;);
+    }
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
+    const usuario = await this.prisma.usuario.create({
+      data: { nombre: dto.nombre, email: dto.email, password: hash },
+    });
+
+    return { id: usuario.id, nombre: usuario.nombre, email: usuario.email };
+  }
+
+  async login(dto: LoginDto) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (!usuario) {
+      throw new UnauthorizedException(&#x27;Credenciales inválidas&#x27;);
+    }
+
+    const passwordOk = await bcrypt.compare(dto.password, usuario.password);
+    if (!passwordOk) {
+      throw new UnauthorizedException(&#x27;Credenciales inválidas&#x27;);
+    }
+
+    const payload = {
+      sub: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return { access_token };
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">JwtStrategy completa</span><span class="code-reveal-note">Crear · src/auth/jwt.strategy.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/jwt.strategy.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable, UnauthorizedException } from &#x27;@nestjs/common&#x27;;
+import { PassportStrategy } from &#x27;@nestjs/passport&#x27;;
+import { ExtractJwt, Strategy } from &#x27;passport-jwt&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+type JwtPayload = { sub: number; email: string; rol: Rol };
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException(&#x27;JWT_SECRET no está definida&#x27;);
+    }
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: secret,
+    });
+  }
+
+  validate(payload: JwtPayload) {
+    return { id: payload.sub, email: payload.email, rol: payload.rol };
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">JwtAuthGuard completo</span><span class="code-reveal-note">Crear · src/auth/jwt-auth.guard.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/jwt-auth.guard.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { AuthGuard } from &#x27;@nestjs/passport&#x27;;
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard(&#x27;jwt&#x27;) {}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">UsuarioActual completo</span><span class="code-reveal-note">Crear · src/auth/usuario-actual.decorator.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/usuario-actual.decorator.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { createParamDecorator, ExecutionContext } from &#x27;@nestjs/common&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+export const UsuarioActual = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) =&gt; {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user as { id: number; email: string; rol: Rol };
+  },
+);</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">Decorador Roles completo</span><span class="code-reveal-note">Crear · src/auth/roles.decorator.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/roles.decorator.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Reflector } from &#x27;@nestjs/core&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+
+export const Roles = Reflector.createDecorator&lt;Rol[]&gt;();</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">RolesGuard completo</span><span class="code-reveal-note">Crear · src/auth/roles.guard.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/roles.guard.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from &#x27;@nestjs/common&#x27;;
+import { Reflector } from &#x27;@nestjs/core&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { Roles } from &#x27;./roles.decorator&#x27;;
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const rolesRequeridos = this.reflector.get(Roles, context.getHandler());
+
+    if (!rolesRequeridos) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const usuario = request.user as { rol: Rol };
+
+    if (!rolesRequeridos.includes(usuario.rol)) {
+      throw new ForbiddenException(&#x27;No tienes permiso para realizar esta acción&#x27;);
+    }
+
+    return true;
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">AuthController completo</span><span class="code-reveal-note">Crear · src/auth/auth.controller.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.controller.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Post } from &#x27;@nestjs/common&#x27;;
+import { ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
+import { RegisterDto } from &#x27;./dto/register.dto&#x27;;
+import { LoginDto } from &#x27;./dto/login.dto&#x27;;
+
+@ApiTags(&#x27;auth&#x27;)
+@Controller(&#x27;auth&#x27;)
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post(&#x27;register&#x27;)
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
+  @Post(&#x27;login&#x27;)
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">AuthModule completo</span><span class="code-reveal-note">Crear · src/auth/auth.module.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.module.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
+import { JwtModule } from &#x27;@nestjs/jwt&#x27;;
+import { PassportModule } from &#x27;@nestjs/passport&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
+import { AuthController } from &#x27;./auth.controller&#x27;;
+import { JwtStrategy } from &#x27;./jwt.strategy&#x27;;
+
+@Module({
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: &#x27;1h&#x27; },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
+})
+export class AuthModule {}</code></pre>
+    </div>
+      </div>
+    </details>
+</div>
+    </section><section class="section view" id="s5" data-accent="1" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">✅</span>
+        <div class="sec-copy">
+          <span class="sec-n">05 · Reglas de negocio</span>
+          <h2 class="sec-t">Tareas con ownership y arranque de producción</h2>
+          <p class="sec-s">El token identifica al dueño; el servicio impide leer o modificar tareas ajenas; main.ts escucha el puerto del entorno.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="micro-task"><span class="component-label">Predice el flujo</span><p class="micro-task-q">Si una tarea existe pero pertenece a otro usuario, ¿la respuesta correcta es 404 o 403?</p><details class="micro-reveal"><summary>Ver criterio</summary><p class="micro-answer"><strong>En esta implementación: 403.</strong> La API encontró el recurso, pero el usuario autenticado no tiene permiso. Si no existe, responde 404.</p></details></div>
+  <div class="compare">
+    <div class="compare-card" data-side="positive"><h3>Ownership correcto</h3><ul><li>usuarioId sale del token</li><li>listar filtra por dueño</li><li>editar y borrar verifican primero</li></ul></div>
+    <div class="compare-card" data-side="negative"><h3>Diseño inseguro</h3><ul><li>usuarioId llega en el body</li><li>listar devuelve todo</li><li>update confía solo en el id</li></ul></div>
+  </div>
+  <div class="callout" data-tone="warning"><span class="callout-icon">!</span><div><h3>Dos líneas deciden el deploy</h3><p>main.ts debe usar process.env.PORT y escuchar en 0.0.0.0. Un puerto fijo o localhost interno dejan el servicio fuera del tráfico público.</p></div></div>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">CrearTareaDto completo</span><span class="code-reveal-note">Crear · src/tareas/dto/crear-tarea.dto.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/tareas/dto/crear-tarea.dto.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from &#x27;class-validator&#x27;;
+import { Prioridad } from &#x27;../../generated/prisma/client&#x27;;
+
+export class CrearTareaDto {
+  @ApiProperty({ example: &#x27;Preparar la guía de la clase 4&#x27; })
+  @IsString()
+  @MinLength(3, { message: &#x27;El título debe tener al menos 3 caracteres&#x27; })
+  @MaxLength(120, { message: &#x27;El título no puede superar 120 caracteres&#x27; })
+  titulo!: string;
+
+  @ApiPropertyOptional({ example: &#x27;Incluir deploy en Render y Docker&#x27; })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500, { message: &#x27;La descripción no puede superar 500 caracteres&#x27; })
+  descripcion?: string;
+
+  @ApiPropertyOptional({ enum: Prioridad, example: &#x27;ALTA&#x27; })
+  @IsOptional()
+  @IsEnum(Prioridad, { message: &#x27;La prioridad debe ser BAJA, MEDIA o ALTA&#x27; })
+  prioridad?: Prioridad;
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">ActualizarTareaDto completo</span><span class="code-reveal-note">Crear · src/tareas/dto/actualizar-tarea.dto.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/tareas/dto/actualizar-tarea.dto.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
+import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from &#x27;class-validator&#x27;;
+import { EstadoTarea, Prioridad } from &#x27;../../generated/prisma/client&#x27;;
+
+export class ActualizarTareaDto {
+  @ApiPropertyOptional({ example: &#x27;Preparar la guía de la clase 4 (revisada)&#x27; })
+  @IsOptional()
+  @IsString()
+  @MinLength(3, { message: &#x27;El título debe tener al menos 3 caracteres&#x27; })
+  @MaxLength(120, { message: &#x27;El título no puede superar 120 caracteres&#x27; })
+  titulo?: string;
+
+  @ApiPropertyOptional({ example: &#x27;Agregar sección de pruebas en producción&#x27; })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500, { message: &#x27;La descripción no puede superar 500 caracteres&#x27; })
+  descripcion?: string;
+
+  @ApiPropertyOptional({ enum: EstadoTarea, example: &#x27;EN_PROGRESO&#x27; })
+  @IsOptional()
+  @IsEnum(EstadoTarea, {
+    message: &#x27;El estado debe ser PENDIENTE, EN_PROGRESO o COMPLETADA&#x27;,
+  })
+  estado?: EstadoTarea;
+
+  @ApiPropertyOptional({ enum: Prioridad, example: &#x27;MEDIA&#x27; })
+  @IsOptional()
+  @IsEnum(Prioridad, { message: &#x27;La prioridad debe ser BAJA, MEDIA o ALTA&#x27; })
+  prioridad?: Prioridad;
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">TareasService completo</span><span class="code-reveal-note">Crear · src/tareas/tareas.service.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/tareas/tareas.service.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from &#x27;@nestjs/common&#x27;;
+import { PrismaService } from &#x27;../prisma/prisma.service&#x27;;
+import { CrearTareaDto } from &#x27;./dto/crear-tarea.dto&#x27;;
+import { ActualizarTareaDto } from &#x27;./dto/actualizar-tarea.dto&#x27;;
+
+@Injectable()
+export class TareasService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  crear(dto: CrearTareaDto, usuarioId: number) {
+    return this.prisma.tarea.create({
+      data: {
+        titulo: dto.titulo,
+        descripcion: dto.descripcion,
+        prioridad: dto.prioridad,
+        usuarioId,
+      },
+    });
+  }
+
+  obtenerMias(usuarioId: number) {
+    return this.prisma.tarea.findMany({
+      where: { usuarioId },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  obtenerTodasAdmin() {
+    return this.prisma.tarea.findMany({
+      include: {
+        usuario: { select: { id: true, nombre: true, email: true } },
+      },
+      orderBy: { id: &#x27;asc&#x27; },
+    });
+  }
+
+  async obtenerUna(id: number, usuarioId: number) {
+    const tarea = await this.prisma.tarea.findUnique({ where: { id } });
+
+    if (!tarea) {
+      throw new NotFoundException(&#x27;La tarea no existe&#x27;);
+    }
+
+    if (tarea.usuarioId !== usuarioId) {
+      throw new ForbiddenException(&#x27;Esta tarea no es tuya&#x27;);
+    }
+
+    return tarea;
+  }
+
+  async actualizar(id: number, dto: ActualizarTareaDto, usuarioId: number) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.tarea.update({ where: { id }, data: dto });
+  }
+
+  async eliminar(id: number, usuarioId: number) {
+    await this.obtenerUna(id, usuarioId);
+    return this.prisma.tarea.delete({ where: { id } });
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">TareasController completo</span><span class="code-reveal-note">Crear · src/tareas/tareas.controller.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/tareas/tareas.controller.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from &#x27;@nestjs/common&#x27;;
+import { ApiBearerAuth, ApiTags } from &#x27;@nestjs/swagger&#x27;;
+import { JwtAuthGuard } from &#x27;../auth/jwt-auth.guard&#x27;;
+import { RolesGuard } from &#x27;../auth/roles.guard&#x27;;
+import { Roles } from &#x27;../auth/roles.decorator&#x27;;
+import { Rol } from &#x27;../generated/prisma/client&#x27;;
+import { UsuarioActual } from &#x27;../auth/usuario-actual.decorator&#x27;;
+import { TareasService } from &#x27;./tareas.service&#x27;;
+import { CrearTareaDto } from &#x27;./dto/crear-tarea.dto&#x27;;
+import { ActualizarTareaDto } from &#x27;./dto/actualizar-tarea.dto&#x27;;
+
+@ApiTags(&#x27;tareas&#x27;)
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller(&#x27;tareas&#x27;)
+export class TareasController {
+  constructor(private readonly tareasService: TareasService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearTareaDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.tareasService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  obtenerMias(@UsuarioActual() usuario: { id: number }) {
+    return this.tareasService.obtenerMias(usuario.id);
+  }
+
+  @Get(&#x27;admin/todas&#x27;)
+  @UseGuards(RolesGuard)
+  @Roles([Rol.ADMIN])
+  obtenerTodasAdmin() {
+    return this.tareasService.obtenerTodasAdmin();
+  }
+
+  @Get(&#x27;:id&#x27;)
+  obtenerUna(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.tareasService.obtenerUna(id, usuario.id);
+  }
+
+  @Patch(&#x27;:id&#x27;)
+  actualizar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @Body() dto: ActualizarTareaDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.tareasService.actualizar(id, dto, usuario.id);
+  }
+
+  @Delete(&#x27;:id&#x27;)
+  eliminar(
+    @Param(&#x27;id&#x27;, ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.tareasService.eliminar(id, usuario.id);
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">TareasModule completo</span><span class="code-reveal-note">Crear · src/tareas/tareas.module.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/tareas/tareas.module.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
+import { TareasService } from &#x27;./tareas.service&#x27;;
+import { TareasController } from &#x27;./tareas.controller&#x27;;
+
+@Module({
+  controllers: [TareasController],
+  providers: [TareasService],
+})
+export class TareasModule {}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">Filtro global de excepciones</span><span class="code-reveal-note">Crear · src/common/filters/http-exception.filter.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">src/common/filters/http-exception.filter.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from &#x27;@nestjs/common&#x27;;
+import { Request, Response } from &#x27;express&#x27;;
+
+@Catch()
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse&lt;Response&gt;();
+    const request = ctx.getRequest&lt;Request&gt;();
+
+    const esExcepcionHttp = exception instanceof HttpException;
+    const statusCode = esExcepcionHttp
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    let mensaje: string | string[] = &#x27;Error interno del servidor&#x27;;
+    if (esExcepcionHttp) {
+      const cuerpo = exception.getResponse();
+      mensaje = typeof cuerpo === &#x27;string&#x27; ? cuerpo : (cuerpo as any).message;
+    } else {
+      console.error(exception);
+    }
+
+    response.status(statusCode).json({
+      statusCode,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: mensaje,
+    });
+  }
+}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">AppModule final</span><span class="code-reveal-note">Reemplazar · src/app.module.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Reemplazar</span><span class="code-file">src/app.module.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
+import { PrismaModule } from &#x27;./prisma/prisma.module&#x27;;
+import { AuthModule } from &#x27;./auth/auth.module&#x27;;
+import { TareasModule } from &#x27;./tareas/tareas.module&#x27;;
+
+@Module({
+  imports: [PrismaModule, AuthModule, TareasModule],
+})
+export class AppModule {}</code></pre>
+    </div>
+      </div>
+    </details>
+<details class="code-reveal">
+      <summary><span><span class="code-reveal-title">main.ts listo para producción</span><span class="code-reveal-note">Reemplazar · src/main.ts · TypeScript</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Reemplazar</span><span class="code-file">src/main.ts</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-typescript">import &#x27;dotenv/config&#x27;;
+import { NestFactory } from &#x27;@nestjs/core&#x27;;
+import { ValidationPipe } from &#x27;@nestjs/common&#x27;;
+import { SwaggerModule, DocumentBuilder } from &#x27;@nestjs/swagger&#x27;;
+import helmet from &#x27;helmet&#x27;;
+import { AppModule } from &#x27;./app.module&#x27;;
+import { HttpExceptionFilter } from &#x27;./common/filters/http-exception.filter&#x27;;
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.enableCors();
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle(&#x27;Gestor de Tareas API&#x27;)
+    .setDescription(&#x27;API de gestión de tareas · Dev Senior&#x27;)
+    .setVersion(&#x27;1.0&#x27;)
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(&#x27;docs&#x27;, app, document);
+
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port, &#x27;0.0.0.0&#x27;);
+}
+bootstrap();</code></pre>
+    </div>
+      </div>
+    </details>
+</div>
+    </section><section class="section view" id="s6" data-accent="2" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🧪</span>
+        <div class="sec-copy">
+          <span class="sec-n">06 · Checkpoint</span>
+          <h2 class="sec-t">Probar local antes de desplegar</h2>
+          <p class="sec-s">Primero se demuestra el flujo registro → login → crear tarea en localhost; después se cambia el entorno.</p>
+        </div>
+      </div>
+      <div class="body">
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">.env local</span><span class="code-reveal-note">Crear · .env · Bash/entorno · NO subir</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear local</span><span class="code-file">.env</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">DATABASE_URL=&quot;postgresql://postgres:postgres@localhost:5432/gestor_tareas&quot;
+JWT_SECRET=&quot;dev_secret_solo_para_pruebas_locales&quot;</code></pre>
+    </div>
+      </div>
+    </details>
+  <div class="active-build">
+    <div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Crear las tablas y generar el cliente</h3><p class="build-step-purpose">La migración queda versionada en prisma/migrations; generate produce el cliente tipado.</p><div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npx prisma migrate dev --name init
+npx prisma generate</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Levantar la API</h3><p class="build-step-purpose">Swagger debe aparecer en http://localhost:3000/docs.</p><div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">npm run start:dev</code></pre>
+    </div></div></div>
+  </div>
+  <div class="panel"><h3>Prueba guiada en Postman · localhost:3000</h3><p>En cada POST selecciona Body → raw → JSON. Conserva el access_token del login para las peticiones protegidas.</p></div>
+  <div class="active-build">
+    <div class="build-step"><span class="build-step-index">A</span><div class="build-step-copy"><h3 class="build-step-title">Registrar</h3><p class="build-step-purpose">POST /auth/register → 201. La respuesta nunca incluye password.</p><div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Body JSON</span><span class="code-file">POST /auth/register</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Ana&quot;, &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;clave1234&quot; }</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">B</span><div class="build-step-copy"><h3 class="build-step-title">Iniciar sesión</h3><p class="build-step-purpose">POST /auth/login → 201. Copia el valor de access_token sin las comillas.</p><div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Body JSON</span><span class="code-file">POST /auth/login</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;clave1234&quot; }</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">C</span><div class="build-step-copy"><h3 class="build-step-title">Autorizar</h3><p class="build-step-purpose">Authorization → Bearer Token. Pega el access_token para que la API identifique al usuario.</p><div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Authorization</span><span class="code-file">Bearer Token</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-http">Bearer eyJ...</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">D</span><div class="build-step-copy"><h3 class="build-step-title">Crear y listar</h3><p class="build-step-purpose">POST /tareas → 201; después GET /tareas → 200 y debe aparecer únicamente tu tarea.</p><div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Body JSON</span><span class="code-file">POST /tareas</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;titulo&quot;: &quot;Preparar la clase 4&quot;, &quot;descripcion&quot;: &quot;deploy + docker&quot;, &quot;prioridad&quot;: &quot;ALTA&quot; }</code></pre>
+    </div></div></div>
+  </div>
+  <ul class="checklist"><li>POST /auth/register responde 201 sin devolver password.</li><li>POST /auth/login responde 201 con access_token.</li><li>POST /tareas toma usuarioId del JWT, nunca del body.</li><li>GET /tareas responde 200 y devuelve solo las tareas propias.</li><li>Sin token, GET /tareas responde 401.</li><li>Con titulo “ab”, POST /tareas responde 400.</li></ul>
+  <div class="checkpoint"><span class="component-label">Señal observable</span><h3>Nest application successfully started</h3><p>Si los imports generados aparecen en rojo, ejecuta prisma generate antes de continuar.</p></div>
+</div>
+    </section><section class="section view" id="s7" data-accent="3" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🔑</span>
+        <div class="sec-copy">
+          <span class="sec-n">07 · Concepto central 1</span>
+          <h2 class="sec-t">La configuración no pertenece al código</h2>
+          <p class="sec-s">La misma aplicación corre en local y en producción porque el entorno aporta valores distintos.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">¿Qué podría hacer alguien que obtiene el JWT_SECRET real del repositorio?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Firmar tokens falsos y suplantar usuarios.</p><p>Además, una URL de base escrita en el código obligaría a editar y redesplegar el programa para cada entorno. Por eso ambos valores se inyectan desde fuera.</p></div></details></div>
+  <div class="table-wrap"><table class="data-table"><caption>Un nombre estable; un valor por entorno</caption><thead><tr><th>Variable</th><th>Local</th><th>Render</th></tr></thead><tbody><tr><td data-emphasis>DATABASE_URL</td><td>PostgreSQL local</td><td>Session pooler de Supabase</td></tr><tr><td data-emphasis>JWT_SECRET</td><td>secreto de prueba</td><td>secreto largo y aleatorio</td></tr><tr><td data-emphasis>PORT</td><td>3000 por defecto</td><td>inyectado por Render</td></tr></tbody></table></div>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">.env.example completo</span><span class="code-reveal-note">Crear · .env.example · Bash/entorno · sí se sube</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">.env.example</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash"># Copia el host exacto desde Supabase: Connect &gt; Session pooler.
+DATABASE_URL=&quot;postgresql://postgres.[REF]:[PASSWORD]@[POOLER-HOST]:5432/postgres&quot;
+
+# Secreto largo y aleatorio para firmar los JWT. Nunca lo subas a GitHub.
+JWT_SECRET=&quot;cambia_esto_por_un_secreto_largo_y_aleatorio&quot;
+
+# Puerto local. En Render la plataforma inyecta PORT automáticamente.
+PORT=3000</code></pre>
+    </div>
+      </div>
+    </details>
+  <div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Fragmento</span><span class="code-file">.gitignore</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-gitignore"># Verifica que esta línea exista:
+.env</code></pre>
+    </div>
+  <div class="callout" data-tone="danger"><span class="callout-icon">!</span><div><h3>Si un secreto llegó a GitHub, ya está expuesto</h3><p>No basta con borrarlo en otro commit. Retíralo del seguimiento y rota el secreto. La prevención es revisar git status antes del primer push.</p></div></div>
+</div>
+    </section><section class="section view" id="s8" data-accent="4" data-layout="split" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">📦</span>
+        <div class="sec-copy">
+          <span class="sec-n">08 · Concepto central 2</span>
+          <h2 class="sec-t">Docker elimina el “depende de mi máquina”</h2>
+          <p class="sec-s">Una imagen describe el paquete; un contenedor es una instancia de ese paquete en ejecución.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">¿Por qué instalar Node y dependencias a mano en cada servidor no garantiza el mismo resultado?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Porque cada instalación puede terminar con versiones, sistema y configuración diferentes.</p><p>La imagen fija base, dependencias, código, compilación y arranque en una receta repetible.</p></div></details></div>
+  <div class="compare">
+    <div class="compare-card" data-side="positive"><h3>Imagen</h3><ul><li>plantilla inmutable</li><li>se construye con docker build</li><li>se puede distribuir</li></ul></div>
+    <div class="compare-card" data-side="positive"><h3>Contenedor</h3><ul><li>instancia en ejecución</li><li>se inicia con docker run</li><li>recibe configuración externa</li></ul></div>
+  </div>
+  <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Modelo mental</h3><p>El Dockerfile es la receta, la imagen es el paquete sellado y el contenedor es ese paquete encendido. Render construye y ejecuta la misma receta.</p></div></div>
+</div>
+    </section><section class="section view" id="s9" data-accent="1" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🐳</span>
+        <div class="sec-copy">
+          <span class="sec-n">09 · Construcción activa</span>
+          <h2 class="sec-t">Empaquetar el backend con Docker</h2>
+          <p class="sec-s">La imagen instala, genera, compila y arranca aplicando solo las migraciones ya versionadas.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="active-build">
+    <div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Capas reproducibles</h3><p class="build-step-purpose">package*.json se copia antes que el código para reutilizar la caché de dependencias.</p><div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Fragmento</span><span class="code-file">Dockerfile</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-docker">COPY package*.json ./
+RUN npm ci
+COPY . .</code></pre>
+    </div></div></div>
+    <div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Migrar al arrancar</h3><p class="build-step-purpose">migrate deploy no crea migraciones: aplica las que ya existen en prisma/migrations.</p><div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Fragmento</span><span class="code-file">Dockerfile</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-docker">CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;npx prisma migrate deploy &amp;&amp; node dist/src/main.js&quot;]</code></pre>
+    </div></div></div>
+  </div>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">Dockerfile completo</span><span class="code-reveal-note">Crear · Dockerfile · Docker</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">Dockerfile</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-docker"># Imagen base: Node 22 sobre Debian slim
+FROM node:22-slim
+
+# Dependencia del sistema usada por Prisma
+RUN apt-get update -y &amp;&amp; apt-get install -y openssl &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Dependencias reproducibles y con caché
+COPY package*.json ./
+RUN npm ci
+
+# Código fuente, sin lo excluido por .dockerignore
+COPY . .
+
+# La URL ficticia solo permite cargar prisma.config.ts durante generate.
+# No se conecta a una base ni queda como secreto de ejecución.
+RUN DATABASE_URL=&quot;postgresql://prisma:prisma@localhost:5432/prisma&quot; npx prisma generate &amp;&amp; npm run build
+
+EXPOSE 3000
+
+# En ejecución usa DATABASE_URL y PORT inyectadas por el entorno real
+CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;npx prisma migrate deploy &amp;&amp; node dist/src/main.js&quot;]</code></pre>
+    </div>
+      </div>
+    </details>
+  <details class="code-reveal">
+      <summary><span><span class="code-reveal-title">.dockerignore completo</span><span class="code-reveal-note">Crear · .dockerignore · Texto</span></span></summary>
+      <div class="code-reveal-body">
+        <div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Crear</span><span class="code-file">.dockerignore</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-gitignore">node_modules
+dist
+.git
+.env
+*.log</code></pre>
+    </div>
+      </div>
+    </details>
+  <div class="micro-task"><span class="component-label">Explica</span><p class="micro-task-q">¿Por qué .env está fuera de la imagen si la aplicación necesita sus valores?</p><details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer">Porque la imagen debe ser genérica y distribuible. Los secretos pertenecen al entorno que ejecuta el contenedor, no a una capa que otras personas pueden inspeccionar.</p></details></div>
+  <div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/ · Docker Desktop</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">docker build -t gestor-tareas .
+docker run --rm -p 3000:3000 --env-file .env -e DATABASE_URL=&quot;postgresql://postgres:postgres@host.docker.internal:5432/gestor_tareas&quot; gestor-tareas</code></pre>
+    </div>
+  <div class="callout" data-tone="warning"><span class="callout-icon">!</span><div><h3>Dentro del contenedor, localhost es el contenedor</h3><p>El comando usa host.docker.internal para alcanzar PostgreSQL en la máquina anfitriona. La prueba principal en la nube usará una DATABASE_URL pública de Supabase.</p></div></div>
+</div>
+    </section><section class="section view" id="s10" data-accent="2" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">☁️</span>
+        <div class="sec-copy">
+          <span class="sec-n">10 · Base en la nube</span>
+          <h2 class="sec-t">Supabase: PostgreSQL accesible para Render</h2>
+          <p class="sec-s">La conexión correcta se copia desde Session pooler y conserva compatibilidad IPv4.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="stepper"><div class="step-item"><span class="step-num">1</span><h4>New project</h4><p>Nombre, contraseña y región.</p></div><div class="step-item"><span class="step-num">2</span><h4>Connect</h4><p>Elegir Session pooler.</p></div><div class="step-item"><span class="step-num">3</span><h4>Copiar exacto</h4><p>Host, usuario, puerto y password.</p></div><div class="step-item"><span class="step-num">4</span><h4>Render</h4><p>Guardar como DATABASE_URL.</p></div></div>
+  <div class="code-block" data-role="fragment">
+      <div class="code-head">
+        <div><span class="code-context">Valor</span><span class="code-file">DATABASE_URL · Session pooler</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">postgresql://postgres.[PROJECT-REF]:[PASSWORD]@[POOLER-HOST]:5432/postgres</code></pre>
+    </div>
+  <div class="callout" data-tone="warning"><span class="callout-icon">!</span><div><h3>No construyas el host a mano</h3><p>El índice del cluster no se deduce de la región. Copia la cadena completa desde Connect. La conexión directa db.[REF].supabase.co usa IPv6 en Free; Session pooler usa IPv4 y puerto 5432.</p></div></div>
+  <div class="socratica"><span class="component-label">Para pensar</span><p class="socratica-q">¿Por qué cambiar de PostgreSQL local a Supabase no exige editar PrismaService?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Porque el código depende del contrato DATABASE_URL, no de un host específico.</p><p>El entorno entrega el valor y PrismaPg abre la conexión con ese valor. Cambia la configuración; el programa permanece igual.</p></div></details></div>
+</div>
+    </section><section class="section view" id="s11" data-accent="3" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🌿</span>
+        <div class="sec-copy">
+          <span class="sec-n">11 · Entrega continua</span>
+          <h2 class="sec-t">GitHub es la entrada del despliegue</h2>
+          <p class="sec-s">Render observa una rama; cada push puede iniciar una nueva construcción con el mismo Dockerfile.</p>
+        </div>
+      </div>
+      <div class="body">
+  <ul class="checklist"><li>.env está ignorado y no aparece en git status.</li><li>node_modules y dist están ignorados.</li><li>prisma/migrations sí está versionada.</li><li>Dockerfile, .dockerignore y .env.example sí están en el repo.</li></ul>
+  <div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">git init
+git status
+git add .
+git status
+git commit -m &quot;gestor-tareas: backend seguro listo para deploy&quot;</code></pre>
+    </div>
+  <div class="code-block" data-tipo="terminal">
+      <div class="code-head">
+        <div><span class="code-context">Terminal</span><span class="code-file">gestor-tareas/</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-bash">git remote add origin https://github.com/[TU-USUARIO]/gestor-tareas.git
+git branch -M main
+git push -u origin main</code></pre>
+    </div>
+  <div class="micro-task"><span class="component-label">Comprueba</span><p class="micro-task-q">El repositorio tiene todo el código, pero no los secretos. ¿Está incompleto?</p><details class="micro-reveal"><summary>Ver criterio</summary><p class="micro-answer">No. Es reproducible y seguro: .env.example documenta los nombres; cada entorno aporta los valores privados.</p></details></div>
+</div>
+    </section><section class="section view" id="s12" data-accent="4" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🚀</span>
+        <div class="sec-copy">
+          <span class="sec-n">12 · Concepto central 3</span>
+          <h2 class="sec-t">Render une repo, imagen, entorno y URL</h2>
+          <p class="sec-s">El clímax ocurre cuando la misma API responde por HTTPS fuera de localhost.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="visual-panel"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>GitHub</strong><span>código + migraciones</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">02</span><strong>Render</strong><span>construye Dockerfile</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">03</span><strong>Contenedor</strong><span>migrate + app</span></div><div class="flow-arrow">→</div><div class="flow-step" data-emphasis><span class="fs-index">04</span><strong>Supabase</strong><span>datos persistentes</span></div></div></div>
+  <div class="stepper"><div class="step-item"><span class="step-num">1</span><h4>Web Service</h4><p>Conectar gestor-tareas.</p></div><div class="step-item"><span class="step-num">2</span><h4>Runtime Docker</h4><p>Render detecta el Dockerfile.</p></div><div class="step-item"><span class="step-num">3</span><h4>Environment</h4><p>DATABASE_URL y JWT_SECRET.</p></div><div class="step-item"><span class="step-num">4</span><h4>Deploy</h4><p>Observar logs y abrir /docs.</p></div></div>
+  <div class="table-wrap"><table class="data-table"><caption>Variables del Web Service</caption><thead><tr><th>Key</th><th>Value</th><th>Responsable</th></tr></thead><tbody><tr><td data-emphasis>DATABASE_URL</td><td>Session pooler copiado de Supabase</td><td>Estudiante</td></tr><tr><td data-emphasis>JWT_SECRET</td><td>largo, aleatorio y exclusivo de producción</td><td>Estudiante</td></tr><tr><td data-emphasis>PORT</td><td>no configurarlo manualmente</td><td>Render</td></tr></tbody></table></div>
+  <div class="timeline"><div class="timeline-item"><h3>Build</h3><p>FROM, npm ci, prisma generate y npm run build.</p></div><div class="timeline-item"><h3>Migrate</h3><p>prisma migrate deploy crea o actualiza tablas.</p></div><div class="timeline-item"><h3>Start</h3><p>Nest application successfully started.</p></div><div class="timeline-item"><h3>URL pública</h3><p>https://gestor-tareas.onrender.com/docs</p></div></div>
+  <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Plan Free</h3><p>El servicio entra en reposo tras inactividad y puede tardar alrededor de un minuto en responder la primera solicitud. Las siguientes peticiones son rápidas.</p></div></div>
+</div>
+    </section><section class="section view" id="s13" data-accent="1" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🔬</span>
+        <div class="sec-copy">
+          <span class="sec-n">13 · Verificación</span>
+          <h2 class="sec-t">Seguir la petición y probar seguridad en producción</h2>
+          <p class="sec-s">La ubicación cambió; autenticación, ownership, validación y roles deben comportarse igual.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="visual-panel"><div class="flow"><div class="flow-step"><span class="fs-index">01</span><strong>Cliente</strong><span>POST /auth/login</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">02</span><strong>Render</strong><span>PORT + contenedor</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">03</span><strong>NestJS</strong><span>validación + auth</span></div><div class="flow-arrow">→</div><div class="flow-step"><span class="fs-index">04</span><strong>Supabase</strong><span>consulta PostgreSQL</span></div><div class="flow-arrow">→</div><div class="flow-step" data-emphasis><span class="fs-index">05</span><strong>JWT</strong><span>respuesta al cliente</span></div></div></div>
+  <div class="active-build"><div class="build-step"><span class="build-step-index">01</span><div class="build-step-copy"><h3 class="build-step-title">Registrar y autenticar</h3><p class="build-step-purpose">Usa la URL real y copia el access_token en Authorize.</p><div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Body</span><span class="code-file">POST /auth/register</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;nombre&quot;: &quot;Ana&quot;, &quot;email&quot;: &quot;ana@correo.com&quot;, &quot;password&quot;: &quot;clave1234&quot; }</code></pre>
+    </div></div></div><div class="build-step"><span class="build-step-index">02</span><div class="build-step-copy"><h3 class="build-step-title">Crear una tarea</h3><p class="build-step-purpose">El owner se toma del JWT, nunca del body.</p><div class="code-block">
+      <div class="code-head">
+        <div><span class="code-context">Body</span><span class="code-file">POST /tareas</span></div>
+        <button class="copy-btn" type="button">Copiar</button>
+      </div>
+      <pre class="line-numbers"><code class="language-json">{ &quot;titulo&quot;: &quot;Mi primera tarea en producción&quot;, &quot;prioridad&quot;: &quot;ALTA&quot; }</code></pre>
+    </div></div></div></div>
+  <div class="table-wrap"><table class="data-table"><caption>Pruebas observables</caption><thead><tr><th>Prueba</th><th>Esperado</th><th>Qué demuestra</th></tr></thead><tbody><tr><td>GET /tareas sin token</td><td data-emphasis>401</td><td>autenticación</td></tr><tr><td>GET /tareas/admin/todas como USUARIO</td><td data-emphasis>403</td><td>autorización</td></tr><tr><td>POST /tareas con titulo “ab”</td><td data-emphasis>400</td><td>validación</td></tr><tr><td>email repetido</td><td data-emphasis>409</td><td>regla de negocio</td></tr><tr><td>tarea ajena</td><td data-emphasis>403</td><td>ownership</td></tr></tbody></table></div>
+  <div class="micro-task"><span class="component-label">Predice el error</span><p class="micro-task-q">Ascendiste al usuario en Supabase, pero su token actual sigue recibiendo 403. ¿Qué falta?</p><details class="micro-reveal"><summary>Ver respuesta</summary><p class="micro-answer">Volver a iniciar sesión. El rol quedó firmado dentro del JWT anterior como USUARIO; el nuevo login genera un token con ADMIN.</p></details></div>
+  <div class="cards"><div class="card" data-accent="1"><b>Base inaccesible</b><p>Lee el primer error de conexión: revisa host del pooler y contraseña.</p></div><div class="card" data-accent="2"><b>Sin puerto detectado</b><p>Revisa process.env.PORT y 0.0.0.0 en main.ts.</p></div><div class="card" data-accent="3"><b>Build de Prisma</b><p>Confirma prisma.config.ts, prisma generate e imports generados.</p></div><div class="card" data-accent="4"><b>Swagger sin candado</b><p>Confirma addBearerAuth y ApiBearerAuth.</p></div></div>
+</div>
+    </section><section class="section view" id="s14" data-accent="2" data-layout="canvas" hidden>
+      <div class="sec-head">
+        <span class="sec-icon" aria-hidden="true">🏁</span>
+        <div class="sec-copy">
+          <span class="sec-n">14 · Cierre</span>
+          <h2 class="sec-t">El backend ya existe fuera de tu máquina</h2>
+          <p class="sec-s">El componente integrador queda seguro, documentado, reproducible y disponible en una URL pública.</p>
+        </div>
+      </div>
+      <div class="body">
+  <div class="table-wrap"><table class="data-table"><caption>Checklist del entregable</caption><thead><tr><th>Requisito</th><th>Evidencia</th><th>Listo</th></tr></thead><tbody><tr><td>Registro y login</td><td>AuthController + AuthService</td><td>☐</td></tr><tr><td>JWT</td><td>JwtModule + JwtStrategy + JwtAuthGuard</td><td>☐</td></tr><tr><td>Roles</td><td>Roles + RolesGuard + rol</td><td>☐</td></tr><tr><td>Validaciones</td><td>DTOs + ValidationPipe</td><td>☐</td></tr><tr><td>Swagger</td><td>/docs en la URL pública</td><td>☐</td></tr><tr><td>Docker</td><td>Dockerfile + .dockerignore</td><td>☐</td></tr><tr><td>Deploy</td><td>Web Service Live en Render</td><td>☐</td></tr><tr><td>GitHub</td><td>sin .env, con migrations</td><td>☐</td></tr></tbody></table></div>
+  <div class="cards"><div class="card" data-accent="1"><b>1 · Configuración</b><p>Los secretos y destinos cambian por entorno; el código no.</p></div><div class="card" data-accent="2"><b>2 · Reproducibilidad</b><p>Docker fija la receta que corre igual en local y en la nube.</p></div><div class="card" data-accent="3"><b>3 · Producción</b><p>Render ejecuta la imagen, conecta Supabase y publica HTTPS.</p></div></div>
+  <div class="checkpoint"><span class="component-label">Presentación final</span><h3>Tres evidencias</h3><p>Abre /docs en la URL pública; demuestra registro → login → crear tarea; muestra el repositorio y confirma que .env no existe allí.</p></div>
+  <div class="socratica"><span class="component-label">Puente al futuro</span><p class="socratica-q">Si cada push ya redespliega, ¿qué problema profesional aparece después?</p><details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Automatizar con criterio y observar lo que ocurre.</p><p>El siguiente escalón es CI/CD con pruebas y monitoreo que avise cuando el sistema falla, sin depender de revisar manualmente a las 3 a. m.</p></div></details></div>
+  <div class="panel"><h3>Fuentes técnicas</h3><p>Prisma ORM: prisma.io/docs · Supabase: supabase.com/docs · NestJS: docs.nestjs.com · Render: render.com/docs · Docker: docs.docker.com</p></div>
+  <p class="doc-foot">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</p>
+</div>
+    </section></div>
+      <nav class="view-controls" id="viewControls" aria-label="Navegación entre secciones"><button class="view-btn" id="prevView" type="button" aria-label="Sección anterior">←</button><span class="view-position" id="viewPosition" aria-live="polite">Portada</span><button class="view-btn" id="nextView" type="button" aria-label="Sección siguiente">→</button></nav>
+    </main>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="anaclase-v11.js"></script>
+</body>
+</html>
