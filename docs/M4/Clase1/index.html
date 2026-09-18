@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro" data-tema-base="oscuro" data-empresa="dev-senior" data-paleta="cobalto" data-atmosfera="tecnica">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>M4C1 · Arquitectura SaaS + módulos + diseño del producto · Ana Alvarado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+  <link rel="stylesheet" href="anaestilos-v11.css">
+</head>
+<body>
+  <a class="skip-link" href="#s1">Saltar al contenido</a>
+  <div class="topline" id="topline" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles">
+    <button class="ctrl" id="temaBtn" type="button" aria-label="Cambiar tema">☀</button>
+    <button class="ctrl" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button>
+  </div>
+
+  <div class="shell" id="shell" data-collapsed="false">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sb-top">
+        <span class="brand-mark">A</span>
+        <div class="sb-title"><b>JavaScript AI Backend</b><span>Módulo 4 · Clase 1</span></div>
+      </div>
+      <button class="sb-toggle" id="collapseBtn" type="button" aria-label="Colapsar menú">‹</button>
+      <nav class="sb-nav" id="nav" aria-label="Secciones">
+        <a class="nav-item active" data-icon="✦" href="#portada"><span class="nav-index">00</span><span class="nav-label">Portada</span></a>
+        <a class="nav-item" data-icon="🧭" href="#s1"><span class="nav-index">01</span><span class="nav-label">Del backend al producto</span></a>
+        <a class="nav-item" data-icon="💈" href="#s2"><span class="nav-index">02</span><span class="nav-label">Don Pepe</span></a>
+        <a class="nav-item" data-icon="🏢" href="#s3"><span class="nav-index">03</span><span class="nav-label">SaaS de verdad</span></a>
+        <a class="nav-item" data-icon="🧩" href="#s4"><span class="nav-index">04</span><span class="nav-label">Dominios</span></a>
+        <a class="nav-item" data-icon="🗂️" href="#s5"><span class="nav-index">05</span><span class="nav-label">Entidades</span></a>
+        <a class="nav-item" data-icon="🔗" href="#s6"><span class="nav-index">06</span><span class="nav-label">Relaciones</span></a>
+        <a class="nav-item" data-icon="🛣️" href="#s7"><span class="nav-index">07</span><span class="nav-label">Ruta del módulo</span></a>
+        <a class="nav-item" data-icon="🏗️" href="#s8"><span class="nav-index">08</span><span class="nav-label">Esqueleto</span></a>
+        <a class="nav-item" data-icon="🗺️" href="#s9"><span class="nav-index">09</span><span class="nav-label">Plano Prisma</span></a>
+        <a class="nav-item" data-icon="🔌" href="#s10"><span class="nav-index">10</span><span class="nav-label">Datos + registro</span></a>
+        <a class="nav-item" data-icon="🔐" href="#s11"><span class="nav-index">11</span><span class="nav-label">Auth completo</span></a>
+        <a class="nav-item" data-icon="🏪" href="#s12"><span class="nav-index">12</span><span class="nav-label">Negocios</span></a>
+        <a class="nav-item" data-icon="🧱" href="#s13"><span class="nav-index">13</span><span class="nav-label">Ensamble</span></a>
+        <a class="nav-item" data-icon="▶️" href="#s14"><span class="nav-index">14</span><span class="nav-label">Arrancar y probar</span></a>
+        <a class="nav-item" data-icon="🩺" href="#s15"><span class="nav-index">15</span><span class="nav-label">Diagnóstico</span></a>
+        <a class="nav-item" data-icon="📁" href="#s16"><span class="nav-index">16</span><span class="nav-label">Mapa de archivos</span></a>
+        <a class="nav-item" data-icon="✅" href="#s17"><span class="nav-index">17</span><span class="nav-label">Cierre</span></a>
+      </nav>
+      <div class="sb-prog">
+        <div class="lbl"><span>Progreso</span><span id="progPct">0%</span></div>
+        <div class="track"><div class="fill" id="progFill"></div></div>
+      </div>
+      <p class="sb-foot">© 2026 Ana Alvarado<br>Educadora Tech &amp; Desarrolladora Full Stack</p>
+    </aside>
+
+    <main class="main">
+      <header class="hero view" id="portada" data-accent="1">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="eyebrow">Módulo 4 · Clase 1 · AgendaFácil</span>
+            <h1 class="hero-title">Arquitectura SaaS: del problema al <em>plano del producto</em></h1>
+            <p class="hero-lead">Hoy no improvisamos endpoints: diseñamos el sistema completo, montamos su esqueleto y dejamos vivo el primer tenant.</p>
+            <div class="meta">
+              <span class="pill" data-hot>NestJS 11</span>
+              <span class="pill">Prisma 7</span>
+              <span class="pill">PostgreSQL</span>
+              <span class="pill">120 min</span>
+            </div>
+          </div>
+          <figure class="hero-visual">
+            <svg viewBox="0 0 420 420" role="img" aria-label="Un plano circular que conecta producto, datos y módulos">
+              <circle cx="210" cy="210" r="154" fill="none" stroke="var(--a2)" stroke-width="2" stroke-dasharray="7 11"/>
+              <circle cx="210" cy="210" r="116" fill="var(--surf-1)" stroke="var(--a1)" stroke-width="4"/>
+              <path d="M148 252V175l62-38 62 38v77" fill="none" stroke="var(--a1)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M177 252v-48h66v48M178 180h18M224 180h18" fill="none" stroke="var(--a3)" stroke-width="10" stroke-linecap="round"/>
+              <circle cx="95" cy="116" r="28" fill="var(--a2)"/>
+              <path d="M83 116l8 8 17-19" fill="none" stroke="var(--a1-ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="326" cy="307" r="28" fill="var(--a4)"/>
+              <path d="M313 307h26M326 294v26" stroke="var(--a1-ink)" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+            <figcaption class="hero-note">Un diseño completo hoy evita un producto improvisado mañana.</figcaption>
+          </figure>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="section view" id="s1" data-accent="1" data-layout="split" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🧭</span>
+            <div class="sec-copy">
+              <span class="sec-n">01 · Cambio de escala</span>
+              <h2 class="sec-t">De construir piezas a diseñar un producto</h2>
+              <p class="sec-s">El último módulo convierte lo aprendido en un SaaS que un negocio real podría usar y pagar.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="timeline">
+              <div class="timeline-item"><h3>M1 · Lógica</h3><p>JavaScript y TypeScript en la terminal.</p></div>
+              <div class="timeline-item"><h3>M2 · Backend</h3><p>NestJS + Prisma para construir un CRUD.</p></div>
+              <div class="timeline-item"><h3>M3 · Backend profesional</h3><p>Auth, roles, validación, Docker y nube.</p></div>
+              <div class="timeline-item"><h3>M4 · Producto SaaS</h3><p>Usuarios, pagos, IA y despliegue sobre un mismo diseño.</p></div>
+            </div>
+            <div class="panel">
+              <span class="component-label">Promesa de la sesión</span>
+              <h3>AgendaFácil sale con cimientos reales</h3>
+              <p>Al terminar podrás explicar qué hace que un backend sea SaaS, separar el producto por dominios y traducir el negocio a entidades y relaciones.</p>
+              <p>Además, el proyecto quedará arrancando con su schema completo, autenticación reutilizada y el módulo <code>negocios</code> funcional.</p>
+              <div class="callout" data-tone="info">
+                <span class="callout-icon">i</span>
+                <div><h3>Clase de planos</h3><p>Primero decidimos cómo debe crecer el sistema; después escribimos las piezas que prueban ese diseño.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s2" data-accent="2" data-layout="split" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">💈</span>
+            <div class="sec-copy">
+              <span class="sec-n">02 · Caso de negocio</span>
+              <h2 class="sec-t">Don Pepe no necesita otro empleado</h2>
+              <p class="sec-s">Necesita que la agenda deje de vivir entre mensajes sueltos y cruces de horario.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="panel">
+              <span class="emoji-hero" aria-hidden="true">💈</span>
+              <h3>La barbería funciona; la agenda, no</h3>
+              <p>Tres barberos, clientes fieles y reservas por WhatsApp. Mientras Don Pepe atiende, los mensajes se pierden, dos citas chocan y las confirmaciones se olvidan.</p>
+              <div class="callout" data-tone="warning">
+                <span class="callout-icon">!</span>
+                <div><h3>El dolor real</h3><p>No falta demanda. Falta una forma confiable de organizarla.</p></div>
+              </div>
+            </div>
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">Si la app le sirve a Don Pepe, ¿a quién más le resolvería exactamente el mismo problema?</p>
+              <p class="socratica-hint">Piensa en negocios que reservan tiempo de una persona para prestar un servicio.</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">A miles de negocios de servicios.</p>
+                  <p>Barberías, salones, spas, talleres, consultorios y veterinarias comparten el mismo patrón. En vez de una app para un cliente, construimos una plataforma única donde cada negocio se registra y usa sus propios datos: AgendaFácil.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <caption>Un dolor, una evolución de cuatro clases</caption>
+              <thead><tr><th>Dolor de Don Pepe</th><th>Momento</th><th>Respuesta del producto</th></tr></thead>
+              <tbody>
+                <tr><td data-emphasis>Una app organizada para muchos negocios</td><td>C1 · Hoy</td><td>Arquitectura SaaS + diseño</td></tr>
+                <tr><td>Cada barbero atiende lo suyo; abrimos de 9 a 6</td><td>C2</td><td>Usuarios, perfiles, configuración y relaciones</td></tr>
+                <tr><td>Funciones premium y ayuda inteligente</td><td>C3</td><td>Stripe + IA</td></tr>
+                <tr><td>Usarla y mostrarla de verdad</td><td>C4</td><td>Deploy final + producto listo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section view" id="s3" data-accent="3" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🏢</span>
+            <div class="sec-copy">
+              <span class="sec-n">03 · Concepto central 1</span>
+              <h2 class="sec-t">Una URL pública no convierte una API en SaaS</h2>
+              <p class="sec-s">SaaS es una decisión de producto y de datos, no solo de alojamiento.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="socratica">
+              <span class="component-label">Compara antes de revelar</span>
+              <p class="socratica-q">En M3 desplegamos una API a internet. ¿Eso ya la convierte en SaaS?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">No necesariamente.</p>
+                  <p>Estar en la nube es solo una condición. Un SaaS aloja una sola aplicación para múltiples clientes independientes, aísla sus datos, permite autoservicio y normalmente opera por suscripción.</p>
+                </div>
+              </details>
+            </div>
+            <div class="cards">
+              <div class="card" data-accent="1"><span class="emoji-orb" aria-hidden="true">🏢</span><b>Multi-inquilino</b><p>Muchos negocios usan la misma app. El backend necesita un modelo <code>Negocio</code>: el tenant.</p></div>
+              <div class="card" data-accent="2"><span class="emoji-orb" aria-hidden="true">🔒</span><b>Aislamiento</b><p>Cada dato pertenece a un negocio y cada consulta filtra por su dueño.</p></div>
+              <div class="card" data-accent="3"><span class="emoji-orb" aria-hidden="true">🚪</span><b>Autoservicio</b><p>El dueño se registra y comienza sin intervención manual del equipo.</p></div>
+              <div class="card" data-accent="4"><span class="emoji-orb" aria-hidden="true">💳</span><b>Suscripción</b><p>El negocio nace en FREE y podrá pasar a PRO cuando integremos Stripe.</p></div>
+            </div>
+            <div class="micro-task">
+              <span class="component-label">Detecta · 30 segundos</span>
+              <p class="micro-task-q">Don Pepe y Doña Marta usan la misma aplicación. ¿Basta con darles contraseñas distintas para aislar sus citas?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar razonamiento</summary>
+                <p class="micro-answer"><strong>No.</strong> El login abre la puerta; el aislamiento lo garantiza el modelo: cada cita, servicio y profesional lleva <code>negocioId</code>, y las consultas filtran por el negocio del usuario autenticado.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s4" data-accent="4" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🧩</span>
+            <div class="sec-copy">
+              <span class="sec-n">04 · Concepto central 2</span>
+              <h2 class="sec-t">Cada dominio resuelve una responsabilidad completa</h2>
+              <p class="sec-s">Separar el producto evita que pagos, citas, usuarios e IA se conviertan en un archivo gigante imposible de mantener.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="compare">
+              <div class="compare-card" data-side="negative"><h3>Un bloque enredado</h3><ul><li>Cambiar pagos puede romper citas.</li><li>Nadie sabe dónde vive una regla.</li><li>Dos personas se pisan al trabajar.</li></ul></div>
+              <div class="compare-card" data-side="positive"><h3>Dominios claros</h3><ul><li>Cada módulo tiene un límite.</li><li>Controlador, servicio y DTOs viven juntos.</li><li>Las áreas colaboran sin mezclarse.</li></ul></div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>El organigrama técnico de AgendaFácil</caption>
+                <thead><tr><th>Dominio</th><th>Responsabilidad</th><th>Cuándo</th></tr></thead>
+                <tbody>
+                  <tr><td data-emphasis><code>auth</code></td><td>Registro, login, JWT y roles</td><td>Reusado de M3</td></tr>
+                  <tr><td data-emphasis><code>negocios</code></td><td>El tenant de Don Pepe</td><td>Funcional hoy</td></tr>
+                  <tr><td><code>profesionales</code></td><td>Quiénes atienden</td><td>C2</td></tr>
+                  <tr><td><code>servicios</code></td><td>Qué se ofrece, duración y precio</td><td>C2</td></tr>
+                  <tr><td><code>citas</code></td><td>Reservas sin cruces</td><td>C2</td></tr>
+                  <tr><td><code>configuracion</code></td><td>Horarios y zona horaria</td><td>C2</td></tr>
+                  <tr><td><code>suscripciones</code></td><td>Plan FREE / PRO</td><td>C3</td></tr>
+                  <tr><td><code>asistente-ia</code></td><td>Consultas y recordatorios</td><td>C3</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="micro-task">
+              <span class="component-label">Decide · 30 segundos</span>
+              <p class="micro-task-q">¿Por qué crear hoy módulos que todavía están vacíos?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar razonamiento</summary>
+                <p class="micro-answer"><strong>Porque el diseño debe verse completo desde el primer día.</strong> Los esqueletos hacen visible qué existe, qué falta y dónde crecerá cada responsabilidad; evitan improvisar el sistema clase a clase.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s5" data-accent="1" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🗂️</span>
+            <div class="sec-copy">
+              <span class="sec-n">05 · Concepto central 3</span>
+              <h2 class="sec-t">Los sustantivos del negocio se vuelven entidades</h2>
+              <p class="sec-s">Modelar es decidir qué necesita recordar el sistema y qué papel cumple cada cosa.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="socratica">
+              <span class="component-label">Recupera el dominio</span>
+              <p class="socratica-q">Sin pensar en código: ¿qué cosas del mundo real debe recordar AgendaFácil para reservar una cita?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">Negocio, personas, oferta y reserva.</p>
+                  <p>La barbería, sus profesionales, los servicios, el cliente y la cita que los conecta. Suscripción y configuración completan las reglas del producto.</p>
+                </div>
+              </details>
+            </div>
+            <div class="mindmap">
+              <div class="mindmap-core"><strong>AgendaFácil</strong><span>un negocio que agenda servicios</span></div>
+              <div class="mindmap-branches">
+                <div class="mindmap-node"><strong>Negocio</strong><p>El tenant del SaaS.</p></div>
+                <div class="mindmap-node" data-accent="2"><strong>Usuario</strong><p>Dueño, staff o cliente.</p></div>
+                <div class="mindmap-node" data-accent="3"><strong>Profesional</strong><p>Quien presta el servicio.</p></div>
+                <div class="mindmap-node" data-accent="4"><strong>Servicio</strong><p>Qué se ofrece, duración y precio.</p></div>
+                <div class="mindmap-node"><strong>Cita</strong><p>Cliente + servicio + profesional + fecha.</p></div>
+                <div class="mindmap-node" data-accent="2"><strong>Suscripción</strong><p>Plan FREE o PRO.</p></div>
+                <div class="mindmap-node" data-accent="3"><strong>Configuración</strong><p>Horario, zona y duración.</p></div>
+              </div>
+            </div>
+            <div class="callout" data-tone="info">
+              <span class="callout-icon">i</span>
+              <div><h3>Modelo mental</h3><p>Las entidades son los sustantivos del problema. Las relaciones cuentan cómo se conectan.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s6" data-accent="2" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🔗</span>
+            <div class="sec-copy">
+              <span class="sec-n">06 · Relaciones del dominio</span>
+              <h2 class="sec-t">Tres cardinalidades sostienen el producto</h2>
+              <p class="sec-s">El tipo de relación no es sintaxis: expresa una regla del negocio.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="rel-pair">
+              <div class="entity" data-emphasis><div class="entity-name">Negocio</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li>nombre</li></ul></div>
+              <div class="rel-link"><span class="rel-card">1 : N</span><span class="rel-desc">un negocio tiene muchos profesionales</span></div>
+              <div class="entity"><div class="entity-name">Profesional</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li class="is-key"><span class="key fk">FK</span> negocioId</li></ul></div>
+            </div>
+            <div class="rel-pair">
+              <div class="entity"><div class="entity-name">Servicio</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li>nombre · precio</li></ul></div>
+              <div class="rel-link"><span class="rel-card">N : M</span><span class="rel-desc">tabla intermedia ServicioProfesional</span></div>
+              <div class="entity" data-accent="3"><div class="entity-name">Profesional</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li>especialidad</li></ul></div>
+            </div>
+            <div class="rel-pair">
+              <div class="entity" data-emphasis><div class="entity-name">Negocio</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li></ul></div>
+              <div class="rel-link"><span class="rel-card">1 : 1</span><span class="rel-desc">un negocio, una configuración</span></div>
+              <div class="entity" data-accent="4"><div class="entity-name">Configuracion</div><ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span> id</li><li class="is-key"><span class="key uq">UQ</span> negocioId</li></ul></div>
+            </div>
+            <div class="micro-task">
+              <span class="component-label">Explica · 45 segundos</span>
+              <p class="micro-task-q">¿Por qué <code>Cita</code> se conecta a negocio, cliente, servicio y profesional, mientras <code>Servicio</code> puede existir sin una reserva?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar razonamiento</summary>
+                <p class="micro-answer"><strong>Porque Cita es la entidad que une el evento completo.</strong> Una cita siempre significa alguien que reserva algo con alguien, dentro de un negocio y en una fecha. El servicio, en cambio, forma parte de la oferta aunque todavía nadie lo reserve.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s7" data-accent="3" data-layout="split" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🛣️</span>
+            <div class="sec-copy">
+              <span class="sec-n">07 · Proyecto evolutivo</span>
+              <h2 class="sec-t">El diseño de hoy sostiene las próximas tres clases</h2>
+              <p class="sec-s">Cada etapa amplía el mismo producto; nada queda como ejercicio aislado.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="stepper">
+              <div class="step-item"><span class="step-num">1</span><h4>Diseño + esqueleto</h4><p>Schema, auth y negocios.</p></div>
+              <div class="step-item"><span class="step-num">2</span><h4>Operación</h4><p>Profesionales, servicios, citas y horarios.</p></div>
+              <div class="step-item"><span class="step-num">3</span><h4>Monetización</h4><p>Stripe + asistente de IA.</p></div>
+              <div class="step-item"><span class="step-num">4</span><h4>Producción</h4><p>Deploy, dominio y monitoreo.</p></div>
+            </div>
+            <div class="panel">
+              <span class="component-label">IA con criterio</span>
+              <h3>Cursor como colega de arquitectura</h3>
+              <p><code>Estoy diseñando un SaaS de agendamiento de citas multi-inquilino. Las entidades son Negocio, Profesional, Servicio, Cita, Usuario, Suscripcion y Configuracion. Propón cómo separarlas en módulos de NestJS y qué relaciones habría entre ellas. No escribas código aún; explícame las decisiones.</code></p>
+              <div class="micro-task">
+                <span class="component-label">Evalúa · 30 segundos</span>
+                <p class="micro-task-q">Si la respuesta de la IA se ve profesional, ¿se acepta tal cual?</p>
+                <details class="micro-reveal"><summary>Ver criterio</summary><p class="micro-answer"><strong>No sin contrastarla con el dominio.</strong> La IA puede sobre-diseñar o inventar relaciones. Acelera la discusión; el equipo conserva la decisión.</p></details>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s8" data-accent="4" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🏗️</span>
+            <div class="sec-copy">
+              <span class="sec-n">08 · Montaje</span>
+              <h2 class="sec-t">Convertimos el plano en una estructura visible</h2>
+              <p class="sec-s">NestJS 11 evita la incompatibilidad ESM; Prisma, auth y cada dominio reciben un lugar explícito.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="active-build">
+              <div class="build-step">
+                <span class="build-step-index">01</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Crear el proyecto con Nest 11</h3>
+                  <p class="build-step-purpose">El CLI queda fijado para conservar el patrón CommonJS usado con <code>moduleFormat = "cjs"</code>.</p>
+                  <div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Terminal</span><span class="code-file">carpeta de proyectos</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-bash">npx @nestjs/cli@11 new citas-saas --package-manager npm
+cd citas-saas</code></pre></div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">02</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Instalar el stack ya conocido</h3>
+                  <p class="build-step-purpose">Stripe y el SDK de IA no llegan todavía: hoy solo instalamos lo que el diseño necesita.</p>
+                  <div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Terminal</span><span class="code-file">citas-saas/</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-bash">npm install @nestjs/jwt@^11 @nestjs/passport@^11 passport passport-jwt bcrypt class-validator class-transformer @nestjs/swagger@^11 helmet dotenv @prisma/client@^7 @prisma/adapter-pg pg
+npm install -D prisma@^7 @types/passport-jwt @types/bcrypt @types/pg
+npx prisma init</code></pre></div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">03</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Crear el mapa físico del dominio</h3>
+                  <p class="build-step-purpose">El agente crea carpetas y archivos vacíos; el código llegará después de revisar el diseño.</p>
+                  <div class="panel"><p><strong>Prompt para Cursor:</strong> crea vacíos los archivos de <code>src/prisma</code>, <code>src/auth</code>, <code>src/negocios</code>, los seis módulos futuros y <code>src/common/filters/http-exception.filter.ts</code>. Crea también <code>prisma.config.ts</code>. No escribas código todavía.</p></div>
+                </div>
+              </div>
+            </div>
+            <details class="code-reveal" data-reference="true">
+              <summary><span><span class="code-reveal-title">Alternativa Mac/Linux sin Cursor</span><span class="code-reveal-note">Crear estructura · raíz de citas-saas · Bash</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Terminal</span><span class="code-file">citas-saas/</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-bash">mkdir -p src/prisma src/auth/dto src/negocios/dto src/profesionales src/servicios src/citas src/configuracion src/suscripciones src/asistente-ia src/common/filters
+touch src/prisma/prisma.service.ts src/prisma/prisma.module.ts \
+  src/auth/dto/register.dto.ts src/auth/dto/login.dto.ts \
+  src/auth/auth.service.ts src/auth/auth.controller.ts src/auth/auth.module.ts \
+  src/auth/jwt.strategy.ts src/auth/jwt-auth.guard.ts \
+  src/auth/usuario-actual.decorator.ts src/auth/roles.decorator.ts src/auth/roles.guard.ts \
+  src/negocios/dto/crear-negocio.dto.ts src/negocios/negocios.service.ts \
+  src/negocios/negocios.controller.ts src/negocios/negocios.module.ts \
+  src/profesionales/profesionales.module.ts src/servicios/servicios.module.ts \
+  src/citas/citas.module.ts src/configuracion/configuracion.module.ts \
+  src/suscripciones/suscripciones.module.ts src/asistente-ia/asistente-ia.module.ts \
+  src/common/filters/http-exception.filter.ts prisma.config.ts
+rm -f src/app.controller.ts src/app.service.ts src/app.controller.spec.ts</code></pre></div></div>
+            </details>
+            <div class="callout" data-tone="warning"><span class="callout-icon">!</span><div><h3>Archivos que se editan, no se crean</h3><p><code>src/main.ts</code>, <code>src/app.module.ts</code> y <code>prisma/schema.prisma</code> ya existen. Elimina los ejemplos <code>app.controller.ts</code>, <code>app.service.ts</code> y su prueba.</p></div></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s9" data-accent="1" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🗺️</span>
+            <div class="sec-copy">
+              <span class="sec-n">09 · Plano del producto</span>
+              <h2 class="sec-t">El schema hace visibles el tenant y sus relaciones</h2>
+              <p class="sec-s">Primero reconoce las decisiones; después abre los archivos completos listos para copiar.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="micro-task">
+              <span class="component-label">Detecta · 45 segundos</span>
+              <p class="micro-task-q">Busca tres señales en el modelo: aislamiento SaaS, relaciones 1:1 y la tabla intermedia N:M.</p>
+              <details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer"><strong>Aislamiento:</strong> <code>negocioId</code> aparece en los datos del tenant. <strong>1:1:</strong> <code>negocioId @unique</code> en configuración y suscripción. <strong>N:M:</strong> <code>ServicioProfesional</code> guarda cada pareja servicio–profesional.</p></details>
+            </div>
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver prisma.config.ts completo</span><span class="code-reveal-note">Crear · raíz/prisma.config.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">prisma.config.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import 'dotenv/config';
+import { defineConfig } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  datasource: {
+    url: process.env.DATABASE_URL,
+  },
+});</code></pre></div></div>
+            </details>
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver .env local completo</span><span class="code-reveal-note">Editar · raíz/.env · Variables locales · no subir</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Editar</span><span class="code-file">.env</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre><code class="language-bash">DATABASE_URL="postgresql://postgres:postgres@localhost:5432/citas_saas"
+JWT_SECRET="dev_secret_solo_para_pruebas_locales"
+PORT=3000</code></pre></div></div>
+            </details>
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver schema.prisma completo</span><span class="code-reveal-note">Reemplazar · prisma/schema.prisma · Prisma · versión final consolidada</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-prisma">generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+//  Enums del dominio
+// ─────────────────────────────────────────────
+
+enum Rol {
+  DUENO
+  STAFF
+  CLIENTE
+}
+
+enum EstadoCita {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum EstadoSuscripcion {
+  ACTIVA
+  CANCELADA
+  VENCIDA
+}
+
+// ─────────────────────────────────────────────
+//  Identidad (reutilizado de M3: auth + roles)
+// ─────────────────────────────────────────────
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       Rol      @default(CLIENTE)
+  creadoEn  DateTime @default(now())
+
+  negocios         Negocio[]
+  citasComoCliente Cita[]    @relation("CitasCliente")
+  perfil           Perfil?
+
+  @@map("usuarios")
+}
+
+model Perfil {
+  id        Int     @id @default(autoincrement())
+  telefono  String?
+  bio       String?
+  avatarUrl String?
+  usuarioId Int     @unique
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@map("perfiles")
+}
+
+// ─────────────────────────────────────────────
+//  Tenant: el negocio de Don Pepe
+// ─────────────────────────────────────────────
+
+model Negocio {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  telefono    String?
+  direccion   String?
+  creadoEn    DateTime @default(now())
+
+  duenoId Int
+  dueno   Usuario @relation(fields: [duenoId], references: [id])
+
+  profesionales Profesional[]
+  servicios     Servicio[]
+  citas         Cita[]
+  suscripcion   Suscripcion?
+  configuracion Configuracion?
+
+  @@index([duenoId])
+  @@map("negocios")
+}
+
+// ─────────────────────────────────────────────
+//  Quien atiende (barberos de Don Pepe)
+// ─────────────────────────────────────────────
+
+model Profesional {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  especialidad String?
+  activo       Boolean  @default(true)
+  creadoEn     DateTime @default(now())
+
+  negocioId Int
+  negocio   Negocio @relation(fields: [negocioId], references: [id])
+
+  servicios ServicioProfesional[]
+  citas     Cita[]
+
+  @@index([negocioId])
+  @@map("profesionales")
+}
+
+// ─────────────────────────────────────────────
+//  Lo que se ofrece (corte, barba, tinte...)
+// ─────────────────────────────────────────────
+
+model Servicio {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  duracionMin Int
+  precio      Decimal  @db.Decimal(10, 2)
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+
+  negocioId Int
+  negocio   Negocio @relation(fields: [negocioId], references: [id])
+
+  profesionales ServicioProfesional[]
+  citas         Cita[]
+
+  @@index([negocioId])
+  @@map("servicios")
+}
+
+// Tabla intermedia explícita de la relación muchos-a-muchos
+model ServicioProfesional {
+  servicioId    Int
+  profesionalId Int
+  servicio      Servicio    @relation(fields: [servicioId], references: [id])
+  profesional   Profesional @relation(fields: [profesionalId], references: [id])
+
+  @@id([servicioId, profesionalId])
+  @@map("servicio_profesional")
+}
+
+// ─────────────────────────────────────────────
+//  El núcleo: la reserva sin cruces
+// ─────────────────────────────────────────────
+
+model Cita {
+  id       Int        @id @default(autoincrement())
+  fecha    DateTime
+  estado   EstadoCita @default(PENDIENTE)
+  notas    String?
+  creadoEn DateTime   @default(now())
+
+  negocioId     Int
+  negocio       Negocio     @relation(fields: [negocioId], references: [id])
+  clienteId     Int
+  cliente       Usuario     @relation("CitasCliente", fields: [clienteId], references: [id])
+  servicioId    Int
+  servicio      Servicio    @relation(fields: [servicioId], references: [id])
+  profesionalId Int
+  profesional   Profesional @relation(fields: [profesionalId], references: [id])
+
+  @@index([negocioId])
+  @@index([profesionalId, fecha])
+  @@map("citas")
+}
+
+// ─────────────────────────────────────────────
+//  Monetización (Stripe, se conecta en C3)
+// ─────────────────────────────────────────────
+
+model Suscripcion {
+  id                   Int               @id @default(autoincrement())
+  plan                 Plan              @default(FREE)
+  estado               EstadoSuscripcion @default(ACTIVA)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  vigenteHasta         DateTime?
+  creadoEn             DateTime          @default(now())
+
+  negocioId Int     @unique
+  negocio   Negocio @relation(fields: [negocioId], references: [id])
+
+  @@map("suscripciones")
+}
+
+// ─────────────────────────────────────────────
+//  Configuración del sistema por negocio (C2)
+// ─────────────────────────────────────────────
+
+model Configuracion {
+  id              Int      @id @default(autoincrement())
+  horaApertura    String   @default("09:00")
+  horaCierre      String   @default("18:00")
+  zonaHoraria     String   @default("America/Bogota")
+  duracionDefault Int      @default(30)
+  actualizadoEn   DateTime @updatedAt
+
+  negocioId Int     @unique
+  negocio   Negocio @relation(fields: [negocioId], references: [id])
+
+  @@map("configuraciones")
+}</code></pre></div></div>
+            </details>
+            <div class="callout" data-tone="warning"><span class="callout-icon">!</span><div><h3>Prisma 7 separa la conexión del modelo</h3><p>La URL vive en <code>prisma.config.ts</code>, no dentro de <code>schema.prisma</code>. Confirma además que <code>.env</code> esté ignorado por Git.</p></div></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s10" data-accent="2" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🔌</span>
+            <div class="sec-copy">
+              <span class="sec-n">10 · Capa de datos + onboarding</span>
+              <h2 class="sec-t">La infraestructura conecta; el producto decide quién nace</h2>
+              <p class="sec-s">Prisma se integra a NestJS y el registro reutilizado de M3 recibe una sola decisión nueva: el usuario inicial es dueño.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="micro-task">
+              <span class="component-label">Decide · 30 segundos</span>
+              <p class="micro-task-q">En AgendaFácil, ¿quien se registra directamente en la plataforma debe nacer como CLIENTE, STAFF o DUENO?</p>
+              <details class="micro-reveal"><summary>Comprobar decisión</summary><p class="micro-answer"><strong>DUENO.</strong> El onboarding de la plataforma está pensado para la persona que viene a crear su negocio. Los clientes finales de la barbería tendrán otro flujo en C2.</p></details>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver PrismaService completo</span><span class="code-reveal-note">Crear · src/prisma/prisma.service.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/prisma/prisma.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/prisma/client';
+
+@Injectable()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  constructor() {
+    super({
+      adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+    });
+  }
+
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver PrismaModule completo</span><span class="code-reveal-note">Crear · src/prisma/prisma.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/prisma/prisma.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Global, Module } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Global()
+@Module({
+  providers: [PrismaService],
+  exports: [PrismaService],
+})
+export class PrismaModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver RegisterDto completo</span><span class="code-reveal-note">Crear · src/auth/dto/register.dto.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/dto/register.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, MinLength } from 'class-validator';
+
+export class RegisterDto {
+  @ApiProperty({ example: 'Don Pepe' })
+  @IsString()
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  nombre!: string;
+
+  @ApiProperty({ example: 'pepe@barberia.com' })
+  @IsEmail({}, { message: 'El email no tiene un formato válido' })
+  email!: string;
+
+  @ApiProperty({ example: 'clave1234' })
+  @IsString()
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+  password!: string;
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver LoginDto completo</span><span class="code-reveal-note">Crear · src/auth/dto/login.dto.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/dto/login.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString } from 'class-validator';
+
+export class LoginDto {
+  @ApiProperty({ example: 'pepe@barberia.com' })
+  @IsEmail({}, { message: 'El email no tiene un formato válido' })
+  email!: string;
+
+  @ApiProperty({ example: 'clave1234' })
+  @IsString()
+  password!: string;
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver AuthService completo</span><span class="code-reveal-note">Crear · src/auth/auth.service.ts · TypeScript · rol DUENO asignado en servidor</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { Rol } from '../generated/prisma/client';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async register(dto: RegisterDto) {
+    const existente = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (existente) {
+      throw new ConflictException('El email ya está registrado');
+    }
+
+    const hash = await bcrypt.hash(dto.password, 10);
+
+    // Onboarding self-service: quien se registra viene a montar su negocio.
+    const usuario = await this.prisma.usuario.create({
+      data: {
+        nombre: dto.nombre,
+        email: dto.email,
+        password: hash,
+        rol: Rol.DUENO,
+      },
+    });
+
+    return {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+  }
+
+  async login(dto: LoginDto) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { email: dto.email },
+    });
+    if (!usuario) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const passwordOk = await bcrypt.compare(dto.password, usuario.password);
+    if (!passwordOk) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const payload = {
+      sub: usuario.id,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return { access_token };
+  }
+}</code></pre></div></div>
+            </details>
+            <div class="checkpoint"><span class="component-label">Checkpoint</span><h3>La seguridad no confía en el body</h3><p><code>RegisterDto</code> no acepta un campo <code>rol</code>; el servidor asigna <code>Rol.DUENO</code>. La contraseña se cifra y nunca aparece en la respuesta.</p></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s11" data-accent="3" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🔐</span>
+            <div class="sec-copy">
+              <span class="sec-n">11 · Auth reutilizado</span>
+              <h2 class="sec-t">El token transporta identidad y rol</h2>
+              <p class="sec-s">Estas piezas ya son patrón conocido: estrategia, guard, decoradores, controlador y módulo quedan completos como red de seguridad.</p>
+            </div>
+          </div>
+          <div class="body">
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver JwtStrategy completa</span><span class="code-reveal-note">Crear · src/auth/jwt.strategy.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/jwt.strategy.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Rol } from '../generated/prisma/client';
+
+type JwtPayload = { sub: number; email: string; rol: Rol };
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new UnauthorizedException('JWT_SECRET no está definida');
+    }
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: secret,
+    });
+  }
+
+  validate(payload: JwtPayload) {
+    return { id: payload.sub, email: payload.email, rol: payload.rol };
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver JwtAuthGuard completo</span><span class="code-reveal-note">Crear · src/auth/jwt-auth.guard.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/jwt-auth.guard.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver @UsuarioActual completo</span><span class="code-reveal-note">Crear · src/auth/usuario-actual.decorator.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/usuario-actual.decorator.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { Rol } from '../generated/prisma/client';
+
+export const UsuarioActual = createParamDecorator(
+  (_data: unknown, ctx: ExecutionContext) =&gt; {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user as { id: number; email: string; rol: Rol };
+  },
+);</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver @Roles completo</span><span class="code-reveal-note">Crear · src/auth/roles.decorator.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/roles.decorator.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Reflector } from '@nestjs/core';
+import { Rol } from '../generated/prisma/client';
+
+export const Roles = Reflector.createDecorator&lt;Rol[]&gt;();</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver RolesGuard completo</span><span class="code-reveal-note">Crear · src/auth/roles.guard.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/roles.guard.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Rol } from '../generated/prisma/client';
+import { Roles } from './roles.decorator';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const rolesRequeridos = this.reflector.get(Roles, context.getHandler());
+
+    if (!rolesRequeridos) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const usuario = request.user as { rol: Rol };
+
+    if (!rolesRequeridos.includes(usuario.rol)) {
+      throw new ForbiddenException('No tienes permiso para realizar esta acción');
+    }
+
+    return true;
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver AuthController completo</span><span class="code-reveal-note">Crear · src/auth/auth.controller.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
+  @Post('login')
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver AuthModule completo</span><span class="code-reveal-note">Crear · src/auth/auth.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/auth/auth.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtStrategy } from './jwt.strategy';
+
+@Module({
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
+})
+export class AuthModule {}</code></pre></div></div>
+            </details>
+            <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Disponible hoy, aplicado en C2</h3><p><code>Roles</code> y <code>RolesGuard</code> quedan listos, aunque el módulo negocios de esta clase se protege por token y ownership.</p></div></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s12" data-accent="4" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🏪</span>
+            <div class="sec-copy">
+              <span class="sec-n">12 · Primer dominio vivo</span>
+              <h2 class="sec-t">Un negocio nace completo, no a medias</h2>
+              <p class="sec-s">El tenant es la raíz: de él colgarán profesionales, servicios y citas.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="micro-task">
+              <span class="component-label">Predice · 45 segundos</span>
+              <p class="micro-task-q">Al crear una barbería con solo su nombre, ¿cómo garantizamos que nazca con horario y plan FREE sin pedirlos en el body?</p>
+              <details class="micro-reveal"><summary>Comprobar razonamiento</summary><p class="micro-answer"><strong>Con una escritura anidada de Prisma.</strong> <code>configuracion: { create: {} }</code> y <code>suscripcion: { create: {} }</code> crean ambas relaciones usando los defaults del schema, dentro de la misma operación.</p></details>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver CrearNegocioDto completo</span><span class="code-reveal-note">Crear · src/negocios/dto/crear-negocio.dto.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/negocios/dto/crear-negocio.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+
+export class CrearNegocioDto {
+  @ApiProperty({ example: 'Barbería Don Pepe' })
+  @IsString()
+  @MinLength(3, { message: 'El nombre debe tener al menos 3 caracteres' })
+  @MaxLength(80, { message: 'El nombre no puede superar 80 caracteres' })
+  nombre!: string;
+
+  @ApiPropertyOptional({ example: 'Cortes clásicos y arreglo de barba' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(300, { message: 'La descripción no puede superar 300 caracteres' })
+  descripcion?: string;
+
+  @ApiPropertyOptional({ example: '3001234567' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  telefono?: string;
+
+  @ApiPropertyOptional({ example: 'Calle 3 # 4-5, Zipaquirá' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  direccion?: string;
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver NegociosService completo</span><span class="code-reveal-note">Crear · src/negocios/negocios.service.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/negocios/negocios.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearNegocioDto } from './dto/crear-negocio.dto';
+
+@Injectable()
+export class NegociosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Al crear el negocio nace con su configuración y suscripción FREE por defecto.
+  crear(dto: CrearNegocioDto, duenoId: number) {
+    return this.prisma.negocio.create({
+      data: {
+        nombre: dto.nombre,
+        descripcion: dto.descripcion,
+        telefono: dto.telefono,
+        direccion: dto.direccion,
+        duenoId,
+        configuracion: { create: {} },
+        suscripcion: { create: {} },
+      },
+      include: { configuracion: true, suscripcion: true },
+    });
+  }
+
+  obtenerMios(duenoId: number) {
+    return this.prisma.negocio.findMany({
+      where: { duenoId },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  async obtenerUno(id: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id },
+      include: { configuracion: true, suscripcion: true },
+    });
+
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+
+    return negocio;
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver NegociosController completo</span><span class="code-reveal-note">Crear · src/negocios/negocios.controller.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/negocios/negocios.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { NegociosService } from './negocios.service';
+import { CrearNegocioDto } from './dto/crear-negocio.dto';
+
+@ApiTags('negocios')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('negocios')
+export class NegociosController {
+  constructor(private readonly negociosService: NegociosService) {}
+
+  @Post()
+  crear(
+    @Body() dto: CrearNegocioDto,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.negociosService.crear(dto, usuario.id);
+  }
+
+  @Get()
+  obtenerMios(@UsuarioActual() usuario: { id: number }) {
+    return this.negociosService.obtenerMios(usuario.id);
+  }
+
+  @Get(':id')
+  obtenerUno(
+    @Param('id', ParseIntPipe) id: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.negociosService.obtenerUno(id, usuario.id);
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver NegociosModule completo</span><span class="code-reveal-note">Crear · src/negocios/negocios.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/negocios/negocios.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { NegociosService } from './negocios.service';
+import { NegociosController } from './negocios.controller';
+
+@Module({
+  controllers: [NegociosController],
+  providers: [NegociosService],
+})
+export class NegociosModule {}</code></pre></div></div>
+            </details>
+            <div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Ownership aplicado en dos niveles</h3><p>El dueño sale del token, nunca del body. Listar filtra por <code>duenoId</code>; obtener uno responde 404 si no existe y 403 si pertenece a otra persona.</p></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s13" data-accent="1" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🧱</span>
+            <div class="sec-copy">
+              <span class="sec-n">13 · Ensamble</span>
+              <h2 class="sec-t">Los dominios futuros ya tienen un lugar</h2>
+              <p class="sec-s">Los esqueletos documentan el mapa; el módulo raíz conecta infraestructura, seguridad y evolución.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="callout" data-tone="info"><span class="callout-icon">i</span><div><h3>Patrón de esqueleto</h3><p>Un <code>@Module({})</code> vacío es válido y compila. Hoy reserva el límite del dominio; en C2 o C3 recibirá controladores y servicios.</p></div></div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver ProfesionalesModule completo</span><span class="code-reveal-note">Crear · src/profesionales/profesionales.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/profesionales.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio: quienes atienden (los barberos de Don Pepe).
+// Se implementa en la Clase 2 (usuarios, perfiles, relaciones avanzadas).
+@Module({})
+export class ProfesionalesModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver ServiciosModule completo</span><span class="code-reveal-note">Crear · src/servicios/servicios.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/servicios/servicios.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio: lo que ofrece el negocio (corte, barba, tinte), con duración y precio.
+// Se implementa en la Clase 2 (incluye la relación M-a-N con Profesional).
+@Module({})
+export class ServiciosModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver CitasModule completo</span><span class="code-reveal-note">Crear · src/citas/citas.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/citas/citas.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio núcleo: la reserva de un servicio con un profesional, sin cruces de horario.
+// Se implementa en la Clase 2 (lógica de negocio) y se protege por plan en la Clase 3.
+@Module({})
+export class CitasModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver ConfiguracionModule completo</span><span class="code-reveal-note">Crear · src/configuracion/configuracion.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/configuracion/configuracion.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio: configuración del sistema por negocio (horarios, zona horaria, duración).
+// Se implementa en la Clase 2 (configuración del sistema).
+@Module({})
+export class ConfiguracionModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver SuscripcionesModule completo</span><span class="code-reveal-note">Crear · src/suscripciones/suscripciones.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/suscripciones/suscripciones.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio: monetización. Plan FREE vs PRO por negocio.
+// Se implementa en la Clase 3 (Stripe API, webhooks, gating por plan).
+@Module({})
+export class SuscripcionesModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver AsistenteIaModule completo</span><span class="code-reveal-note">Crear · src/asistente-ia/asistente-ia.module.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/asistente-ia/asistente-ia.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+
+// Dominio: funcionalidades inteligentes (responder consultas de clientes sobre
+// disponibilidad y redactar recordatorios). Función PRO.
+// Se implementa en la Clase 3 (OpenAI API / Claude API).
+@Module({})
+export class AsistenteIaModule {}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver filtro global de errores completo</span><span class="code-reveal-note">Crear · src/common/filters/http-exception.filter.ts · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/common/filters/http-exception.filter.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch()
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse&lt;Response&gt;();
+    const request = ctx.getRequest&lt;Request&gt;();
+
+    const esExcepcionHttp = exception instanceof HttpException;
+    const statusCode = esExcepcionHttp
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    let mensaje: string | string[] = 'Error interno del servidor';
+    if (esExcepcionHttp) {
+      const cuerpo = exception.getResponse();
+      mensaje = typeof cuerpo === 'string' ? cuerpo : (cuerpo as any).message;
+    } else {
+      console.error(exception);
+    }
+
+    response.status(statusCode).json({
+      statusCode,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: mensaje,
+    });
+  }
+}</code></pre></div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver AppModule completo</span><span class="code-reveal-note">Reemplazar · src/app.module.ts · TypeScript · versión final consolidada</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/app.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { NegociosModule } from './negocios/negocios.module';
+import { ProfesionalesModule } from './profesionales/profesionales.module';
+import { ServiciosModule } from './servicios/servicios.module';
+import { CitasModule } from './citas/citas.module';
+import { ConfiguracionModule } from './configuracion/configuracion.module';
+import { SuscripcionesModule } from './suscripciones/suscripciones.module';
+import { AsistenteIaModule } from './asistente-ia/asistente-ia.module';
+
+@Module({
+  imports: [
+    // Infraestructura
+    PrismaModule,
+    // Ya construido (M3, reusado)
+    AuthModule,
+    // Funcional hoy (C1)
+    NegociosModule,
+    // Esqueleto — se construyen en C2/C3
+    ProfesionalesModule,
+    ServiciosModule,
+    CitasModule,
+    ConfiguracionModule,
+    SuscripcionesModule,
+    AsistenteIaModule,
+  ],
+})
+export class AppModule {}</code></pre></div></div>
+            </details>
+            <div class="checkpoint"><span class="component-label">Checkpoint</span><h3>Un archivo cuenta el estado del producto</h3><p><code>AppModule</code> muestra la infraestructura, lo reutilizado, el dominio vivo y los seis dominios reservados. Un módulo fuera de <code>imports</code> no existe para la aplicación.</p></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s14" data-accent="2" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">▶️</span>
+            <div class="sec-copy">
+              <span class="sec-n">14 · Arrancar y comprobar</span>
+              <h2 class="sec-t">El diseño cobra vida en una operación observable</h2>
+              <p class="sec-s">Migramos, generamos el cliente, arrancamos y recorremos registro → login → negocio.</p>
+            </div>
+          </div>
+          <div class="body">
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Ver main.ts completo</span><span class="code-reveal-note">Reemplazar · src/main.ts · TypeScript · versión final consolidada</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block"><div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/main.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div><pre class="line-numbers"><code class="language-typescript">import 'dotenv/config';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.enableCors();
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle('AgendaFácil API')
+    .setDescription('SaaS de agendamiento de citas · Dev Senior')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port, '0.0.0.0');
+}
+bootstrap();</code></pre></div></div>
+            </details>
+
+            <div class="active-build">
+              <div class="build-step">
+                <span class="build-step-index">01</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Preparar la base y crear las tablas</h3>
+                  <p class="build-step-purpose">PostgreSQL debe estar encendido. Crea la base si todavía no existe y aplica el schema completo.</p>
+                  <div class="code-block" data-tipo="terminal"><div class="code-head"><div><span class="code-context">Terminal</span><span class="code-file">citas-saas/</span></div><button class="copy-btn" type="button">Copiar</button></div><pre><code class="language-bash">createdb citas_saas
+npx prisma migrate dev --name init_saas
+npx prisma generate
+npm run start:dev</code></pre></div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">02</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Abrir Swagger y registrar al dueño</h3>
+                  <p class="build-step-purpose"><code>http://localhost:3000/docs</code> debe mostrar auth y negocios. El registro devuelve rol DUENO.</p>
+                  <div class="code-block"><div class="code-head"><div><span class="code-context">Body</span><span class="code-file">POST /auth/register</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-json">{
+  "nombre": "Don Pepe",
+  "email": "pepe@barberia.com",
+  "password": "clave1234"
+}</code></pre></div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">03</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Iniciar sesión y autorizar Swagger</h3>
+                  <p class="build-step-purpose">Copia <code>access_token</code> de la respuesta y pégalo en <strong>Authorize</strong>.</p>
+                  <div class="code-block"><div class="code-head"><div><span class="code-context">Body</span><span class="code-file">POST /auth/login</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-json">{
+  "email": "pepe@barberia.com",
+  "password": "clave1234"
+}</code></pre></div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">04</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Crear el tenant</h3>
+                  <p class="build-step-purpose">La respuesta 201 debe incluir configuración 09:00–18:00, zona Bogotá y suscripción FREE creadas automáticamente.</p>
+                  <div class="code-block"><div class="code-head"><div><span class="code-context">Body</span><span class="code-file">POST /negocios</span></div><button class="copy-btn" type="button">Copiar</button></div><pre class="line-numbers"><code class="language-json">{
+  "nombre": "Barbería Don Pepe"
+}</code></pre></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="visual-panel">
+              <span class="chart-title">Traza de crear un negocio</span>
+              <div class="flow">
+                <div class="flow-step"><span class="fs-index">01</span><strong>JWT Guard</strong><span>token válido</span></div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step"><span class="fs-index">02</span><strong>ValidationPipe</strong><span>DTO válido</span></div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step"><span class="fs-index">03</span><strong>Controller</strong><span>id desde token</span></div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step" data-emphasis><span class="fs-index">04</span><strong>Service + Prisma</strong><span>3 filas</span></div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step"><span class="fs-index">05</span><strong>PostgreSQL</strong><span>respuesta 201</span></div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="m"><b>201</b><span>registro</span></div>
+              <div class="m"><b>201</b><span>login</span></div>
+              <div class="m"><b>201</b><span>negocio</span></div>
+              <div class="m"><b>200</b><span>listado</span></div>
+            </div>
+            <div class="callout" data-tone="success"><span class="callout-icon">✓</span><div><h3>Conteo consistente</h3><p>El schema define <strong>9 tablas del dominio</strong>. Prisma crea además <code>_prisma_migrations</code>; por eso PostgreSQL muestra <strong>10 tablas en total</strong> tras la migración.</p></div></div>
+          </div>
+        </section>
+
+        <section class="section view" id="s15" data-accent="3" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">🩺</span>
+            <div class="sec-copy">
+              <span class="sec-n">15 · Diagnóstico + transferencia</span>
+              <h2 class="sec-t">Leer señales antes de cambiar código</h2>
+              <p class="sec-s">Cada error apunta a una decisión concreta; los ejercicios extienden el mismo producto sin adelantarse a C2.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>Errores frecuentes y lectura útil</caption>
+                <thead><tr><th>Señal</th><th>Causa probable</th><th>Acción</th></tr></thead>
+                <tbody>
+                  <tr><td data-emphasis><code>../generated/prisma/client</code> en rojo</td><td>Falta generar el cliente</td><td><code>npx prisma generate</code> y revisar <code>output</code></td></tr>
+                  <tr><td data-emphasis><code>P1012</code> al migrar</td><td>URL dentro del schema</td><td>Dejarla solo en <code>prisma.config.ts</code></td></tr>
+                  <tr><td data-emphasis>Conexión rechazada en 5432</td><td>PostgreSQL apagado, base ausente o URL incorrecta</td><td>Arrancar PostgreSQL, crear <code>citas_saas</code> y revisar <code>.env</code></td></tr>
+                  <tr><td data-emphasis><code>401</code> en <code>POST /negocios</code></td><td>Token ausente o vencido</td><td>Hacer login y actualizar <strong>Authorize</strong></td></tr>
+                  <tr><td data-emphasis>Un módulo “no hace nada”</td><td>No está en <code>AppModule.imports</code></td><td>Importarlo y registrarlo</td></tr>
+                  <tr><td data-emphasis>Nest 12 / errores ESM</td><td>CLI creado sin fijar v11</td><td>Crear con <code>npx @nestjs/cli@11 new</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="cards">
+              <div class="card" data-accent="1"><span class="emoji-orb" aria-hidden="true">🔎</span><b>Leer el diseño</b><p>Cuenta las relaciones 1:N de Negocio e identifica la única N:M.</p></div>
+              <div class="card" data-accent="2"><span class="emoji-orb" aria-hidden="true">🌐</span><b>Extender el DTO</b><p>Propón <code>sitioWeb</code> opcional y decide qué más debe cambiar para persistirlo.</p></div>
+              <div class="card" data-accent="3"><span class="emoji-orb" aria-hidden="true">💰</span><b>Justificar Decimal</b><p>Explica por qué dinero no debe modelarse con <code>Float</code>.</p></div>
+              <div class="card" data-accent="4"><span class="emoji-orb" aria-hidden="true">✏️</span><b>Diseñar Servicio</b><p>Dibuja el DTO con nombre, duración y precio, sin implementarlo todavía.</p></div>
+            </div>
+            <div class="micro-task">
+              <span class="component-label">Transferencia · 60 segundos</span>
+              <p class="micro-task-q">Si agregas <code>sitioWeb</code> al DTO y Swagger lo muestra, ¿el valor ya quedará guardado?</p>
+              <details class="micro-reveal"><summary>Ver criterio</summary><p class="micro-answer"><strong>No.</strong> El DTO valida la entrada, pero persistir el campo exige añadirlo al modelo <code>Negocio</code>, migrar la base y pasarlo en <code>NegociosService.crear</code>.</p></details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s16" data-accent="4" data-layout="canvas" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">📁</span>
+            <div class="sec-copy">
+              <span class="sec-n">16 · Inventario reproducible</span>
+              <h2 class="sec-t">El estado final del proyecto, sin adivinar</h2>
+              <p class="sec-s">Cada archivo tiene una acción explícita y una versión completa disponible en las escenas anteriores.</p>
+            </div>
+          </div>
+          <div class="body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>Mapa final de archivos</caption>
+                <thead><tr><th>Archivo</th><th>Ruta</th><th>Acción</th><th>Estado final</th></tr></thead>
+                <tbody>
+                  <tr><td data-emphasis><code>prisma.config.ts</code></td><td>raíz</td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td data-emphasis><code>.env</code></td><td>raíz</td><td>Editar</td><td>Completo · local</td></tr>
+                  <tr><td data-emphasis><code>schema.prisma</code></td><td><code>prisma/</code></td><td>Reemplazar</td><td>Final consolidado</td></tr>
+                  <tr><td><code>prisma.service.ts</code></td><td><code>src/prisma/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>prisma.module.ts</code></td><td><code>src/prisma/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>register.dto.ts</code></td><td><code>src/auth/dto/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>login.dto.ts</code></td><td><code>src/auth/dto/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>auth.service.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>jwt.strategy.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>jwt-auth.guard.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>usuario-actual.decorator.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>roles.decorator.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>roles.guard.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>auth.controller.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>auth.module.ts</code></td><td><code>src/auth/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>crear-negocio.dto.ts</code></td><td><code>src/negocios/dto/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>negocios.service.ts</code></td><td><code>src/negocios/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>negocios.controller.ts</code></td><td><code>src/negocios/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>negocios.module.ts</code></td><td><code>src/negocios/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td><code>profesionales.module.ts</code></td><td><code>src/profesionales/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>servicios.module.ts</code></td><td><code>src/servicios/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>citas.module.ts</code></td><td><code>src/citas/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>configuracion.module.ts</code></td><td><code>src/configuracion/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>suscripciones.module.ts</code></td><td><code>src/suscripciones/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>asistente-ia.module.ts</code></td><td><code>src/asistente-ia/</code></td><td>Crear</td><td>Esqueleto</td></tr>
+                  <tr><td><code>http-exception.filter.ts</code></td><td><code>src/common/filters/</code></td><td>Crear</td><td>Completo</td></tr>
+                  <tr><td data-emphasis><code>app.module.ts</code></td><td><code>src/</code></td><td>Reemplazar</td><td>Final consolidado</td></tr>
+                  <tr><td data-emphasis><code>main.ts</code></td><td><code>src/</code></td><td>Reemplazar</td><td>Final consolidado</td></tr>
+                  <tr><td><code>app.controller.ts</code></td><td><code>src/</code></td><td>Eliminar</td><td>Ejemplo de Nest</td></tr>
+                  <tr><td><code>app.service.ts</code></td><td><code>src/</code></td><td>Eliminar</td><td>Ejemplo de Nest</td></tr>
+                  <tr><td><code>app.controller.spec.ts</code></td><td><code>src/</code></td><td>Eliminar</td><td>Prueba del ejemplo</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="checklist">
+              <li><strong>Esperado al arrancar:</strong> <code>Nest application successfully started</code>.</li>
+              <li><strong>Rutas mínimas:</strong> <code>/auth/register</code>, <code>/auth/login</code> y <code>/negocios</code>.</li>
+              <li><strong>Prueba de aislamiento:</strong> otro dueño no puede consultar el negocio ajeno; recibe 403.</li>
+              <li><strong>Prueba de seguridad:</strong> sin token, negocios responde 401.</li>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s17" data-accent="1" data-layout="focus" hidden>
+          <div class="sec-head">
+            <span class="sec-icon" aria-hidden="true">✅</span>
+            <div class="sec-copy">
+              <span class="sec-n">17 · Cierre</span>
+              <h2 class="sec-t">AgendaFácil ya tiene una arquitectura que puede crecer</h2>
+              <p class="sec-s">El producto pasó de una necesidad informal a un sistema diseñado, ensamblado y verificable.</p>
+            </div>
+          </div>
+          <div class="body">
+            <ul class="checklist">
+              <li><strong>Problema resuelto:</strong> dejamos de pensar en una app aislada para diseñar una plataforma útil para muchos negocios.</li>
+              <li><strong>Qué construimos:</strong> schema completo, módulos visibles, auth reutilizado y el primer dominio funcional.</li>
+              <li><strong>Qué cambió:</strong> un dueño puede registrarse, iniciar sesión, crear su negocio y recibir configuración + plan FREE automáticamente.</li>
+            </ul>
+            <div class="cards">
+              <div class="card" data-accent="1"><span class="emoji-orb" aria-hidden="true">🏢</span><b>1 · SaaS se diseña</b><p>Multi-inquilino, aislamiento, autoservicio y suscripción viven en el backend.</p></div>
+              <div class="card" data-accent="2"><span class="emoji-orb" aria-hidden="true">🧩</span><b>2 · Dominios claros</b><p>Cada área conserva una responsabilidad y un límite.</p></div>
+              <div class="card" data-accent="3"><span class="emoji-orb" aria-hidden="true">🔗</span><b>3 · El negocio manda</b><p>Entidades y relaciones nacen del mundo real, no de la sintaxis.</p></div>
+            </div>
+            <div class="socratica">
+              <span class="component-label">Puente a la Clase 2</span>
+              <p class="socratica-q">El negocio ya existe, pero todavía no puede operar. ¿Qué necesita antes de recibir su primera cita?</p>
+              <details class="reveal"><summary>Ver respuesta</summary><div class="reveal-body"><p class="lead-answer">Profesionales, servicios y la relación entre ambos.</p><p>En C2 implementaremos quién atiende, qué ofrece, qué profesional presta cada servicio, los perfiles y los horarios. AgendaFácil pasará de existir a poder agendar.</p></div></details>
+            </div>
+            <div class="panel">
+              <span class="component-label">Fuentes técnicas de la guía</span>
+              <p><a href="https://docs.nestjs.com">Documentación oficial de NestJS</a> · Modules, Providers, OpenAPI y Helmet.</p>
+              <p><a href="https://www.prisma.io/docs">Documentación oficial de Prisma</a> · configuración, relaciones, escrituras anidadas y generador de Prisma 7.</p>
+              <p><a href="https://www.postgresql.org/docs/">Documentación oficial de PostgreSQL</a> · tipos numéricos y decimales.</p>
+            </div>
+            <p class="doc-foot">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</p>
+          </div>
+        </section>
+      </div>
+
+      <nav class="view-controls" id="viewControls" aria-label="Navegación entre secciones">
+        <button class="view-btn" id="prevView" type="button" aria-label="Sección anterior">←</button>
+        <span class="view-position" id="viewPosition" aria-live="polite">Portada</span>
+        <button class="view-btn" id="nextView" type="button" aria-label="Sección siguiente">→</button>
+      </nav>
+    </main>
+  </div>
+
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+  <script src="anaclase-v11.js"></script>
+</body>
+</html>
