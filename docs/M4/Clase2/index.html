@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro" data-tema-base="oscuro" data-empresa="dev-senior" data-paleta="cobalto">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Ana Alvarado">
+  <meta name="copyright" content="© 2026 Ana Alvarado — Todos los derechos reservados">
+  <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+  <title>M4C2 · Usuarios, perfiles y reserva · Ana Alvarado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&amp;family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
+  <link rel="stylesheet" href="anaestilos-v12.css">
+</head>
+<body>
+  <a class="skip-link" href="#s1">Saltar al contenido</a>
+  <div class="topline" id="topline" aria-hidden="true"></div>
+  <div class="controls" aria-label="Controles">
+    <button class="ctrl" id="temaBtn" type="button" aria-label="Cambiar tema">☀</button>
+    <button class="ctrl" id="fullscreenBtn" type="button" aria-label="Pantalla completa">⛶</button>
+  </div>
+
+  <div class="shell" id="shell" data-collapsed="false">
+    <aside class="sidebar" aria-label="Índice de la clase">
+      <div class="sb-top">
+        <span class="brand-mark">A</span>
+        <div class="sb-title"><b>AgendaFácil · Módulo 4</b><span>Clase 2 · 120 min</span></div>
+      </div>
+      <button class="sb-toggle" id="collapseBtn" type="button" aria-label="Colapsar menú">‹</button>
+      <nav class="sb-nav" id="nav" aria-label="Secciones">
+        <a class="nav-item active" href="#portada"><span class="nav-index">00</span><span class="nav-label">Portada</span></a>
+        <span class="nav-group">Problema</span>
+        <a class="nav-item" href="#s1"><span class="nav-index">01</span><span class="nav-label">Dos reglas</span></a>
+        <span class="nav-group">Comprender</span>
+        <a class="nav-item" href="#s2"><span class="nav-index">02</span><span class="nav-label">Relaciones</span></a>
+        <a class="nav-item" href="#s3"><span class="nav-index">03</span><span class="nav-label">Perfil y configuración</span></a>
+        <span class="nav-group">Construir</span>
+        <a class="nav-item" href="#s4"><span class="nav-index">04</span><span class="nav-label">Catálogo</span></a>
+        <a class="nav-item" href="#s5"><span class="nav-index">05</span><span class="nav-label">Regla N:M</span></a>
+        <a class="nav-item" href="#s6"><span class="nav-index">06</span><span class="nav-label">Implementar N:M</span></a>
+        <a class="nav-item" href="#s7"><span class="nav-index">07</span><span class="nav-label">Roles reales</span></a>
+        <a class="nav-item" href="#s8"><span class="nav-index">08</span><span class="nav-label">Quién reserva</span></a>
+        <a class="nav-item" href="#s9"><span class="nav-index">09</span><span class="nav-label">Crear la reserva</span></a>
+        <a class="nav-item" href="#s10"><span class="nav-index">10</span><span class="nav-label">Sin cruces</span></a>
+        <a class="nav-item" href="#s11"><span class="nav-index">11</span><span class="nav-label">Exponer y ensamblar</span></a>
+        <span class="nav-group">Probar</span>
+        <a class="nav-item" href="#s12"><span class="nav-index">12</span><span class="nav-label">Traza completa</span></a>
+        <a class="nav-item" href="#s13"><span class="nav-index">13</span><span class="nav-label">Casos de prueba</span></a>
+        <a class="nav-item" href="#s14"><span class="nav-index">14</span><span class="nav-label">Errores frecuentes</span></a>
+        <a class="nav-item" href="#s15"><span class="nav-index">15</span><span class="nav-label">Transferencia</span></a>
+        <span class="nav-group">Cerrar</span>
+        <a class="nav-item" href="#s16"><span class="nav-index">16</span><span class="nav-label">Cierre y puente</span></a>
+      </nav>
+      <div class="sb-prog">
+        <div class="lbl"><span>Progreso</span><span id="progPct">0%</span></div>
+        <div class="track"><div class="fill" id="progFill"></div></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="hero view" id="portada" data-accent="1">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="eyebrow">Dev Senior · JavaScript AI Backend Developer</span>
+            <h1 class="hero-title">Del negocio vacío a la primera reserva sin cruces</h1>
+            <p class="hero-lead">AgendaFácil conectará perfiles, catálogo, roles y relaciones para que un cliente reserve con el profesional correcto, en un horario disponible.</p>
+            <div class="meta">
+              <span class="pill" data-hot>120 minutos</span>
+              <span class="pill">NestJS 11 · Prisma 7</span>
+              <span class="pill">PostgreSQL · JWT</span>
+            </div>
+          </div>
+          <figure class="hero-visual">
+            <svg viewBox="0 0 440 300" role="img" aria-label="Agenda de Luis con una cita válida de 15:00 a 15:30 y un intento rechazado a las 15:15">
+              <rect x="34" y="22" width="372" height="256" rx="18" fill="var(--paper-2)" stroke="var(--paper-line)" stroke-width="2"/>
+              <text x="58" y="58" font-family="Bricolage Grotesque, Inter" font-size="21" font-weight="600" fill="var(--paper-ink)">Agenda de Luis · jueves</text>
+              <line x1="58" y1="82" x2="382" y2="82" stroke="var(--paper-line)" stroke-width="2"/>
+              <text x="58" y="124" font-family="IBM Plex Mono" font-size="16" fill="var(--paper-soft)">15:00</text>
+              <rect x="126" y="99" width="226" height="50" rx="9" fill="var(--a1-papel)"/>
+              <text x="146" y="130" font-family="Inter" font-size="16" font-weight="600" fill="var(--paper-ink)">Corte · Juan · 30 min</text>
+              <text x="58" y="190" font-family="IBM Plex Mono" font-size="16" fill="var(--paper-soft)">15:15</text>
+              <rect x="126" y="165" width="226" height="50" rx="9" fill="var(--paper)" stroke="var(--danger)" stroke-width="2"/>
+              <text x="146" y="196" font-family="Inter" font-size="16" font-weight="600" fill="var(--danger)">Rechazada · se cruza</text>
+              <text x="58" y="250" font-family="IBM Plex Mono" font-size="15" fill="var(--success)">15:30 → siguiente franja disponible</text>
+            </svg>
+            <figcaption class="hero-note">La agenda acepta citas consecutivas, pero rechaza cualquier franja que se superponga.</figcaption>
+          </figure>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="section view" id="s1" data-accent="1" data-layout="canvas" data-escena="apertura" hidden>
+          <div class="sec-head">
+            <span class="sec-n">El problema</span>
+            <h2 class="sec-t">Don Pepe da por obvias dos reglas que el software todavía no sabe</h2>
+            <p class="sec-s">El negocio existe desde la clase anterior, pero aún no tiene catálogo, profesionales ni una forma segura de reservar.</p>
+          </div>
+          <div class="body">
+            <figure class="figura">
+              <div class="figura-stage">
+                <svg viewBox="0 0 700 240" role="img" aria-label="Nota de Don Pepe con las dos reglas de negocio: Luis no hace tinte y no puede atender citas simultáneas">
+                  <rect x="36" y="22" width="628" height="196" rx="16" fill="var(--paper-2)" stroke="var(--paper-line)" stroke-width="2"/>
+                  <text x="66" y="64" font-family="Bricolage Grotesque, Inter" font-size="22" font-weight="600" fill="var(--paper-ink)">Pedido de Don Pepe</text>
+                  <line x1="66" y1="82" x2="634" y2="82" stroke="var(--paper-line)" stroke-width="2"/>
+                  <text x="66" y="120" font-family="Inter" font-size="16" fill="var(--paper-ink)">1. Luis hace corte y barba; no lo agenden para tinte.</text>
+                  <text x="66" y="158" font-family="Inter" font-size="16" fill="var(--paper-ink)">2. Si atiende de 15:00 a 15:30, no le pongan otra a las 15:15.</text>
+                  <text x="66" y="197" font-family="IBM Plex Mono" font-size="15" fill="var(--a1-ink)">quién hace qué + franjas que no se solapan</text>
+                </svg>
+              </div>
+              <figcaption>Las dos frases se convertirán en reglas verificables antes de insertar una cita.</figcaption>
+            </figure>
+            <div class="compare">
+              <div class="compare-card" data-side="negative">
+                <h3>El negocio hoy</h3>
+                <ol>
+                  <li>Sin servicios ni profesionales.</li>
+                  <li>Los clientes no pueden reservar.</li>
+                  <li>Nada impide una cita incompatible o cruzada.</li>
+                </ol>
+              </div>
+              <div class="compare-card" data-side="positive">
+                <h3>El negocio al cerrar</h3>
+                <ol>
+                  <li>Catálogo y profesionales conectados.</li>
+                  <li>Cliente y dueño con roles coherentes.</li>
+                  <li>Primera reserva aceptada o rechazada con una razón clara.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s2" data-accent="1" data-layout="canvas" data-escena="concepto" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Comprender · relaciones</span>
+            <h2 class="sec-t">Cuando ambos lados tienen muchos, la relación necesita una tabla propia</h2>
+            <p class="sec-s">Los tres tipos de relación aparecen hoy, pero el foco está en representar quién puede ofrecer cada servicio.</p>
+          </div>
+          <div class="body">
+            <div class="definicion">
+              <div class="def-tecnica">
+                <span class="component-label">Definición técnica</span>
+                <p class="def-termino">Relación muchos a muchos</p>
+                <p>Se representa con una tabla intermedia que guarda una fila por cada pareja real de identificadores.</p>
+                <span class="def-fuente">Prisma ORM · Relations y compound IDs</span>
+              </div>
+              <div class="def-vida">
+                <span class="component-label">En la vida real</span>
+                <p>Es la lista “quién sabe hacer qué” de la barbería: Corte–Luis, Barba–Luis y Corte–Andrés. No vive dentro de una sola ficha.</p>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>Las relaciones de AgendaFácil</caption>
+                <thead><tr><th>Tipo</th><th>Ejemplo</th><th>Qué significa</th></tr></thead>
+                <tbody>
+                  <tr><td><code>1:1</code></td><td>Usuario ↔ Perfil</td><td>Cada usuario tiene, como máximo, un perfil.</td></tr>
+                  <tr><td><code>1:1</code></td><td>Negocio ↔ Configuración</td><td>Cada negocio mantiene un único conjunto de horarios.</td></tr>
+                  <tr><td><code>1:N</code></td><td>Negocio → Servicios</td><td>Un negocio publica muchos servicios; cada servicio pertenece a uno.</td></tr>
+                  <tr><td><code>N:M</code></td><td>Servicios ↔ Profesionales</td><td data-emphasis>Ambos lados pueden tener muchos del otro.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="er-board" role="group" aria-label="Entidades de la relación muchos a muchos">
+              <div class="entity">
+                <div class="entity-name">Servicio</div>
+                <ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span>id</li><li>nombre</li><li>negocioId</li></ul>
+              </div>
+              <div class="entity" data-emphasis>
+                <div class="entity-name">ServicioProfesional</div>
+                <ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span>servicioId + profesionalId</li><li><span class="key fk">FK</span>servicioId</li><li><span class="key fk">FK</span>profesionalId</li></ul>
+              </div>
+              <div class="entity">
+                <div class="entity-name">Profesional</div>
+                <ul class="entity-fields"><li class="is-key"><span class="key pk">PK</span>id</li><li>nombre</li><li>negocioId</li></ul>
+              </div>
+            </div>
+
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">Si la llave primaria es la pareja completa, ¿qué ocurre al asignar el mismo servicio al mismo profesional dos veces?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">La pareja no puede repetirse.</p>
+                  <p>La base rechazaría el duplicado. El backend lo anticipará y responderá <code>409 Conflict</code> con un mensaje claro.</p>
+                </div>
+              </details>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">Modelo intermedio existente desde C1</span><span class="code-reveal-note">Consultar en prisma/schema.prisma · Prisma · sin migración hoy</span></span></summary>
+              <div class="code-reveal-body">
+                <div class="code-block">
+                  <div class="code-head"><div><span class="code-context">Referencia</span><span class="code-file">prisma/schema.prisma</span></div><button class="copy-btn" type="button">Copiar</button></div>
+                  <pre class="line-numbers"><code class="language-prisma">model ServicioProfesional {
+  servicioId    Int
+  profesionalId Int
+  servicio      Servicio    @relation(fields: [servicioId], references: [id])
+  profesional   Profesional @relation(fields: [profesionalId], references: [id])
+
+  @@id([servicioId, profesionalId])
+  @@map("servicio_profesional")
+}</code></pre>
+                </div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section view" id="s3" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · relaciones 1:1</span>
+            <h2 class="sec-t">Perfil y configuración separan datos editables de identidad y propiedad</h2>
+            <p class="sec-s">El perfil pertenece al usuario del token; la configuración solo puede consultarla o cambiarla el dueño del negocio.</p>
+          </div>
+          <div class="body">
+            <div class="pipeline" role="group" aria-label="Dos flujos uno a uno">
+              <div class="pipe-step">
+                <span class="component-label">Usuario</span>
+                <h3>Identidad estable</h3>
+                <ul><li>nombre · email · rol</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step" data-emphasis>
+                <span class="component-label">Relaciones 1:1</span>
+                <h3>Datos con responsabilidad propia</h3>
+                <ul><li>Perfil → upsert</li><li>Configuración → update</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step">
+                <span class="component-label">Protección</span>
+                <h3>Datos confiables</h3>
+                <ul><li>select sin contraseña</li><li>404 o 403 por propiedad</li></ul>
+              </div>
+            </div>
+
+            <div class="micro-task">
+              <span class="component-label">Decide · 30 segundos</span>
+              <p class="micro-task-q">Si el usuario no sabe si ya tiene perfil, ¿conviene obligarlo a elegir entre crear y actualizar?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar</summary>
+                <p class="micro-answer"><strong>No.</strong> <code>upsert</code> inserta cuando no existe y actualiza cuando ya existe; la llave única <code>usuarioId</code> decide.</p>
+              </details>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">actualizar-perfil.dto.ts completo</span><span class="code-reveal-note">Crear en src/perfiles/dto/ · TypeScript · listo para copiar</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/perfiles/dto/actualizar-perfil.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
+
+export class ActualizarPerfilDto {
+  @ApiPropertyOptional({ example: '3001234567' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  telefono?: string;
+
+  @ApiPropertyOptional({ example: 'Barbero con 10 años de experiencia' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(300, { message: 'La bio no puede superar 300 caracteres' })
+  bio?: string;
+
+  @ApiPropertyOptional({ example: 'https://.../avatar.png' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  avatarUrl?: string;
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">perfiles.service.ts completo</span><span class="code-reveal-note">Crear en src/perfiles/ · TypeScript · select seguro + upsert</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/perfiles/perfiles.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { ActualizarPerfilDto } from './dto/actualizar-perfil.dto';
+
+@Injectable()
+export class PerfilesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Devuelve el perfil del usuario junto con sus datos básicos (sin la contraseña).
+  obtenerMio(usuarioId: number) {
+    return this.prisma.usuario.findUnique({
+      where: { id: usuarioId },
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        rol: true,
+        perfil: true,
+      },
+    });
+  }
+
+  // Crea el perfil si no existe, o lo actualiza si ya existe (relación 1:1).
+  actualizarMio(usuarioId: number, dto: ActualizarPerfilDto) {
+    return this.prisma.perfil.upsert({
+      where: { usuarioId },
+      create: { usuarioId, ...dto },
+      update: { ...dto },
+    });
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">perfiles.controller.ts completo</span><span class="code-reveal-note">Crear en src/perfiles/ · TypeScript · GET y PUT /perfil</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/perfiles/perfiles.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { PerfilesService } from './perfiles.service';
+import { ActualizarPerfilDto } from './dto/actualizar-perfil.dto';
+
+@ApiTags('perfil')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('perfil')
+export class PerfilesController {
+  constructor(private readonly perfilesService: PerfilesService) {}
+
+  @Get()
+  obtenerMio(@UsuarioActual() usuario: { id: number }) {
+    return this.perfilesService.obtenerMio(usuario.id);
+  }
+
+  @Put()
+  actualizarMio(
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: ActualizarPerfilDto,
+  ) {
+    return this.perfilesService.actualizarMio(usuario.id, dto);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">perfiles.module.ts completo</span><span class="code-reveal-note">Crear en src/perfiles/ · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/perfiles/perfiles.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { PerfilesService } from './perfiles.service';
+import { PerfilesController } from './perfiles.controller';
+
+@Module({
+  controllers: [PerfilesController],
+  providers: [PerfilesService],
+})
+export class PerfilesModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="callout" data-tone="info">
+              <span class="callout-icon">i</span>
+              <div><h3>La configuración exige propiedad</h3><p>La ruta anidada comunica la jerarquía real: <code>/negocios/:negocioId/configuracion</code>. Antes de leer o actualizar, el service confirma que el negocio existe y pertenece al usuario.</p></div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">actualizar-configuracion.dto.ts completo</span><span class="code-reveal-note">Crear en src/configuracion/dto/ · TypeScript · HH:MM y duración</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/configuracion/dto/actualizar-configuracion.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsInt, IsOptional, IsString, Matches, Max, Min } from 'class-validator';
+
+export class ActualizarConfiguracionDto {
+  @ApiPropertyOptional({ example: '08:00' })
+  @IsOptional()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+    message: 'La hora de apertura debe tener formato HH:MM (24h)',
+  })
+  horaApertura?: string;
+
+  @ApiPropertyOptional({ example: '19:00' })
+  @IsOptional()
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+    message: 'La hora de cierre debe tener formato HH:MM (24h)',
+  })
+  horaCierre?: string;
+
+  @ApiPropertyOptional({ example: 'America/Bogota' })
+  @IsOptional()
+  @IsString()
+  zonaHoraria?: string;
+
+  @ApiPropertyOptional({ example: 45 })
+  @IsOptional()
+  @IsInt()
+  @Min(5, { message: 'La duración por defecto no puede ser menor a 5 minutos' })
+  @Max(480, { message: 'La duración por defecto no puede superar 480 minutos' })
+  duracionDefault?: number;
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">configuracion.service.ts completo</span><span class="code-reveal-note">Crear en src/configuracion/ · TypeScript · 404/403 antes de tocar datos</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/configuracion/configuracion.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { ActualizarConfiguracionDto } from './dto/actualizar-configuracion.dto';
+
+@Injectable()
+export class ConfiguracionService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Regla de negocio reutilizable: el negocio debe existir y ser del usuario.
+  private async verificarNegocioPropio(negocioId: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id: negocioId },
+    });
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+    return negocio;
+  }
+
+  async obtener(negocioId: number, duenoId: number) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.configuracion.findUnique({ where: { negocioId } });
+  }
+
+  async actualizar(
+    negocioId: number,
+    duenoId: number,
+    dto: ActualizarConfiguracionDto,
+  ) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.configuracion.update({
+      where: { negocioId },
+      data: dto,
+    });
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">configuracion.controller.ts completo</span><span class="code-reveal-note">Crear en src/configuracion/ · TypeScript · GET y PATCH anidados</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/configuracion/configuracion.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { ConfiguracionService } from './configuracion.service';
+import { ActualizarConfiguracionDto } from './dto/actualizar-configuracion.dto';
+
+@ApiTags('configuracion')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('negocios/:negocioId/configuracion')
+export class ConfiguracionController {
+  constructor(private readonly configuracionService: ConfiguracionService) {}
+
+  @Get()
+  obtener(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.configuracionService.obtener(negocioId, usuario.id);
+  }
+
+  @Patch()
+  actualizar(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: ActualizarConfiguracionDto,
+  ) {
+    return this.configuracionService.actualizar(negocioId, usuario.id, dto);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">configuracion.module.ts completo</span><span class="code-reveal-note">Editar en src/configuracion/ · TypeScript · reemplazar el esqueleto</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/configuracion/configuracion.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { ConfiguracionService } from './configuracion.service';
+import { ConfiguracionController } from './configuracion.controller';
+
+@Module({
+  controllers: [ConfiguracionController],
+  providers: [ConfiguracionService],
+})
+export class ConfiguracionModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="checkpoint">
+              <span class="component-label">Checkpoint</span>
+              <h3>Dos 1:1, dos responsabilidades claras.</h3>
+              <p><code>GET /perfil</code> nunca expone contraseña; <code>PATCH /negocios/1/configuracion</code> acepta <code>08:00</code>, rechaza <code>25:99</code> y responde <code>403</code> si el negocio es ajeno.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s4" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · catálogo</span>
+            <h2 class="sec-t">Servicios y profesionales repiten un patrón que ya conocemos</h2>
+            <p class="sec-s">Crear y listar por negocio es boilerplate: la IA puede acelerarlo porque el estudiante ya domina la verificación de propiedad y debe auditar cada línea.</p>
+          </div>
+          <div class="body">
+            <div class="momento-ia">
+              <div class="momento-ia-head">
+                <span class="momento-ia-titulo">Momento IA</span>
+                <span class="ia-nivel">Nivel 2 · Copiloto</span>
+                <span class="ia-herramienta">Cursor / GitHub Copilot en VS Code</span>
+              </div>
+              <div class="momento-ia-body">
+                <p class="ia-porque">El patrón “crear + listar por negocio con verificación de propiedad” ya se construyó en C1. Repetirlo a mano no agrega aprendizaje; revisarlo sí.</p>
+                <div class="ia-grid">
+                  <div><span class="component-label">Primero razonas tú</span><p>Qué campos lleva un servicio y por qué <code>negocioId</code> viene de la URL, no del body.</p></div>
+                  <div class="ia-no-delega"><span class="component-label">No se delega</span><p>Decidir que <code>negocioId</code> viene de la URL y que <code>precio</code> es <code>Decimal</code>, no <code>Float</code>.</p></div>
+                </div>
+                <div class="code-block" data-tipo="prompt">
+                  <div class="code-head"><div><span class="code-context">Prompt sugerido</span><span class="code-file">Chat de Copilot</span></div><button class="copy-btn" type="button">Copiar</button></div>
+                  <pre><code class="language-plaintext">En un proyecto NestJS 11 con Prisma 7, tengo el patrón de 'negocios': un service con un método privado `verificarNegocioPropio(negocioId, duenoId)` que lanza NotFoundException/ForbiddenException, y métodos `crear` y `listarPorNegocio`. Genérame el mismo patrón para 'servicios', con un DTO que valide nombre (mínimo 3), duracionMin (entero, mínimo 5) y precio (número positivo con 2 decimales). Rutas anidadas bajo /negocios/:negocioId/servicios. Sin usar `any`.</code></pre>
+                </div>
+                <div>
+                  <span class="component-label">Cómo validar la respuesta</span>
+                  <ul class="checklist">
+                    <li>Compila y no inventa imports.</li>
+                    <li><code>verificarNegocioPropio</code> conserva la lógica 404/403.</li>
+                    <li>El precio es positivo y la ruta quedó anidada.</li>
+                    <li>Puedes explicar cada línea que propone.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">crear-servicio.dto.ts completo</span><span class="code-reveal-note">Crear en src/servicios/dto/ · TypeScript · valida nombre, duración y precio</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/servicios/dto/crear-servicio.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsInt,
+  IsNumber,
+  IsPositive,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
+
+export class CrearServicioDto {
+  @ApiProperty({ example: 'Corte clásico' })
+  @IsString()
+  @MinLength(3, { message: 'El nombre debe tener al menos 3 caracteres' })
+  nombre!: string;
+
+  @ApiProperty({ example: 30 })
+  @IsInt()
+  @Min(5, { message: 'La duración debe ser de al menos 5 minutos' })
+  duracionMin!: number;
+
+  @ApiProperty({ example: 25000 })
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive({ message: 'El precio debe ser mayor a cero' })
+  precio!: number;
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">servicios.service.ts completo</span><span class="code-reveal-note">Crear en src/servicios/ · TypeScript · crear y listar con propiedad</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/servicios/servicios.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearServicioDto } from './dto/crear-servicio.dto';
+
+@Injectable()
+export class ServiciosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  private async verificarNegocioPropio(negocioId: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id: negocioId },
+    });
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+  }
+
+  async crear(negocioId: number, duenoId: number, dto: CrearServicioDto) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.servicio.create({
+      data: {
+        nombre: dto.nombre,
+        duracionMin: dto.duracionMin,
+        precio: dto.precio,
+        negocioId,
+      },
+    });
+  }
+
+  async listarPorNegocio(negocioId: number, duenoId: number) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.servicio.findMany({
+      where: { negocioId },
+      orderBy: { id: 'asc' },
+    });
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">servicios.controller.ts completo</span><span class="code-reveal-note">Crear en src/servicios/ · TypeScript · POST y GET anidados</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/servicios/servicios.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { ServiciosService } from './servicios.service';
+import { CrearServicioDto } from './dto/crear-servicio.dto';
+
+@ApiTags('servicios')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('negocios/:negocioId/servicios')
+export class ServiciosController {
+  constructor(private readonly serviciosService: ServiciosService) {}
+
+  @Post()
+  crear(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: CrearServicioDto,
+  ) {
+    return this.serviciosService.crear(negocioId, usuario.id, dto);
+  }
+
+  @Get()
+  listar(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.serviciosService.listarPorNegocio(negocioId, usuario.id);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">servicios.module.ts completo</span><span class="code-reveal-note">Editar en src/servicios/ · TypeScript · reemplazar el esqueleto</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/servicios/servicios.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { ServiciosService } from './servicios.service';
+import { ServiciosController } from './servicios.controller';
+
+@Module({
+  controllers: [ServiciosController],
+  providers: [ServiciosService],
+})
+export class ServiciosModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">crear-profesional.dto.ts completo</span><span class="code-reveal-note">Crear en src/profesionales/dto/ · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/dto/crear-profesional.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+
+export class CrearProfesionalDto {
+  @ApiProperty({ example: 'Luis Barbero' })
+  @IsString()
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  nombre!: string;
+
+  @ApiPropertyOptional({ example: 'Fade y diseño' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  especialidad?: string;
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">profesionales.controller.ts completo</span><span class="code-reveal-note">Crear en src/profesionales/ · TypeScript · CRUD del profesional</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/profesionales.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { ProfesionalesService } from './profesionales.service';
+import { CrearProfesionalDto } from './dto/crear-profesional.dto';
+
+@ApiTags('profesionales')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('negocios/:negocioId/profesionales')
+export class ProfesionalesController {
+  constructor(private readonly profesionalesService: ProfesionalesService) {}
+
+  @Post()
+  crear(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: CrearProfesionalDto,
+  ) {
+    return this.profesionalesService.crear(negocioId, usuario.id, dto);
+  }
+
+  @Get()
+  listar(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.profesionalesService.listarPorNegocio(negocioId, usuario.id);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="checkpoint">
+              <span class="component-label">Checkpoint</span>
+              <h3>El catálogo ya existe, todavía sin la relación.</h3>
+              <p>Podemos crear Corte, Tinte y Luis dentro del negocio 1. El precio aparece como texto en JSON porque Prisma preserva la precisión de <code>Decimal</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s5" data-accent="1" data-layout="canvas" data-escena="pregunta" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Decidir · aislamiento</span>
+            <h2 class="sec-t">La relación N:M también debe respetar el negocio</h2>
+          </div>
+          <div class="body">
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">Don Pepe intenta asignar “Manicure”, del salón de Doña Rosa, a su barbero Luis. ¿Debería permitirse?</p>
+              <p class="socratica-hint">Ser dueño de un negocio no concede acceso a los datos de otro tenant.</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">No: servicio y profesional deben pertenecer al mismo negocio, y ese negocio debe ser del usuario.</p>
+                  <p>Mezclar identificadores entre negocios rompería el aislamiento del SaaS. La validación ocurre antes de insertar la pareja.</p>
+                </div>
+              </details>
+            </div>
+            <div class="sin-ia">
+              <span class="sin-ia-icono" aria-hidden="true"></span>
+              <div><h3>Sin IA aquí</h3><p>La regla “solo datos del mismo negocio” es el razonamiento central de este bloque. Se decide y escribe a mano; la IA puede revisarla después.</p></div>
+            </div>
+            <div class="pipeline" role="group" aria-label="Validaciones antes de crear la relación">
+              <div class="pipe-step">
+                <span class="component-label">Profesional</span>
+                <h3>Existe y es mío</h3>
+                <ul><li>404 si no existe</li><li>403 si es ajeno</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step" data-emphasis>
+                <span class="component-label">Regla de negocio</span>
+                <h3>Mismo negocio</h3>
+                <ul><li>servicio.negocioId</li><li>profesional.negocioId</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step">
+                <span class="component-label">Pareja</span>
+                <h3>No está duplicada</h3>
+                <ul><li>409 si ya existe</li><li>create si todo pasa</li></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s6" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · profesional ↔ servicio</span>
+            <h2 class="sec-t">Cada condición protege una parte de la integridad</h2>
+            <p class="sec-s">Asignar, listar y quitar viven en un controlador dedicado a la relación; el service conserva la lógica del tenant.</p>
+          </div>
+          <div class="body">
+            <div class="active-build">
+              <div class="build-step">
+                <span class="build-step-index">01</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Verificar el profesional y traer su negocio</h3>
+                  <p class="build-step-purpose"><code>include: { negocio: true }</code> hace posible comparar el dueño y reutilizar el <code>negocioId</code>.</p>
+                  <div class="code-block" data-role="fragment">
+                    <div class="code-head"><div><span class="code-context">Fragmento</span><span class="code-file">src/profesionales/profesionales.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+                    <pre class="line-numbers"><code class="language-typescript">const profesional = await this.prisma.profesional.findUnique({
+  where: { id: profesionalId },
+  include: { negocio: true },
+});
+
+if (profesional.negocio.duenoId !== duenoId) {
+  throw new ForbiddenException('Este profesional no es tuyo');
+}</code></pre>
+                  </div>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">02</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Validar mismo negocio y pareja única</h3>
+                  <p class="build-step-purpose">La llave compuesta generada por Prisma se consulta como <code>servicioId_profesionalId</code>.</p>
+                  <div class="code-block" data-role="fragment">
+                    <div class="code-head"><div><span class="code-context">Fragmento</span><span class="code-file">src/profesionales/profesionales.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+                    <pre class="line-numbers"><code class="language-typescript">if (servicio.negocioId !== profesional.negocioId) {
+  throw new BadRequestException(
+    'El servicio y el profesional deben pertenecer al mismo negocio',
+  );
+}
+
+const yaAsignado = await this.prisma.servicioProfesional.findUnique({
+  where: { servicioId_profesionalId: { servicioId, profesionalId } },
+});</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">asignar-servicio.dto.ts completo</span><span class="code-reveal-note">Crear en src/profesionales/dto/ · TypeScript</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/dto/asignar-servicio.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsPositive } from 'class-validator';
+
+export class AsignarServicioDto {
+  @ApiProperty({ example: 1, description: 'ID del servicio a asignar al profesional' })
+  @IsInt()
+  @IsPositive()
+  servicioId!: number;
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">profesionales.service.ts completo</span><span class="code-reveal-note">Crear en src/profesionales/ · TypeScript · CRUD + relación N:M</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/profesionales.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CrearProfesionalDto } from './dto/crear-profesional.dto';
+
+@Injectable()
+export class ProfesionalesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  private async verificarNegocioPropio(negocioId: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id: negocioId },
+    });
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+  }
+
+  // Trae el profesional y valida que su negocio sea del usuario. Reutilizable.
+  private async obtenerProfesionalPropio(profesionalId: number, duenoId: number) {
+    const profesional = await this.prisma.profesional.findUnique({
+      where: { id: profesionalId },
+      include: { negocio: true },
+    });
+    if (!profesional) {
+      throw new NotFoundException('El profesional no existe');
+    }
+    if (profesional.negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este profesional no es tuyo');
+    }
+    return profesional;
+  }
+
+  async crear(negocioId: number, duenoId: number, dto: CrearProfesionalDto) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.profesional.create({
+      data: {
+        nombre: dto.nombre,
+        especialidad: dto.especialidad,
+        negocioId,
+      },
+    });
+  }
+
+  async listarPorNegocio(negocioId: number, duenoId: number) {
+    await this.verificarNegocioPropio(negocioId, duenoId);
+    return this.prisma.profesional.findMany({
+      where: { negocioId },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  // ─── Relación N:M: asignar un servicio a un profesional ───
+  async asignarServicio(
+    profesionalId: number,
+    servicioId: number,
+    duenoId: number,
+  ) {
+    const profesional = await this.obtenerProfesionalPropio(
+      profesionalId,
+      duenoId,
+    );
+
+    const servicio = await this.prisma.servicio.findUnique({
+      where: { id: servicioId },
+    });
+    if (!servicio) {
+      throw new NotFoundException('El servicio no existe');
+    }
+
+    // Regla de negocio: servicio y profesional deben ser del MISMO negocio.
+    if (servicio.negocioId !== profesional.negocioId) {
+      throw new BadRequestException(
+        'El servicio y el profesional deben pertenecer al mismo negocio',
+      );
+    }
+
+    const yaAsignado = await this.prisma.servicioProfesional.findUnique({
+      where: { servicioId_profesionalId: { servicioId, profesionalId } },
+    });
+    if (yaAsignado) {
+      throw new ConflictException('El profesional ya ofrece este servicio');
+    }
+
+    return this.prisma.servicioProfesional.create({
+      data: { servicioId, profesionalId },
+    });
+  }
+
+  async quitarServicio(
+    profesionalId: number,
+    servicioId: number,
+    duenoId: number,
+  ) {
+    await this.obtenerProfesionalPropio(profesionalId, duenoId);
+
+    const asignacion = await this.prisma.servicioProfesional.findUnique({
+      where: { servicioId_profesionalId: { servicioId, profesionalId } },
+    });
+    if (!asignacion) {
+      throw new NotFoundException('El profesional no ofrece este servicio');
+    }
+
+    await this.prisma.servicioProfesional.delete({
+      where: { servicioId_profesionalId: { servicioId, profesionalId } },
+    });
+    return { mensaje: 'Servicio retirado del profesional' };
+  }
+
+  async listarServicios(profesionalId: number, duenoId: number) {
+    await this.obtenerProfesionalPropio(profesionalId, duenoId);
+    const asignaciones = await this.prisma.servicioProfesional.findMany({
+      where: { profesionalId },
+      include: { servicio: true },
+      orderBy: { servicioId: 'asc' },
+    });
+    return asignaciones.map((a) => a.servicio);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">asignaciones.controller.ts completo</span><span class="code-reveal-note">Crear en src/profesionales/ · TypeScript · POST, GET y DELETE de la relación</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/profesionales/asignaciones.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { ProfesionalesService } from './profesionales.service';
+import { AsignarServicioDto } from './dto/asignar-servicio.dto';
+
+// Controlador dedicado a la relación N:M entre profesional y servicio.
+@ApiTags('profesionales-servicios')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('profesionales/:profesionalId/servicios')
+export class AsignacionesController {
+  constructor(private readonly profesionalesService: ProfesionalesService) {}
+
+  @Post()
+  asignar(
+    @Param('profesionalId', ParseIntPipe) profesionalId: number,
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: AsignarServicioDto,
+  ) {
+    return this.profesionalesService.asignarServicio(
+      profesionalId,
+      dto.servicioId,
+      usuario.id,
+    );
+  }
+
+  @Get()
+  listar(
+    @Param('profesionalId', ParseIntPipe) profesionalId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.profesionalesService.listarServicios(profesionalId, usuario.id);
+  }
+
+  @Delete(':servicioId')
+  quitar(
+    @Param('profesionalId', ParseIntPipe) profesionalId: number,
+    @Param('servicioId', ParseIntPipe) servicioId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.profesionalesService.quitarServicio(
+      profesionalId,
+      servicioId,
+      usuario.id,
+    );
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">profesionales.module.ts completo</span><span class="code-reveal-note">Editar en src/profesionales/ · TypeScript · dos controladores, un service</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/profesionales/profesionales.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { ProfesionalesService } from './profesionales.service';
+import { ProfesionalesController } from './profesionales.controller';
+import { AsignacionesController } from './asignaciones.controller';
+
+@Module({
+  controllers: [ProfesionalesController, AsignacionesController],
+  providers: [ProfesionalesService],
+})
+export class ProfesionalesModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="checkpoint">
+              <span class="component-label">Checkpoint</span>
+              <h3>La pared de “quién hace qué” ya está en la base.</h3>
+              <p><code>POST /profesionales/1/servicios</code> con <code>{ "servicioId": 1 }</code> crea la pareja; repetirla devuelve <code>409</code>; mezclar negocios devuelve <code>400</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s7" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · roles</span>
+            <h2 class="sec-t">Registrarse crea un cliente; abrir un negocio crea un dueño</h2>
+            <p class="sec-s">La identidad ya no se decide desde el body: el servidor aplica una transición coherente con el uso real del producto.</p>
+          </div>
+          <div class="body">
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">¿Qué rol debería tener alguien apenas se registra: dueño o cliente?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">Cliente.</p>
+                  <p>La mayoría entra para reservar. Convertirse en dueño es la excepción y ocurre cuando el usuario crea un negocio.</p>
+                </div>
+              </details>
+            </div>
+
+            <div class="compare">
+              <div class="compare-card" data-side="negative">
+                <h3>Antes: simplificación de C1</h3>
+                <ol><li>Todo registro forzaba <code>Rol.DUENO</code>.</li><li>No había una identidad coherente para Juan, el cliente.</li></ol>
+              </div>
+              <div class="compare-card" data-side="positive">
+                <h3>Ahora: transición real</h3>
+                <ol><li>Registro → <code>Rol.CLIENTE</code>.</li><li>Crear negocio → <code>Rol.DUENO</code> dentro de una transacción.</li></ol>
+              </div>
+            </div>
+
+            <div class="code-block" data-role="fragment">
+              <div class="code-head"><div><span class="code-context">Modificar dentro de register</span><span class="code-file">src/auth/auth.service.ts</span></div><button class="copy-btn" type="button">Copiar reemplazo</button></div>
+              <pre class="line-numbers"><code class="language-typescript">    // Quien se registra nace como CLIENTE (el usuario común que reserva).
+    // Se convierte en DUENO cuando crea su primer negocio (ver NegociosService).
+    const usuario = await this.prisma.usuario.create({
+      data: {
+        nombre: dto.nombre,
+        email: dto.email,
+        password: hash,
+        rol: Rol.CLIENTE,
+      },
+    });</code></pre>
+            </div>
+
+            <div class="callout" data-tone="info">
+              <span class="callout-icon">i</span>
+              <div><h3>Cambio localizado</h3><p>Este bloque reemplaza el <code>create</code> del método <code>register</code> de C1. La verificación de email, el hash y la respuesta sin contraseña permanecen sin cambios.</p></div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">negocios.service.ts completo</span><span class="code-reveal-note">Editar en src/negocios/ · TypeScript · versión final con transacción</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/negocios/negocios.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Rol } from '../generated/prisma/client';
+import { CrearNegocioDto } from './dto/crear-negocio.dto';
+
+@Injectable()
+export class NegociosService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Al crear el negocio: nace con configuración y suscripción FREE por defecto,
+  // y su creador pasa de CLIENTE a DUENO (ambas cosas en una transacción).
+  async crear(dto: CrearNegocioDto, duenoId: number) {
+    const [negocio] = await this.prisma.$transaction([
+      this.prisma.negocio.create({
+        data: {
+          nombre: dto.nombre,
+          descripcion: dto.descripcion,
+          telefono: dto.telefono,
+          direccion: dto.direccion,
+          duenoId,
+          configuracion: { create: {} },
+          suscripcion: { create: {} },
+        },
+        include: { configuracion: true, suscripcion: true },
+      }),
+      this.prisma.usuario.update({
+        where: { id: duenoId },
+        data: { rol: Rol.DUENO },
+      }),
+    ]);
+    return negocio;
+  }
+
+  obtenerMios(duenoId: number) {
+    return this.prisma.negocio.findMany({
+      where: { duenoId },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  async obtenerUno(id: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id },
+      include: { configuracion: true, suscripcion: true },
+    });
+
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+
+    return negocio;
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="callout" data-tone="warning">
+              <span class="callout-icon">!</span>
+              <div><h3>El JWT no cambia solo</h3><p>El rol queda congelado al iniciar sesión. Después de crear el negocio, Don Pepe debe volver a iniciar sesión para recibir un token que diga <code>DUENO</code>. La propiedad <code>duenoId</code> ya protege la administración mientras tanto.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s8" data-accent="1" data-layout="canvas" data-escena="pregunta" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Decidir · identidad</span>
+            <h2 class="sec-t">El cliente de la cita no se escribe en el body</h2>
+          </div>
+          <div class="body">
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">¿De dónde sale el <code>clienteId</code>: del body o de otro lugar?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body">
+                  <p class="lead-answer">Del token firmado.</p>
+                  <p>Quien reserva es el usuario logueado. Aceptar <code>clienteId</code> en el body permitiría que una persona reservara fingiendo ser otra.</p>
+                </div>
+              </details>
+            </div>
+
+            <div class="sin-ia">
+              <span class="sin-ia-icono" aria-hidden="true"></span>
+              <div><h3>Sin IA aquí</h3><p>La lógica del “sin cruces” y la identidad de quien reserva son el razonamiento central del día. La IA puede revisarlos después, no decidirlos.</p></div>
+            </div>
+
+            <div class="compare">
+              <div class="compare-card" data-side="negative">
+                <h3>Body manipulable</h3>
+                <ol><li><code>clienteId: 99</code></li><li>El cliente elige quién dice ser.</li></ol>
+              </div>
+              <div class="compare-card" data-side="positive">
+                <h3>Token firmado</h3>
+                <ol><li><code>request.user.id</code></li><li>El servidor determina quién reserva.</li></ol>
+              </div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">crear-cita.dto.ts completo</span><span class="code-reveal-note">Crear en src/citas/dto/ · TypeScript · sin clienteId</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/citas/dto/crear-cita.dto.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsInt,
+  IsISO8601,
+  IsOptional,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+
+export class CrearCitaDto {
+  @ApiProperty({ example: 1, description: 'ID del servicio a reservar' })
+  @IsInt()
+  @IsPositive()
+  servicioId!: number;
+
+  @ApiProperty({ example: 1, description: 'ID del profesional que atenderá' })
+  @IsInt()
+  @IsPositive()
+  profesionalId!: number;
+
+  @ApiProperty({ example: '2026-10-01T15:00:00.000Z', description: 'Fecha y hora en formato ISO 8601' })
+  @IsISO8601({}, { message: 'La fecha debe estar en formato ISO 8601' })
+  fecha!: string;
+
+  @ApiPropertyOptional({ example: 'Pidió corte bajo' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  notas?: string;
+}</code></pre>
+              </div></div>
+            </details>
+          </div>
+        </section>
+
+        <section class="section view" id="s9" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · citas.service</span>
+            <h2 class="sec-t">La reserva atraviesa tres puertas antes de tocar la base</h2>
+            <p class="sec-s">Pertenencia al negocio, servicio ofrecido y disponibilidad temporal forman una sola historia vertical.</p>
+          </div>
+          <div class="body">
+            <div class="pipeline" role="group" aria-label="Tres validaciones de la reserva">
+              <div class="pipe-step">
+                <span class="component-label">Puerta 1</span>
+                <h3>Mismo negocio</h3>
+                <ul><li>servicio</li><li>profesional</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step" data-emphasis>
+                <span class="component-label">Puerta 2</span>
+                <h3>El profesional ofrece el servicio</h3>
+                <ul><li>tabla N:M</li></ul>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+              <div class="pipe-step">
+                <span class="component-label">Puerta 3</span>
+                <h3>No hay cruce</h3>
+                <ul><li>franja disponible</li><li>create PENDIENTE</li></ul>
+              </div>
+            </div>
+
+            <div class="active-build">
+              <div class="build-step">
+                <span class="build-step-index">01</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Comprobar pertenencia y capacidad</h3>
+                  <p class="build-step-purpose">Un cliente sí puede reservar en un negocio ajeno; lo que debe coincidir es el negocio del servicio y del profesional.</p>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">02</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Calcular la franja y buscar solapamientos</h3>
+                  <p class="build-step-purpose">La duración real viene del servicio. Las citas canceladas no bloquean disponibilidad.</p>
+                </div>
+              </div>
+              <div class="build-step">
+                <span class="build-step-index">03</span>
+                <div class="build-step-copy">
+                  <h3 class="build-step-title">Crear solo después de validar</h3>
+                  <p class="build-step-purpose">El <code>clienteId</code> viene del token y el estado nace <code>PENDIENTE</code> por defecto en el schema.</p>
+                </div>
+              </div>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">citas.service.ts completo</span><span class="code-reveal-note">Crear en src/citas/ · TypeScript · reserva, agenda del dueño y mis citas</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/citas/citas.service.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { EstadoCita } from '../generated/prisma/client';
+import { CrearCitaDto } from './dto/crear-cita.dto';
+
+@Injectable()
+export class CitasService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Reservar: lo hace el CLIENTE logueado (clienteId viene de su token).
+  async crear(negocioId: number, clienteId: number, dto: CrearCitaDto) {
+    // El negocio debe existir (NO se exige ser el dueño: un cliente reserva
+    // en un negocio que no es suyo).
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id: negocioId },
+    });
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+
+    // Servicio y profesional deben ser de ESTE negocio.
+    const servicio = await this.prisma.servicio.findUnique({
+      where: { id: dto.servicioId },
+    });
+    if (!servicio || servicio.negocioId !== negocioId) {
+      throw new BadRequestException('El servicio no pertenece a este negocio');
+    }
+
+    const profesional = await this.prisma.profesional.findUnique({
+      where: { id: dto.profesionalId },
+    });
+    if (!profesional || profesional.negocioId !== negocioId) {
+      throw new BadRequestException('El profesional no pertenece a este negocio');
+    }
+
+    // El profesional debe OFRECER ese servicio (usa la relación N:M de hoy).
+    const ofrece = await this.prisma.servicioProfesional.findUnique({
+      where: {
+        servicioId_profesionalId: {
+          servicioId: dto.servicioId,
+          profesionalId: dto.profesionalId,
+        },
+      },
+    });
+    if (!ofrece) {
+      throw new BadRequestException(
+        'El profesional no ofrece el servicio seleccionado',
+      );
+    }
+
+    // Sin cruces: la nueva cita no puede solapar otra del mismo profesional.
+    const inicio = new Date(dto.fecha);
+    const fin = new Date(inicio.getTime() + servicio.duracionMin * 60000);
+
+    const citasProfesional = await this.prisma.cita.findMany({
+      where: {
+        profesionalId: dto.profesionalId,
+        estado: { not: EstadoCita.CANCELADA },
+      },
+      include: { servicio: true },
+    });
+
+    const hayCruce = citasProfesional.some((c) => {
+      const cInicio = new Date(c.fecha);
+      const cFin = new Date(cInicio.getTime() + c.servicio.duracionMin * 60000);
+      return cInicio &lt; fin &amp;&amp; inicio &lt; cFin;
+    });
+    if (hayCruce) {
+      throw new ConflictException(
+        'El profesional ya tiene una cita en ese horario',
+      );
+    }
+
+    return this.prisma.cita.create({
+      data: {
+        fecha: inicio,
+        notas: dto.notas,
+        negocioId,
+        clienteId,
+        servicioId: dto.servicioId,
+        profesionalId: dto.profesionalId,
+      },
+    });
+  }
+
+  // Listar las citas de un negocio: solo su DUENO (autorización por propiedad).
+  async listarPorNegocio(negocioId: number, duenoId: number) {
+    const negocio = await this.prisma.negocio.findUnique({
+      where: { id: negocioId },
+    });
+    if (!negocio) {
+      throw new NotFoundException('El negocio no existe');
+    }
+    if (negocio.duenoId !== duenoId) {
+      throw new ForbiddenException('Este negocio no es tuyo');
+    }
+    return this.prisma.cita.findMany({
+      where: { negocioId },
+      include: {
+        cliente: { select: { id: true, nombre: true } },
+        servicio: { select: { id: true, nombre: true, duracionMin: true } },
+        profesional: { select: { id: true, nombre: true } },
+      },
+      orderBy: { fecha: 'asc' },
+    });
+  }
+
+  // Listar MIS citas como cliente (las que yo reservé, en cualquier negocio).
+  listarMias(clienteId: number) {
+    return this.prisma.cita.findMany({
+      where: { clienteId },
+      include: {
+        negocio: { select: { id: true, nombre: true } },
+        servicio: { select: { id: true, nombre: true } },
+        profesional: { select: { id: true, nombre: true } },
+      },
+      orderBy: { fecha: 'asc' },
+    });
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="checkpoint">
+              <span class="component-label">Checkpoint</span>
+              <h3>El service cuenta la historia completa del día.</h3>
+              <p>Negocio → pertenencia → N:M → cruce → cita. Si una puerta falla, la inserción no ocurre y la API devuelve una razón específica.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s10" data-accent="1" data-layout="canvas" data-escena="concepto" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Comprender · intervalos</span>
+            <h2 class="sec-t">Dos franjas se cruzan cuando ambas alcanzan el interior de la otra</h2>
+            <p class="sec-s">El límite se modela como <code>[inicio, fin)</code>: incluye el comienzo y excluye el final, por eso dos citas pueden quedar pegadas.</p>
+          </div>
+          <div class="body">
+            <figure class="figura">
+              <div class="figura-stage">
+                <svg viewBox="0 0 700 280" role="img" aria-label="Comparación temporal entre una cita de 15:00 a 15:30, otra cruzada a las 15:15 y otra válida a las 15:30">
+                  <text x="96" y="38" font-family="Inter" font-size="16" fill="var(--paper-soft)">15:00</text>
+                  <text x="342" y="38" font-family="Inter" font-size="16" fill="var(--paper-soft)">15:30</text>
+                  <text x="584" y="38" font-family="Inter" font-size="16" fill="var(--paper-soft)">16:00</text>
+                  <line x1="110" y1="58" x2="610" y2="58" stroke="var(--paper-line)" stroke-width="2"/>
+                  <line x1="110" y1="50" x2="110" y2="66" stroke="var(--paper-soft)" stroke-width="2"/>
+                  <line x1="360" y1="50" x2="360" y2="66" stroke="var(--paper-soft)" stroke-width="2"/>
+                  <line x1="610" y1="50" x2="610" y2="66" stroke="var(--paper-soft)" stroke-width="2"/>
+                  <text x="30" y="112" font-family="Inter" font-size="15" font-weight="600" fill="var(--paper-ink)">Existente</text>
+                  <rect x="110" y="88" width="250" height="38" rx="8" fill="var(--a1-papel)"><title>15:00 a 15:30</title></rect>
+                  <text x="128" y="113" font-family="IBM Plex Mono" font-size="15" fill="var(--paper-ink)">15:00–15:30</text>
+                  <text x="30" y="178" font-family="Inter" font-size="15" font-weight="600" fill="var(--danger)">Cruza</text>
+                  <rect x="235" y="154" width="250" height="38" rx="8" fill="var(--paper)" stroke="var(--danger)" stroke-width="2"><title>15:15 a 15:45, se cruza</title></rect>
+                  <text x="253" y="179" font-family="IBM Plex Mono" font-size="15" fill="var(--danger)">15:15–15:45</text>
+                  <text x="30" y="244" font-family="Inter" font-size="15" font-weight="600" fill="var(--success)">Válida</text>
+                  <rect x="360" y="220" width="250" height="38" rx="8" fill="var(--paper)" stroke="var(--success)" stroke-width="2"><title>15:30 a 16:00, no se cruza</title></rect>
+                  <text x="378" y="245" font-family="IBM Plex Mono" font-size="15" fill="var(--success)">15:30–16:00</text>
+                </svg>
+              </div>
+              <figcaption>Usar <code>&lt;</code> estricto permite que una cita empiece exactamente cuando termina la anterior.</figcaption>
+            </figure>
+
+            <div class="micro-task">
+              <span class="component-label">Predice · 30 segundos</span>
+              <p class="micro-task-q">La cita existente termina a las 15:30. ¿Una nueva que inicia a las 15:30 debe producir <code>409</code>?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar</summary>
+                <p class="micro-answer"><strong>No.</strong> La fórmula <code>cInicio &lt; fin &amp;&amp; inicio &lt; cFin</code> es falsa cuando el nuevo inicio coincide con el fin anterior.</p>
+              </details>
+            </div>
+
+            <div class="code-block" data-role="fragment">
+              <div class="code-head"><div><span class="code-context">Fragmento decisivo</span><span class="code-file">src/citas/citas.service.ts</span></div><button class="copy-btn" type="button">Copiar</button></div>
+              <pre class="line-numbers"><code class="language-typescript">const hayCruce = citasProfesional.some((c) => {
+  const cInicio = new Date(c.fecha);
+  const cFin = new Date(cInicio.getTime() + c.servicio.duracionMin * 60000);
+  return cInicio &lt; fin &amp;&amp; inicio &lt; cFin;
+});</code></pre>
+            </div>
+
+            <div class="callout" data-tone="warning">
+              <span class="callout-icon">!</span>
+              <div><h3>Un detalle cambia el negocio</h3><p>Usar <code>&lt;=</code> rechazaría las citas pegadas. Si el producto exige un colchón, se suman minutos a la franja de fin de forma explícita.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s11" data-accent="1" data-layout="canvas" data-escena="construccion" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Construir · rutas y módulos</span>
+            <h2 class="sec-t">Dos vistas de agenda, un service y un módulo raíz que lo enciende todo</h2>
+            <p class="sec-s">La agenda del negocio exige propiedad; <code>/mis-citas</code> sigue al usuario del token en cualquier negocio.</p>
+          </div>
+          <div class="body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>Responsabilidad de cada ruta</caption>
+                <thead><tr><th>Ruta</th><th>Quién</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                  <tr><td><code>POST /negocios/:negocioId/citas</code></td><td>Usuario logueado</td><td>Reserva como cliente.</td></tr>
+                  <tr><td><code>GET /negocios/:negocioId/citas</code></td><td>Dueño del negocio</td><td>Ve la agenda completa.</td></tr>
+                  <tr><td><code>GET /mis-citas</code></td><td>Cliente logueado</td><td data-emphasis>Ve sus reservas en todos los negocios.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">citas.controller.ts completo</span><span class="code-reveal-note">Crear en src/citas/ · TypeScript · reservar y ver agenda</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/citas/citas.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { CitasService } from './citas.service';
+import { CrearCitaDto } from './dto/crear-cita.dto';
+
+@ApiTags('citas')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('negocios/:negocioId/citas')
+export class CitasController {
+  constructor(private readonly citasService: CitasService) {}
+
+  // Reservar: cualquier usuario logueado (actúa como cliente).
+  @Post()
+  reservar(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+    @Body() dto: CrearCitaDto,
+  ) {
+    return this.citasService.crear(negocioId, usuario.id, dto);
+  }
+
+  // Ver la agenda del negocio: solo su dueño.
+  @Get()
+  listarDelNegocio(
+    @Param('negocioId', ParseIntPipe) negocioId: number,
+    @UsuarioActual() usuario: { id: number },
+  ) {
+    return this.citasService.listarPorNegocio(negocioId, usuario.id);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">mis-citas.controller.ts completo</span><span class="code-reveal-note">Crear en src/citas/ · TypeScript · responsabilidad separada</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Crear</span><span class="code-file">src/citas/mis-citas.controller.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsuarioActual } from '../auth/usuario-actual.decorator';
+import { CitasService } from './citas.service';
+
+// Las citas que yo reservé como cliente, en cualquier negocio.
+@ApiTags('mis-citas')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('mis-citas')
+export class MisCitasController {
+  constructor(private readonly citasService: CitasService) {}
+
+  @Get()
+  listar(@UsuarioActual() usuario: { id: number }) {
+    return this.citasService.listarMias(usuario.id);
+  }
+}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">citas.module.ts completo</span><span class="code-reveal-note">Editar en src/citas/ · TypeScript · reemplazar el esqueleto</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/citas/citas.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { CitasService } from './citas.service';
+import { CitasController } from './citas.controller';
+import { MisCitasController } from './mis-citas.controller';
+
+@Module({
+  controllers: [CitasController, MisCitasController],
+  providers: [CitasService],
+})
+export class CitasModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <details class="code-reveal">
+              <summary><span><span class="code-reveal-title">app.module.ts completo</span><span class="code-reveal-note">Editar en src/ · TypeScript · versión final consolidada</span></span></summary>
+              <div class="code-reveal-body"><div class="code-block">
+                <div class="code-head"><div><span class="code-context">Reemplazar</span><span class="code-file">src/app.module.ts</span></div><button class="copy-btn" type="button">Copiar archivo</button></div>
+                <pre class="line-numbers"><code class="language-typescript">import { Module } from '@nestjs/common';
+import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { NegociosModule } from './negocios/negocios.module';
+import { PerfilesModule } from './perfiles/perfiles.module';
+import { ProfesionalesModule } from './profesionales/profesionales.module';
+import { ServiciosModule } from './servicios/servicios.module';
+import { CitasModule } from './citas/citas.module';
+import { ConfiguracionModule } from './configuracion/configuracion.module';
+import { SuscripcionesModule } from './suscripciones/suscripciones.module';
+import { AsistenteIaModule } from './asistente-ia/asistente-ia.module';
+
+@Module({
+  imports: [
+    // Infraestructura
+    PrismaModule,
+    // Ya construido (M3, reusado)
+    AuthModule,
+    // Funcional desde C1
+    NegociosModule,
+    // Funcional hoy (C2): perfiles, configuración, relaciones avanzadas y la reserva
+    PerfilesModule,
+    ConfiguracionModule,
+    ServiciosModule,
+    ProfesionalesModule,
+    CitasModule,
+    // Esqueleto — se construyen en C3
+    SuscripcionesModule,
+    AsistenteIaModule,
+  ],
+})
+export class AppModule {}</code></pre>
+              </div></div>
+            </details>
+
+            <div class="checkpoint">
+              <span class="component-label">Checkpoint</span>
+              <h3>Todo módulo nuevo está registrado.</h3>
+              <p>Un archivo puede existir y aun así producir <code>404</code> si su controlador no está en el módulo o el módulo no está en <code>AppModule.imports</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s12" data-accent="1" data-layout="canvas" data-escena="concepto" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Comprender · traza completa</span>
+            <h2 class="sec-t">Juan reserva un corte y cada pieza del sistema cumple una responsabilidad</h2>
+            <p class="sec-s">Seguir un dato de punta a punta evita aprender el backend como una colección de archivos aislados.</p>
+          </div>
+          <div class="body">
+            <div class="timeline">
+              <div class="timeline-item"><h3>Request autenticado</h3><p><code>POST /negocios/1/citas</code> con servicio 1, profesional 1 y fecha <code>2026-10-01T15:00:00.000Z</code>.</p></div>
+              <div class="timeline-item"><h3>Guard y validación</h3><p><code>JwtAuthGuard</code> deja <code>{ id: 2, rol: CLIENTE }</code> en <code>request.user</code>; <code>ValidationPipe</code> valida ISO 8601 e ids positivos.</p></div>
+              <div class="timeline-item"><h3>Controller</h3><p><code>CitasController.reservar</code> pasa <code>negocioId=1</code>, <code>clienteId=2</code> desde el token y el DTO.</p></div>
+              <div class="timeline-item"><h3>Service</h3><p>Confirma negocio, pertenencia, pareja N:M y franja 15:00–15:30 sin cruces.</p></div>
+              <div class="timeline-item"><h3>Prisma y respuesta</h3><p>Inserta la cita para cliente 2 con estado <code>PENDIENTE</code> y responde <code>201</code>.</p></div>
+            </div>
+
+            <div class="consola">
+              <div class="consola-head">Recorrido observable</div>
+              <ol>
+                <li class="in">POST /negocios/1/citas</li>
+                <li class="in">{ "servicioId": 1, "profesionalId": 1, "fecha": "2026-10-01T15:00:00.000Z" }</li>
+                <li class="out">negocio 1 existe</li>
+                <li class="out">servicio 1 y profesional 1 pertenecen al negocio 1</li>
+                <li class="out">profesional 1 ofrece servicio 1</li>
+                <li class="out">franja 15:00–15:30 disponible</li>
+                <li class="out">HTTP <b>201</b> · estado PENDIENTE · clienteId 2</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s13" data-accent="1" data-layout="canvas" data-escena="prueba" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Probar · flujo completo</span>
+            <h2 class="sec-t">Los rechazos demuestran que las reglas están protegiendo el negocio</h2>
+            <p class="sec-s">Ejecuta con PostgreSQL local y el servidor en modo desarrollo. Hoy no se migra: el schema ya existe desde C1.</p>
+          </div>
+          <div class="body">
+            <div class="code-block" data-tipo="terminal">
+              <div class="code-head"><div><span class="code-context">Ejecutar</span><span class="code-file">Terminal · citas-saas</span></div><button class="copy-btn" type="button">Copiar</button></div>
+              <pre><code class="language-bash">npm run start:dev</code></pre>
+            </div>
+
+            <div class="callout" data-tone="warning">
+              <span class="callout-icon">!</span>
+              <div><h3>No corras migrate</h3><p>Las tablas ya existen y el schema no cambió. Si el editor no reconoce <code>../generated/prisma/client</code>, ejecuta una sola vez <code>npx prisma generate</code>.</p></div>
+            </div>
+
+            <div class="code-block">
+              <div class="code-head"><div><span class="code-context">Preparar datos</span><span class="code-file">Swagger o Postman</span></div><button class="copy-btn" type="button">Copiar flujo</button></div>
+              <pre><code class="language-plaintext">POST /auth/register
+{ "nombre": "Don Pepe", "email": "pepe@barberia.com", "password": "clave1234" }
+→ { "id": 1, "nombre": "Don Pepe", "email": "pepe@barberia.com", "rol": "CLIENTE" }
+
+POST /negocios
+{ "nombre": "Barberia Don Pepe" }
+→ negocio con configuracion y suscripcion FREE
+
+# Vuelve a iniciar sesión: GET /perfil mostrará "rol": "DUENO"
+
+POST /negocios/1/servicios
+{ "nombre": "Corte", "duracionMin": 30, "precio": 25000 }
+→ servicio 1; "precio": "25000"
+
+POST /negocios/1/servicios
+{ "nombre": "Tinte", "duracionMin": 60, "precio": 60000 }
+→ servicio 2
+
+POST /negocios/1/profesionales
+{ "nombre": "Luis" }
+→ profesional 1
+
+POST /profesionales/1/servicios
+{ "servicioId": 1 }
+→ Luis ofrece Corte; no ofrece Tinte
+
+POST /auth/register
+{ "nombre": "Juan", "email": "juan@correo.com", "password": "clave1234" }
+→ usuario 2; rol CLIENTE</code></pre>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <caption>Casos de reserva verificados</caption>
+                <thead><tr><th>Solicitud</th><th>Regla observada</th><th class="num">Resultado</th></tr></thead>
+                <tbody>
+                  <tr><td>Corte con Luis a las 15:00</td><td>Todo coincide y la franja está libre.</td><td class="num" data-emphasis><code>201</code></td></tr>
+                  <tr><td>Corte con Luis a las 15:15</td><td>Se superpone con 15:00–15:30.</td><td class="num"><code>409</code></td></tr>
+                  <tr><td>Corte con Luis a las 15:30</td><td>Empieza justo cuando termina la anterior.</td><td class="num"><code>201</code></td></tr>
+                  <tr><td>Tinte con Luis a las 18:00</td><td>Luis no ofrece ese servicio.</td><td class="num"><code>400</code></td></tr>
+                  <tr><td>Fecha <code>"manana"</code></td><td>No cumple ISO 8601.</td><td class="num"><code>400</code></td></tr>
+                  <tr><td>Juan consulta agenda del negocio</td><td>No es el dueño.</td><td class="num"><code>403</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="code-block">
+              <div class="code-head"><div><span class="code-context">Ejecutar pruebas</span><span class="code-file">Swagger o Postman</span></div><button class="copy-btn" type="button">Copiar casos</button></div>
+              <pre><code class="language-plaintext"># Reserva válida
+POST /negocios/1/citas
+{ "servicioId": 1, "profesionalId": 1, "fecha": "2026-10-01T15:00:00.000Z" }
+→ HTTP 201 · id 1 · estado PENDIENTE · clienteId 2
+
+# Se cruza con 15:00–15:30
+POST /negocios/1/citas
+{ "servicioId": 1, "profesionalId": 1, "fecha": "2026-10-01T15:15:00.000Z" }
+→ HTTP 409 · "El profesional ya tiene una cita en ese horario"
+
+# Cita pegada: sí se permite
+POST /negocios/1/citas
+{ "servicioId": 1, "profesionalId": 1, "fecha": "2026-10-01T15:30:00.000Z" }
+→ HTTP 201
+
+# El profesional no ofrece Tinte
+POST /negocios/1/citas
+{ "servicioId": 2, "profesionalId": 1, "fecha": "2026-10-01T18:00:00.000Z" }
+→ HTTP 400 · "El profesional no ofrece el servicio seleccionado"
+
+# Fecha inválida
+POST /negocios/1/citas
+{ "servicioId": 1, "profesionalId": 1, "fecha": "manana" }
+→ HTTP 400 · "La fecha debe estar en formato ISO 8601"
+
+GET /mis-citas
+→ HTTP 200 · las 2 citas de Juan con negocio, servicio y profesional
+
+GET /negocios/1/citas
+→ Don Pepe: HTTP 200 · agenda con el nombre del cliente
+→ Juan: HTTP 403 · "Este negocio no es tuyo"</code></pre>
+            </div>
+
+            <div class="socratica">
+              <span class="component-label">Para pensar</span>
+              <p class="socratica-q">El precio llega como <code>"25000"</code>, con comillas. ¿Es un error?</p>
+              <details class="reveal">
+                <summary>Ver respuesta</summary>
+                <div class="reveal-body"><p class="lead-answer">No: Prisma serializa <code>Decimal</code> como texto para no perder precisión.</p><p>Si el frontend necesita operar con el valor, lo convierte explícitamente con <code>Number(precio)</code>.</p></div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s14" data-accent="1" data-layout="canvas" data-escena="prueba" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Diagnosticar</span>
+            <h2 class="sec-t">Cada error apunta a una decisión concreta</h2>
+            <p class="sec-s">Lee el síntoma, ubica la regla que falló y corrige sin perseguir la traza completa.</p>
+          </div>
+          <div class="body">
+            <div class="cards">
+              <div class="card"><b>409 sin cruce real</b><p>Revisa la fórmula. Usar <code>&lt;=</code> en vez de <code>&lt;</code> rechaza citas pegadas.</p></div>
+              <div class="card"><b>400 “no ofrece el servicio”</b><p>La pareja no existe en la tabla intermedia. Asigna primero con <code>POST /profesionales/:id/servicios</code>.</p></div>
+              <div class="card"><b><code>duenoId</code> sobre undefined</b><p>Falta <code>include: { negocio: true }</code> al buscar el profesional.</p></div>
+              <div class="card"><b>Don Pepe sigue como CLIENTE</b><p>El token fue emitido antes del cambio. Vuelve a iniciar sesión.</p></div>
+              <div class="card"><b>Hora inválida devuelve 400</b><p>El texto no cumple <code>HH:MM</code>. Envía, por ejemplo, <code>"08:00"</code>.</p></div>
+              <div class="card"><b>Ruta nueva devuelve 404</b><p>Comprueba el controlador en su módulo y el módulo en <code>AppModule.imports</code>.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s15" data-accent="1" data-layout="canvas" data-escena="prueba" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Transferir</span>
+            <h2 class="sec-t">Ahora cambia una decisión, no repitas el ejemplo</h2>
+            <p class="sec-s">Cada reto evoluciona el mismo proyecto y declara cuánto apoyo de IA corresponde.</p>
+          </div>
+          <div class="body">
+            <div class="cards">
+              <div class="card"><b>Cancelar una cita</b><p><strong>Nivel 1 · IA revisora.</strong> Agrega <code>PATCH /negocios/:negocioId/citas/:id</code> para cambiar a <code>CANCELADA</code>. Decide y justifica quién puede cancelar.</p></div>
+              <div class="card"><b>Filtrar agenda por día</b><p><strong>Sin IA.</strong> Haz que <code>GET /negocios/:id/citas</code> reciba una fecha y filtre en la base, no después en memoria.</p></div>
+              <div class="card"><b>Endpoint espejo</b><p><strong>Nivel 2 permitido.</strong> Crea <code>GET /servicios/:servicioId/profesionales</code>. La verificación de propiedad se escribe a mano.</p></div>
+              <div class="card"><b>Defender la arquitectura</b><p><strong>Sin IA.</strong> Explica por qué <code>/mis-citas</code> tiene controlador propio en términos de rutas y responsabilidad.</p></div>
+            </div>
+            <div class="micro-task">
+              <span class="component-label">Criterio profesional</span>
+              <p class="micro-task-q">¿Qué reto cambiaría primero la experiencia real del usuario y cuál mejora sobre todo la arquitectura?</p>
+              <details class="micro-reveal">
+                <summary>Comprobar</summary>
+                <p class="micro-answer"><strong>Experiencia:</strong> cancelar o filtrar por día. <strong>Arquitectura:</strong> el endpoint espejo y la defensa de responsabilidades. La prioridad depende del siguiente objetivo del producto.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section view" id="s16" data-accent="1" data-layout="canvas" data-escena="cierre" hidden>
+          <div class="sec-head">
+            <span class="sec-n">Cierre</span>
+            <h2 class="sec-t">El negocio ya recibe reservas y sabe cuándo decir que no</h2>
+            <p class="sec-s">AgendaFácil pasó de tener un negocio vacío a proteger una operación completa con identidad, relaciones y tiempo.</p>
+          </div>
+          <div class="body">
+            <div class="compare">
+              <div class="compare-card" data-side="negative">
+                <h3>Al empezar</h3>
+                <ol><li>Negocio sin catálogo ni profesionales.</li><li>Todos los registros parecían dueños.</li><li>No existía una reserva protegida.</li></ol>
+              </div>
+              <div class="compare-card" data-side="positive">
+                <h3>Al terminar</h3>
+                <ol><li>Servicios y profesionales conectados por N:M.</li><li>Cliente por defecto; dueño al crear negocio.</li><li>Reserva validada por pertenencia, capacidad y disponibilidad.</li></ol>
+              </div>
+            </div>
+
+            <ol class="ideas">
+              <li><span>El <strong>muchos-a-muchos</strong> vive en una tabla intermedia de parejas únicas.</span></li>
+              <li><span>La <strong>lógica de negocio</strong> valida antes de escribir: mismo negocio, servicio ofrecido y franja libre.</span></li>
+              <li><span>La <strong>identidad</strong> la decide el servidor: cliente desde el token y dueño dentro de una transacción.</span></li>
+            </ol>
+
+            <div class="micro-task">
+              <span class="component-label">Pregunta que queda abierta</span>
+              <p class="micro-task-q">Don Pepe ya recibe reservas. Si quiere recordatorios automáticos con IA, ¿deberían ser gratuitos?</p>
+              <details class="micro-reveal">
+                <summary>Descubrir el puente</summary>
+                <p class="micro-answer"><strong>No necesariamente.</strong> En C3 el negocio pagará su plan con Stripe y el asistente de IA quedará detrás de la suscripción PRO.</p>
+              </details>
+            </div>
+
+            <div class="papel">
+              <span class="component-label">Profundización y fuentes</span>
+              <p>Quedan tres decisiones para explorar: extraer <code>verificarNegocioPropio</code> a un service compartido o guard; definir permisos de STAFF; y validar <code>horaApertura</code>/<code>horaCierre</code> antes de reservar.</p>
+              <p>Referencias: Prisma ORM — Relations, <code>upsert</code>, <code>$transaction</code>, compound IDs y <code>Decimal</code>; NestJS — Controllers, Pipes y Exception filters; class-validator — <code>@Matches</code>, <code>@IsISO8601</code> y validadores numéricos; MDN — <code>Date</code>, <code>getTime()</code> y <code>Array.prototype.some()</code>.</p>
+            </div>
+
+            <p class="doc-foot">© 2026 Ana Alvarado · Educadora Tech &amp; Desarrolladora Full Stack · Todos los derechos reservados · linkedin.com/in/ana-alvarado-instructora-full-stack</p>
+          </div>
+        </section>
+      </div>
+
+      <nav class="view-controls" id="viewControls" aria-label="Navegación entre secciones">
+        <button class="view-btn" id="prevView" type="button" aria-label="Sección anterior">←</button>
+        <span class="view-position" id="viewPosition" aria-live="polite">Portada</span>
+        <button class="view-btn" id="nextView" type="button" aria-label="Sección siguiente">→</button>
+      </nav>
+    </main>
+  </div>
+
+  <div class="watermark" aria-hidden="true">© 2026 ANA ALVARADO</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+  <script src="anaclase-v12.js"></script>
+</body>
+</html>
